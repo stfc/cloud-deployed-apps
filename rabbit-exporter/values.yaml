@@ -1,0 +1,7 @@
+service:
+  type: LoadBalancer
+
+rabbitmq:
+  url: https://hv746.nubes.rl.ac.uk:15672/
+  user: monitoring
+  existingPasswordSecret: rabbitmq-exporter-secret
