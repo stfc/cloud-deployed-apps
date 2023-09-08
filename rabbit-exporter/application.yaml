@@ -5,19 +5,16 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
+  sources:
+  - repoURL: 'https://github.com/prometheus-community/helm-charts.git'
     path: charts/prometheus-rabbitmq-exporter
-    repoURL: https://github.com/prometheus-community/helm-charts.git
+    targetRevision: HEAD
     helm:
-      releaseName: rabbitmq-exporter
-      values: |
-        service:
-          type: LoadBalancer
-
-        rabbitmq:
-          url: https://hv746.nubes.rl.ac.uk:15672/
-          user: monitoring
-          existingPasswordSecret: rabbitmq-exporter-secret
+      valueFiles:
+      - $values/rabbit-exporter/values.yaml
+  - repoURL: 'https://github.com/stfc/cloud-deployed-apps.git'
+    targetRevision: rabbit-expoter-app
+    ref: values
   destination:
     server: "https://kubernetes.default.svc"
     namespace: rabbitmq-exporter
