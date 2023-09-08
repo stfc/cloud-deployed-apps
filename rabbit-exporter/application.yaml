@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rabbit-exporter
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: 'https://github.com/prometheus-community/helm-charts.git'
+    path: charts/prometheus-rabbitmq-exporter
+    targetRevision: 706ee46f37f9762f1202f494708e9afbfa14a23b
+    helm:
+      valueFiles:
+      - $values/rabbit-exporter/values.yaml
+  - repoURL: 'https://github.com/stfc/cloud-deployed-apps.git'
+    targetRevision: rabbit-expoter-app
+    ref: values
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: rabbitmq-exporter
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
