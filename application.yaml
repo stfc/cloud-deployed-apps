@@ -9,10 +9,10 @@ spec:
   # each -repoURL refers to a new app
   - repoURL: 'https://github.com/stfc/cloud-deployed-apps'
     path: rabbit-exporter
-    targetRevision: rabbit-expoter-app
+    targetRevision: HEAD
   - repoURL: 'https://github.com/stfc/cloud-deployed-apps'
     path: guestbook
-    targetRevision: rabbit-expoter-app       
+    targetRevision: HEAD      
   destination:
     server: https://kubernetes.default.svc
     namespace: default
