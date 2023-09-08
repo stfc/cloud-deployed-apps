@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: appofapps
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  # each -repoURL refers to a new app
+  - repoURL: 'https://github.com/stfc/cloud-deployed-apps'
+    path: rabbit-exporter
+    targetRevision: rabbit-expoter-app
+  - repoURL: 'https://github.com/stfc/cloud-deployed-apps'
+    path: guestbook
+    targetRevision: rabbit-expoter-app       
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default

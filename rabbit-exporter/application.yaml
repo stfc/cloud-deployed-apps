@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rabbit-exporter
+  namespace: argocd
+spec:
+  project: default
+  source:
+    path: charts/prometheus-rabbitmq-exporter
+    repoURL: https://github.com/prometheus-community/helm-charts.git
+    helm:
+      releaseName: rabbitmq-exporter
+      values: |
+        service:
+          type: LoadBalancer
+
+        rabbitmq:
+          url: https://hv746.nubes.rl.ac.uk:15672/
+          user: monitoring
+          existingPasswordSecret: rabbitmq-exporter-secret
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: rabbitmq-exporter
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
