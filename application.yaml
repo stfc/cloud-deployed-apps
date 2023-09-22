@@ -5,14 +5,10 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  sources:
-  # each -repoURL refers to a new app
-  - repoURL: 'https://github.com/stfc/cloud-deployed-apps'
-    path: rabbit-exporter
-    targetRevision: HEAD
-  - repoURL: 'https://github.com/stfc/cloud-deployed-apps'
-    path: guestbook
-    targetRevision: HEAD      
+  source:
+      repoURL: https://github.com/stfc/cloud-deployed-apps
+      path: Apps
+      targetRevision: development
   destination:
     server: https://kubernetes.default.svc
     namespace: default
