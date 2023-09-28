@@ -3,5 +3,4 @@ service:
 
 rabbitmq:
   url: https://hv746.nubes.rl.ac.uk:15672/
-  user: monitorings
-  existingPasswordSecret: qrabbitmq-exporter-secret
+  existingPasswordSecret: rabbitmq-exporter-secret

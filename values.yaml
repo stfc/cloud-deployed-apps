@@ -1,0 +1,12 @@
+global:
+  env: development
+  helmDefault: false
+  valuesFile: values.yaml
+  spec:
+    project: default
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      repoURL: https://github.com/stfc/cloud-deployed-apps
+      targetRevision: HEAD
