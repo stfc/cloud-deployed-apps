@@ -3,4 +3,4 @@ expose:
     tls:
         enabled: false
 loadBalancer:
-    IP: "130.246.214.222"
+    IP: 

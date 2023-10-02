@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: appofapps
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: guestbook
+    server: https://kubernetes.default.svc
+  source:
+    path: .
+    repoURL: 'https://github.com/stfc/cloud-deployed-apps.git'
+    targetRevision: templates
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
