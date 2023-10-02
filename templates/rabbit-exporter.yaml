@@ -13,7 +13,7 @@ spec:
       valueFiles:
       - $values/values/rabbit-exporter-values.yaml
   - repoURL: 'https://github.com/stfc/cloud-deployed-apps.git'
-    targetRevision: templating
+    targetRevision: templates
     ref: values
   destination:
     server: {{ $.Values.global.spec.destination.server }}
