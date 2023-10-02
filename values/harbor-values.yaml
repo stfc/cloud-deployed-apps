@@ -1,0 +1,2 @@
+expose:
+    type: loadBalancer
