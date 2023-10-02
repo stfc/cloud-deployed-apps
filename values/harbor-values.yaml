@@ -1,2 +1,4 @@
 expose:
     type: loadBalancer
+    tls:
+        enabled: false
