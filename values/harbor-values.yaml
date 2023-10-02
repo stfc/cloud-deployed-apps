@@ -1,0 +1,6 @@
+expose:
+    type: loadBalancer
+    tls:
+        enabled: false
+loadBalancer:
+    IP: 

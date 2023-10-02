@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: thanos-{{ $.Values.global.env }}
+  namespace: argocd
+spec:
+  project: {{ $.Values.global.spec.project }}
+  sources:
+  - repoURL: 'https://github.com/bitnami/charts.git'
+    path: bitnami/thanos
+    targetRevision: 42da2c849e18c70e13fee9c43bb3d286a2ffa288
+    helm:
+      valueFiles:
+      - $values/values/thanos-values.yaml
+  - repoURL: 'https://github.com/stfc/cloud-deployed-apps.git'
+    targetRevision: templates
+    ref: values
+  destination:
+    server: {{ $.Values.global.spec.destination.server }}
+    namespace: {{ $.Values.global.spec.destination.namespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
