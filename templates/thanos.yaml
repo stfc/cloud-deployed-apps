@@ -8,7 +8,7 @@ spec:
   sources:
   - repoURL: 'https://github.com/bitnami/charts.git'
     path: bitnami/thanos
-    targetRevision: HEAD
+    targetRevision: 42da2c849e18c70e13fee9c43bb3d286a2ffa288
     helm:
       valueFiles:
       - $values/values/thanos-values.yaml
