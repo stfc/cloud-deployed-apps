@@ -2,3 +2,5 @@ expose:
     type: loadBalancer
     tls:
         enabled: false
+loadBalancer:
+    IP: "130.246.214.222"
