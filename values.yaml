@@ -9,4 +9,4 @@ global:
       namespace: default
     source:
       repoURL: https://github.com/stfc/cloud-deployed-apps
-      targetRevision: HEAD
+      targetRevision: env-values
