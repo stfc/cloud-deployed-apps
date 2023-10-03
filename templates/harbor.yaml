@@ -14,7 +14,7 @@ spec:
     targetRevision: 1.13.0
     helm:
       valueFiles:
-      - $values/values/harbor-values.yaml
+      - $values/{{ $.Values.global.env }}-values/harbor-values.yaml
   - repoURL: 'https://github.com/stfc/cloud-deployed-apps.git'
     targetRevision: templates
     ref: values
