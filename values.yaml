@@ -1,5 +1,5 @@
 global:
-  env: development
+  env: dev
   helmDefault: false
   valuesFile: values.yaml
   spec:
@@ -9,4 +9,4 @@ global:
       namespace: default
     source:
       repoURL: https://github.com/stfc/cloud-deployed-apps
-      targetRevision: HEAD
+      targetRevision: env-values

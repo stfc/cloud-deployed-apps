@@ -1,0 +1,10 @@
+#values for thanos kubernetes
+#helm upgrade --install release-name oci://registry-1.docker.io/bitnamicharts/thanos -f values.yaml
+query:
+  stores: [172.16.102.82:19190, 172.16.114.142:19190]
+
+queryFrontend:
+  service:
+    ## @param queryFrontend.service.type Kubernetes service type
+    ##
+    type: LoadBalancer
