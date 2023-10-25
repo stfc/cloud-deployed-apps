@@ -47,7 +47,7 @@ jobservice:
 # For storing images and charts, you can also use "azure", "gcs", "s3",
 # "swift" or "oss". Set it in the "imageChartStorage" section
 persistence:
-    enabled: false
+    enabled: true
     resourcePolicy: ""
     imageChartStorage:
     # Specify whether to disable `redirect` for images and chart storage, for
