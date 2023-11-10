@@ -41,6 +41,8 @@ jobservice:
 
 # The persistence is enabled by default and a default StorageClass
 # is needed in the k8s cluster to provision volumes dynamically.
+# The persistence is enabled by default and a default StorageClass
+# is needed in the k8s cluster to provision volumes dynamically.
 # Specify another StorageClass in the "storageClass" or set "existingClaim"
 # if you already have existing persistent volumes to use
 #
@@ -50,39 +52,40 @@ persistence:
     enabled: true
     resourcePolicy: ""
     imageChartStorage:
-    # Specify whether to disable `redirect` for images and chart storage, for
-    # backends which not supported it (such as using minio for `s3` storage type), please disable
-    # it. To disable redirects, simply set `disableredirect` to `true` instead.
-    # Refer to
-    # https://github.com/distribution/distribution/blob/main/docs/configuration.md#redirect
-    # for the detail.
-    disableredirect: false
-    # Specify the "caBundleSecretName" if the storage service uses a self-signed certificate.
-    # The secret must contain keys named "ca.crt" which will be injected into the trust store
-    # of registry's containers.
-    # caBundleSecretName:
+        # Specify whether to disable `redirect` for images and chart storage, for
+        # backends which not supported it (such as using minio for `s3` storage type), please disable
+        # it. To disable redirects, simply set `disableredirect` to `true` instead.
+        # Refer to
+        # https://github.com/distribution/distribution/blob/main/docs/configuration.md#redirect
+        # for the detail.
+        disableredirect: false
+        # Specify the "caBundleSecretName" if the storage service uses a self-signed certificate.
+        # The secret must contain keys named "ca.crt" which will be injected into the trust store
+        # of registry's containers.
+        # caBundleSecretName:
 
-    # Specify the type of storage: "filesystem", "azure", "gcs", "s3", "swift",
-    # "oss" and fill the information needed in the corresponding section. The type
-    # must be "filesystem" if you want to use persistent volumes for registry
-    type: filesystem
-    swift:
-      authurl: https://storage.myprovider.com/v3/auth
-      username: username
-      password: password
-      container: containername
-      #region: fr
-      #tenant: tenantname
-      #tenantid: tenantid
-      #domain: domainname
-      #domainid: domainid
-      #trustid: trustid
-      #insecureskipverify: false
-      #chunksize: 5M
-      #prefix:
-      #secretkey: secretkey
-      #accesskey: accesskey
-      #authversion: 3
-      #endpointtype: public
-      #tempurlcontainerkey: false
-      #tempurlmethods:
+        # Specify the type of storage: "filesystem", "azure", "gcs", "s3", "swift",
+        # "oss" and fill the information needed in the corresponding section. The type
+        # must be "filesystem" if you want to use persistent volumes for registry
+        type: s3
+        s3:
+            # Set an existing secret for S3 accesskey and secretkey
+            # keys in the secret should be REGISTRY_STORAGE_S3_ACCESSKEY and REGISTRY_STORAGE_S3_SECRETKEY for registry
+            # existingSecret: ""
+            #region: us-west-1
+            bucket: bucket-name
+            accesskey: 
+            secretkey:
+            regionendpoint: ceph-gw5.gridpp.rl.ac.uk
+            encrypt: true
+            #keyid: mykeyid
+            secure: true
+            skipverify: false
+            #v4auth: true
+            #chunksize: "5242880"
+            #rootdirectory: /s3/object/name/prefix
+            #storageclass: STANDARD
+            #multipartcopychunksize: "33554432"
+            #multipartcopymaxconcurrency: 100
+            #multipartcopythresholdsize: "33554432"
+            #loglevel: debug
