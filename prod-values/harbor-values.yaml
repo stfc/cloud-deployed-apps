@@ -50,39 +50,22 @@ persistence:
     enabled: true
     resourcePolicy: ""
     imageChartStorage:
-    # Specify whether to disable `redirect` for images and chart storage, for
-    # backends which not supported it (such as using minio for `s3` storage type), please disable
-    # it. To disable redirects, simply set `disableredirect` to `true` instead.
-    # Refer to
-    # https://github.com/distribution/distribution/blob/main/docs/configuration.md#redirect
-    # for the detail.
-    disableredirect: false
-    # Specify the "caBundleSecretName" if the storage service uses a self-signed certificate.
-    # The secret must contain keys named "ca.crt" which will be injected into the trust store
-    # of registry's containers.
-    # caBundleSecretName:
-
-    # Specify the type of storage: "filesystem", "azure", "gcs", "s3", "swift",
-    # "oss" and fill the information needed in the corresponding section. The type
-    # must be "filesystem" if you want to use persistent volumes for registry
-    type: filesystem
-    swift:
-      authurl: https://storage.myprovider.com/v3/auth
-      username: username
-      password: password
-      container: containername
-      #region: fr
-      #tenant: tenantname
-      #tenantid: tenantid
-      #domain: domainname
-      #domainid: domainid
-      #trustid: trustid
-      #insecureskipverify: false
-      #chunksize: 5M
-      #prefix:
-      #secretkey: secretkey
-      #accesskey: accesskey
-      #authversion: 3
-      #endpointtype: public
-      #tempurlcontainerkey: false
-      #tempurlmethods:
+        # Specify whether to disable `redirect` for images and chart storage, for
+        # backends which not supported it (such as using minio for `s3` storage type), please disable
+        # it. To disable redirects, simply set `disableredirect` to `true` instead.
+        # Refer to
+        # https://github.com/distribution/distribution/blob/main/docs/configuration.md#redirect
+        # for the detail.
+        disableredirect: false
+        # Specify the type of storage: "filesystem", "azure", "gcs", "s3", "swift",
+        # "oss" and fill the information needed in the corresponding section. The type
+        # must be "filesystem" if you want to use persistent volumes for registry
+        type: s3
+        s3:
+            bucket: bucket-name
+            accesskey: 
+            secretkey:
+            regionendpoint: ceph-gw5.gridpp.rl.ac.uk
+            encrypt: true
+            secure: true
+            skipverify: false
