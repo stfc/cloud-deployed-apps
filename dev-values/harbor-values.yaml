@@ -7,7 +7,6 @@ expose:
     enabled: true
     certSource: secret
     secret:
-      #secretName: "letsencrypt-staging"
       secretName: "letsencrypt-prod"
   ingress:
     hosts:
@@ -21,8 +20,6 @@ expose:
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
-      # Please change cluster issue when you are happy 
-      #cert-manager.io/cluster-issuer: "letsencrypt-staging"
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
 
     # ingress-specific labels
@@ -32,10 +29,10 @@ database:
   external:
     host: "dbspg03.fds.rl.ac.uk"
     port: "5432"
-    coreDatabase: "registry"
-    username: "harbor"
+    coreDatabase: "cloud_harbor_registry_dev"
+    username: "cloud_harbor_registry_dev_user"
     # if using existing secret, the key must be "password"
-    existingSecret: "dev-harbor-db-password"
+    existingSecret: "harbor-db-password"
     # "disable" - No SSL
     # "require" - Always SSL (skip verification)
     # "verify-ca" - Always SSL (verify that the certificate presented by the
@@ -93,8 +90,8 @@ persistence:
     type: s3
     s3:
       bucket: dev-harborHA
-      existingSecret: "dev-harbor-s3-creds"
+      existingSecret: "harbor-s3-creds"
       regionendpoint: "http://ceph-dev-gw3.gridpp.rl.ac.uk"
       encrypt: false
       secure: false
-      skipverify: false
+      skipverify: true
