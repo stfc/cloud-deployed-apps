@@ -1,71 +1,100 @@
+externalURL: "https://harbor.stfc.ac.uk"
+internalTLS:
+  enabled: true
 expose:
-    type: loadBalancer
-    tls:
-        # For now tls is disabled
-        enabled: false
-loadBalancer:
-    # You must assign a floating IP 
-    IP: ""
-database:
-    type: external
-    external:
-        host: ""
-        port: "5432"
-        username: ""
-        password: ""
-        coreDatabase: "registry"
-        # if using existing secret, the key must be "password"
-        #existingSecret: ""
-        # "disable" - No SSL
-        # "require" - Always SSL (skip verification)
-        # "verify-ca" - Always SSL (verify that the certificate presented by the
-        # server was signed by a trusted CA)
-        # "verify-full" - Always SSL (verify that the certification presented by the
-        # server was signed by a trusted CA and the server host name matches the one
-        # in the certificate)
-        sslmode: "disable"
-    # The maximum number of connections in the idle connection pool per pod (core+exporter).
-    # If it <=0, no idle connections are retained.
-    maxIdleConns: 100
-    # The maximum number of open connections to the database per pod (core+exporter).
-    # If it <= 0, then there is no limit on the number of open connections.
-    # Note: the default number of connections is 1024 for postgre of harbor.
-    maxOpenConns: 900
-    ## Additional deployment annotations
-    podAnnotations: {}
-    ## Additional deployment labels
-    podLabels: {}
-jobservice:
-    jobLoggers: 
-        - database
-
-# The persistence is enabled by default and a default StorageClass
-# is needed in the k8s cluster to provision volumes dynamically.
-# Specify another StorageClass in the "storageClass" or set "existingClaim"
-# if you already have existing persistent volumes to use
-#
-# For storing images and charts, you can also use "azure", "gcs", "s3",
-# "swift" or "oss". Set it in the "imageChartStorage" section
-persistence:
+  type: ingress
+  tls:
     enabled: true
-    resourcePolicy: ""
-    imageChartStorage:
-        # Specify whether to disable `redirect` for images and chart storage, for
-        # backends which not supported it (such as using minio for `s3` storage type), please disable
-        # it. To disable redirects, simply set `disableredirect` to `true` instead.
-        # Refer to
-        # https://github.com/distribution/distribution/blob/main/docs/configuration.md#redirect
-        # for the detail.
-        disableredirect: false
-        # Specify the type of storage: "filesystem", "azure", "gcs", "s3", "swift",
-        # "oss" and fill the information needed in the corresponding section. The type
-        # must be "filesystem" if you want to use persistent volumes for registry
-        type: s3
-        s3:
-            bucket: bucket-name
-            accesskey: 
-            secretkey:
-            regionendpoint: ceph-gw5.gridpp.rl.ac.uk
-            encrypt: true
-            secure: true
-            skipverify: false
+    certSource: secret
+    secret:
+      #secretName: "letsencrypt-staging"
+      secretName: "letsencrypt-prod"
+  ingress:
+    hosts:
+      core: "harbor.stfc.ac.uk"
+    controller: default
+    className: "nginx"
+    annotations:
+      # note different ingress controllers may require a different ssl-redirect annotation
+      ingress.kubernetes.io/ssl-redirect: "true"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+      # Please change cluster issue when you are happy 
+      #cert-manager.io/cluster-issuer: "letsencrypt-staging"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+    # ingress-specific labels
+    labels: {}
+database:
+  type: external
+  external:
+    host: "dbspgha01.fds.rl.ac.uk"
+    port: "5432"
+    coreDatabase: "registry"
+    username: "harbor"
+    # if using existing secret, the key must be "password"
+    existingSecret: "dev-harbor-db-password"
+    # "disable" - No SSL
+    # "require" - Always SSL (skip verification)
+    # "verify-ca" - Always SSL (verify that the certificate presented by the
+    # server was signed by a trusted CA)
+    # "verify-full" - Always SSL (verify that the certification presented by the
+    # server was signed by a trusted CA and the server host name matches the one
+    # in the certificate)
+    sslmode: "disable"
+  # The maximum number of connections in the idle connection pool per pod (core+exporter).
+  # If it <=0, no idle connections are retained.
+  maxIdleConns: 100
+  # The maximum number of open connections to the database per pod (core+exporter).
+  # If it <= 0, then there is no limit on the number of open connections.
+  # Note: the default number of connections is 1024 for postgre of harbor.
+  maxOpenConns: 900
+  ## Additional deployment annotations
+  podAnnotations: {}
+  ## Additional deployment labels
+  podLabels: {}
+
+jobservice:
+  replicas: 2
+  jobLoggers:
+    - database
+
+notary:
+  enabled: false
+  
+registry:
+  replicas: 2
+
+trivy:
+  replicas: 2
+
+exporter:
+  replicas: 2
+
+portal:
+  replicas: 2
+
+core:
+  replicas: 2
+
+persistence:
+  enabled: false
+  resourcePolicy: ""
+  imageChartStorage:
+    # Specify whether to disable `redirect` for images and chart storage, for
+    # backends which not supported it (such as using minio for `s3` storage type), please disable
+    # it. To disable redirects, simply set `disableredirect` to `true` instead.
+    # Refer to
+    # https://github.com/distribution/distribution/blob/main/docs/configuration.md#redirect
+    # for the detail.
+    disableredirect: false
+    type: s3
+    s3:
+      bucket: harbor
+      existingSecret: "dev-harbor-s3-creds"
+      regionendpoint: "https://ceph-gw5.gridpp.rl.ac.uk"
+      encrypt: true
+      secure: true
+      skipverify: false
