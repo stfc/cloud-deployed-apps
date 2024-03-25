@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+# Specify the API version for the Kustomization resource.
+kind: Kustomization
+
+resources:
+# Specify the relative paths to the base configuration files.
+- ../../appofapps
+
+patches:
+- target:
+    group: argoproj.io
+    version: v1alpha1
+    kind: Application
+    name: appofapps
+  path: cluster-patch.yaml

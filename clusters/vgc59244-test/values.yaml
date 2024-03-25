@@ -1,0 +1,19 @@
+global:
+  clusterName: vgc59244-test
+  spec:
+    source:
+      targetRevision: HEAD
+
+infra:
+  - name: vgc59244-test
+    disableAutomated: false
+    appName: infra
+    namespace: clusters
+    additionalValueFiles: 
+      - clusters/vgc59244-test/overrides/cluster-self-manage.yaml
+
+apps:
+  - name: argocd
+    disableAutomated: false
+    appName: argocd
+    namespace: argocd

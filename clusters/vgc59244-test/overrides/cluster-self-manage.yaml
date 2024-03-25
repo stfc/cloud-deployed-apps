@@ -1,0 +1,31 @@
+
+openstack-cluster:
+
+  controlPlane: 
+    machineCount: 5
+  
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 4
+  
+  nodeGroupDefaults:
+    machineFlavor: l3.tiny
+
+  # you must provide this for it to work
+  # - if this is for self-managing its <cluster-name>-cloud-credentials and can be found in the cluster namespace
+  # - if this is for setting up child cluster you can provide your own credentials secret or use the same one
+  # kubectl get secrets -n clusters
+  cloudCredentialsSecretName: vgc59244-test-cloud-credentials
+
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            # need this for argocd ingress to work
+            controller:
+              extraArgs:
+                enable-ssl-passthrough: true
+
+      # manually add floating ip 

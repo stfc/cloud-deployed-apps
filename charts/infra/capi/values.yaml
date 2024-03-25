@@ -1,0 +1,83 @@
+openstack-cluster:
+
+  cloudName: openstack
+
+  kubeNetwork:
+    pods:
+      cidrBlocks:
+        - 10.0.0.0/12
+    services:
+      cidrBlocks:
+        - 10.7.0.0/13
+    serviceDomain: cluster.local
+
+  clusterNetworking:
+    dnsNameservers:
+      - 130.246.209.132
+      - 130.246.209.163
+      - 130.246.208.220
+    externalNetworkId: External
+
+  registryMirrors: { docker.io: ["https://dockerhub.stfc.ac.uk"] }
+
+  apiServer:
+    # we have to manually floating ip once argo-cd is setup
+    enableLoadBalancer: true
+    associateFloatingIP: true
+    port: 6443
+
+  addons:
+    monitoring:
+      # disabled for now whilst working out how best to configure it
+      enabled: false
+
+    openstack:
+      csiCinder:
+        defaultStorageClass:
+          availabilityZone: ceph
+    
+    ingress:
+      # manually have to set ingress floating ip once argo-cd is setup
+      enabled: true 
+      # need this for argocd ingress to work
+      extraArgs:
+        enable-ssl-passthrough: "true"
+
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 2
+
+  nodeGroupDefaults:
+    autoscale: false
+    machineFlavor: l3.micro
+
+    healthCheck:
+      enabled: true
+      spec:
+        maxUnhealthy: 100%
+        nodeStartupTimeout: 10m0s
+        unhealthyConditions:
+          - type: Ready
+            status: Unknown
+            timeout: 5m0s
+          - type: Ready
+            status: "False"
+            timeout: 5m0s
+  
+  additionalPackages: []
+
+  controlPlane:
+    remediationStrategy:
+      retryPeriod: 20m0s
+      minHealthyPeriod: 1h0m0s
+
+    machineCount: 5
+    machineFlavor: l3.nano
+
+  kubernetesVersion: "1.28.7"
+  machineImage: "capi-ubuntu-2004-kube-v1.28.7-2024-03-01"
+
+  registryAuth:
+    {}
+
+  machineSSHKeyName:

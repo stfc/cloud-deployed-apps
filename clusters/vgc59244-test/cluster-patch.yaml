@@ -1,0 +1,3 @@
+- op: add
+  path: /spec/source/helm/valueFiles/-
+  value: ../../clusters/vgc59244-test/values.yaml

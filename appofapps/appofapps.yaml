@@ -5,15 +5,16 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    name: ''
-    namespace: guestbook
+    namespace: argocd
     server: https://kubernetes.default.svc
-  source:
-    path: .
-    repoURL: 'https://github.com/stfc/cloud-deployed-apps.git'
-    targetRevision: templates
-  sources: []
   project: default
+  source:
+    repoURL: 'https://github.com/anish-mudaraddi/cloud-deployed-apps.git'
+    targetRevision: HEAD
+    path: charts/base
+    helm:
+      valueFiles:
+        - ./values.yaml
   syncPolicy:
     automated:
       prune: true
