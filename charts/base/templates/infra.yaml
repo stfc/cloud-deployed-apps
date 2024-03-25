@@ -19,14 +19,14 @@ spec:
         {{- range $infraName, $paths := $.Values.infraValueFiles }}
         {{- if eq $infraName $infra.infraName }}
         {{- range $path := $paths }}
-        - ../../{{ $path }}
+        - ../../../{{ $path }}
         {{- end }}
         {{- end }}
         {{- end }}
 
         {{- if .additionalValueFiles }}
         {{- range $path := .additionalValueFiles }}
-        - ../../{{ $path }}
+        - ../../../{{ $path }}
         {{- end }}
         {{- end }}
   syncPolicy:

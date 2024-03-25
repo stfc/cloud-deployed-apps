@@ -7,7 +7,7 @@ global:
 infra:
   - name: vgc59244-test
     disableAutomated: false
-    appName: infra
+    infraName: capi
     namespace: clusters
     additionalValueFiles: 
       - clusters/vgc59244-test/overrides/cluster-self-manage.yaml
