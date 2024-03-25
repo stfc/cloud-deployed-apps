@@ -246,7 +246,3 @@ Your last commit should be to change back the `gitRevision` back to `HEAD`
 ### 7. Mark the PR ready for review and get it merged
 
 Merging this PR should be fairly quick now as the major changes have been fixed 
-
-
-
-
