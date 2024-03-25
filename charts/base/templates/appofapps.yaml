@@ -15,6 +15,7 @@ spec:
     helm:
       valueFiles:
         - ../../clusters/{{ $.Values.global.clusterName }}/values.yaml
+        - ./values.yaml
   syncPolicy:
     automated:
       prune: true
