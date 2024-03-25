@@ -61,41 +61,7 @@ create a branch for development off of main (`HEAD`)
 
 1. Add a directory in `clusters/<name-of-your-cluster>`
 
-2. Add boilerplate files to enable patching through kubernetes kustomize.
-   
-This allows cluster-specific configuration to override default config set in `charts/`
-
-create `clusters/<name-of-your-cluster>/kustomization.yaml` file 
-```
-# kustomization.yaml
-
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-- ../../appofapps/
-
-patches:
-- target:
-    group: argoproj.io
-    version: v1alpha1
-    kind: Application
-    name: appofapps
-  path: cluster-patch.yaml
-
-```
-
-create `clusters/<name-of-your-cluster>/cluster-patch.yaml` file
-```
-# cluster-patch.yaml
-
-- op: add
-  path: /spec/source/helm/valueFiles/-
-  value: ../clusters/<name-of-your-cluster>/values.yaml
-```
-
-
-create `clusters/<name-of-your-cluster>/values.yaml` file and define apps and infra you'd like argocd to manage
+2. Create `clusters/<name-of-your-cluster>/values.yaml` file and define apps and infra you'd like argocd to manage
 
 see `clusters/test-cluster/values.yaml` for a good example
 
