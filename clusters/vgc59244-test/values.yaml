@@ -1,19 +1,68 @@
 global:
+  # name of the cluster 
+  # MUST MATCH THE DIRECTORY NAME
   clusterName: vgc59244-test
   spec:
     source:
+      # change this to point to a different git SHA 
+      # useful when working on dev branches
       targetRevision: HEAD
 
+      # change this to point to a different fork 
+      # useful when working on dev forks
+      repoURL: https://github.com/anish-mudaraddi/cloud-deployed-apps.git
+
+      # namespace where the argocd applications will be installed to 
+      namespace: argocd
+
+# specify the infrastructure that argocd should manage 
+# these are charts located in charts/infra
+# be careful selecting infra - make sure it works with your K8s cluster 
 infra:
+  # name of the argocd application resource
+  # this allows you to create more than one of the same chart instance 
+  #   - useful for creating child clusters
+  # this is the same as the cluster name - so it will self-manage
   - name: vgc59244-test
+
+    # when true, will disable auto-sync and auto-heal on the argocd app
     disableAutomated: false
+
+    # name of the chart to install - corresponds with chart name in charts/infra/
     chartName: capi
+
+    # (optional) can define the git SHA to sync against specific to the app
+    # This overrides global.spec.targetRevision
+    # targetRevision: HEAD
+
+    # namespace where the chart contents will be installed to
     namespace: clusters
+
+    # a list of filepaths to cluster-specific values for a given chart
+    # overrides defaults set in .valueFiles for that chart
     additionalValueFiles: 
       - clusters/vgc59244-test/overrides/cluster-self-manage.yaml
 
+
+# specify the apps that argocd should manage 
+# these are charts located in charts/apps
+# apps should be system agnostic - all apps should work on any K8s cluster
 apps:
+  # name of the argocd application resource
+  # this allows you to create more than one of the same chart instance 
+  #   - useful for creating child clusters
+  # this is the same as the cluster name - so it will self-manage
   - name: argocd
+
+    # when true, will disable auto-sync and auto-heal on the argocd app
     disableAutomated: false
+
+    # name of the chart to install - corresponds with chart name in charts/infra/
     chartName: argocd
+
+    # (optional) can define the git SHA to sync against specific to the app
+    # This overrides global.spec.targetRevision
+    # targetRevision: HEAD
+
+    # namespace where the chart contents will be installed to
     namespace: argocd

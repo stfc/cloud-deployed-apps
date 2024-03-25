@@ -71,6 +71,45 @@ then you can run:
 `kubectl patch -n argocd app <infra-app-name> --patch-file capi_patch.yaml --type merge`
 
 
+### Making Changes
+
+As with all apps, you can edit values by setting overrides i.e.
+
+To change the flavor name for instance - make a cluster-specific file and place in `clusters/<cluster-name>/overrides/capi-overrides.yaml` 
+
+```
+# capi-overrides.yaml
+
+openstack-cluster:
+  nodeGroupDefaults:
+    machineFlavor: l3.tiny   
+
+  controlPlane: 
+    machineFlavor: l3.micro 
+
+```
+
+and add it to `.additionalValueFiles` in `clusters/<cluster-name>/values.yaml` like so
+
+```
+# values.yaml
+
+# since capi is an infra chart
+infra:
+  # name should match so it will self-manage
+  - name: <cluster-name>
+    chartName: capi
+    ...
+    additionalValueFiles:
+       # path starts from root of repo
+       - clusters/<cluster-name>/overrides/capi-overrides.yaml
+
+```
+
+
+**NOTE** The name of the override file here is just an example 
+   - it is left to you and repo maintainers to determine how best to organise override files
+
 
 # Repository Structure
 

@@ -1,0 +1,27 @@
+openstack-cluster:
+
+  cloudName: openstack
+
+  kubeNetwork:
+    pods:
+      cidrBlocks:
+        - 10.0.0.0/12
+    services:
+      cidrBlocks:
+        - 10.7.0.0/13
+    serviceDomain: cluster.local
+
+  clusterNetworking:
+    dnsNameservers:
+      - 130.246.209.132
+      - 130.246.209.163
+      - 130.246.208.220
+    externalNetworkId: External
+
+  registryMirrors: { docker.io: ["https://dockerhub.stfc.ac.uk"] }
+
+  apiServer:
+    # we have to manually floating ip once argo-cd is setup
+    enableLoadBalancer: true
+    associateFloatingIP: true
+    port: 6443
