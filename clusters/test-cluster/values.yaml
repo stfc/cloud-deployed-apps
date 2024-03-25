@@ -23,7 +23,7 @@ infra:
   # this allows you to create more than one of the same chart instance 
   #   - useful for creating child clusters
   # this is the same as the cluster name - so it will self-manage
-  - name: vgc59244-test
+  - name: test-cluster
 
     # when true, will disable auto-sync and auto-heal on the argocd app
     disableAutomated: false
@@ -41,7 +41,7 @@ infra:
     # a list of filepaths to cluster-specific values for a given chart
     # overrides defaults set in .valueFiles for that chart
     additionalValueFiles: 
-      - clusters/vgc59244-test/overrides/cluster-self-manage.yaml
+      - clusters/test-cluster/overrides/cluster-self-manage.yaml
 
 
 # specify the apps that argocd should manage 

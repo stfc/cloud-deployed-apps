@@ -15,4 +15,4 @@ openstack-cluster:
   # - if this is for self-managing its <cluster-name>-cloud-credentials and can be found in the cluster namespace
   # - if this is for setting up child cluster you can provide your own credentials secret or use the same one
   # kubectl get secrets -n clusters
-  cloudCredentialsSecretName: vgc59244-test-cloud-credentials
+  cloudCredentialsSecretName: test-cluster-cloud-credentials
