@@ -38,6 +38,6 @@ fi
 
 # Create the App of Apps
 echo "Creating App of Apps for cluster $CLUSTER_NAME..."
-kubectl apply -k ../clusters/"$CLUSTER_NAME"/ -n argocd
+helm upgrade --install argocd-apps ../charts/base -n argocd -f ../charts/base/values.yaml -f ../clusters/$CLUSTER_NAME/values.yaml --wait
 
 echo "ArgoCD installation and configuration completed for cluster $CLUSTER_NAME."
