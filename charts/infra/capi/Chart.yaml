@@ -1,5 +1,5 @@
 apiVersion: v2
-name: cluster-apps
+name: capi-dependencies
 version: 1.0.0
 dependencies:
   - name: openstack-cluster

@@ -7,7 +7,7 @@ global:
 infra:
   - name: vgc59244-test
     disableAutomated: false
-    infraName: capi
+    chartName: capi
     namespace: clusters
     additionalValueFiles: 
       - clusters/vgc59244-test/overrides/cluster-self-manage.yaml
@@ -15,5 +15,5 @@ infra:
 apps:
   - name: argocd
     disableAutomated: false
-    appName: argocd
+    chartName: argocd
     namespace: argocd

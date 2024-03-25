@@ -39,9 +39,17 @@ openstack-cluster:
     ingress:
       # manually have to set ingress floating ip once argo-cd is setup
       enabled: true 
-      # need this for argocd ingress to work
-      extraArgs:
-        enable-ssl-passthrough: "true"
+      nginx:
+        release:
+          values:
+            # we'll add this manually
+            # service:
+            #   loadBalancerIP: # "130.x.y.z"
+
+            # need this for argocd ingress to work
+            controller:
+              extraArgs:
+                enable-ssl-passthrough: true
 
   nodeGroups:
     - name: default-md-0

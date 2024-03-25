@@ -13,11 +13,11 @@ spec:
   source:
     repoURL: {{ $.Values.global.spec.source.repoURL }}
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
-    path: charts/apps/{{ .appName }}
+    path: charts/apps/{{ .chartName }}
     helm:
       valueFiles:
-        {{- range $appName, $paths := $.Values.appValueFiles }}
-        {{- if eq $appName $app.appName }}
+        {{- range $chartName, $paths := $.Values.valueFiles }}
+        {{- if eq $chartName $app.chartName }}
         {{- range $path := $paths }}
         - ../../../{{ $path }}
         {{- end }}
@@ -26,7 +26,7 @@ spec:
 
         {{- if .additionalValueFiles }}
         {{- range $path := .additionalValueFiles }}
-        - ../../../{ $path }}
+        - ../../../{{ $path }}
         {{- end }}
         {{- end }}
   syncPolicy:

@@ -16,16 +16,3 @@ openstack-cluster:
   # - if this is for setting up child cluster you can provide your own credentials secret or use the same one
   # kubectl get secrets -n clusters
   cloudCredentialsSecretName: vgc59244-test-cloud-credentials
-
-  addons:
-    ingress:
-      enabled: true
-      nginx:
-        release:
-          values:
-            # need this for argocd ingress to work
-            controller:
-              extraArgs:
-                enable-ssl-passthrough: true
-
-      # manually add floating ip 
