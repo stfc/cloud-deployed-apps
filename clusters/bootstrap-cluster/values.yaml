@@ -39,8 +39,10 @@ infra:
     # a list of filepaths to cluster-specific values for a given chart
     # overrides defaults set in .valueFiles for that chart
     additionalValueFiles: 
-      - clusters/test-cluster/overrides/cluster-self-manage.yaml
-
+      - clusters/bootstrap-cluster/overrides/cluster-self-manage.yaml
+  
+  # - name: test-cluster
+  #   chartName: capi
 
 # specify the apps that argocd should manage 
 # these are charts located in charts/apps
