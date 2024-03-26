@@ -1,12 +1,12 @@
 global:
   # name of the cluster 
   # MUST MATCH THE DIRECTORY NAME
-  clusterName: vgc59244-test
+  clusterName: test-cluster
   spec:
     source:
       # change this to point to a different git SHA 
       # useful when working on dev branches
-      targetRevision: HEAD
+      targetRevision: main
 
       # change this to point to a different fork 
       # useful when working on dev forks
@@ -33,7 +33,7 @@ infra:
 
     # (optional) can define the git SHA to sync against specific to the app
     # This overrides global.spec.targetRevision
-    # targetRevision: HEAD
+    # targetRevision: main
 
     # namespace where the chart contents will be installed to
     namespace: clusters
@@ -62,7 +62,7 @@ apps:
 
     # (optional) can define the git SHA to sync against specific to the app
     # This overrides global.spec.targetRevision
-    # targetRevision: HEAD
+    # targetRevision: main
 
     # namespace where the chart contents will be installed to
     namespace: argocd

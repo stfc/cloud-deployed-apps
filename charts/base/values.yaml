@@ -5,10 +5,11 @@ global:
     source:
       # specifies source repo 
       # you'll only want to change this if you make a fork
-      repoURL: https://github.com/anish-mudaraddi/cloud-deployed-apps.git
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git
       
-      # default target revision to use - if cluster values don't specify
-      targetRevision: HEAD
+      # default target revision to use - branch "main" by default
+      # can be overidden on a per-cluster basis
+      targetRevision: main
       
       # namespace where the argocd applications will be installed to 
       namespace: argocd

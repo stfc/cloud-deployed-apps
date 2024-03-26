@@ -1,12 +1,53 @@
 # Making Changes To This Repo
 
-There are two main reasons you will want to make changes to this repository
 
-1. Adding a new cluster to be managed
-2. Adding/Editing existing charts that clusters can use
 
-In both cases, you will want to follow this workflow
 
+# Making Changes
+
+There are 4 main reasons you will want to make changes to this repository
+
+In all cases, you will want to follow this developemnt workflow for testing changes (see below)
+
+
+## 1. Adding a Cluster
+
+1. Add a directory in `clusters/<name-of-your-cluster>`
+
+2. Create `clusters/<name-of-your-cluster>/values.yaml` file and define apps and infra you'd like argocd to manage
+
+see `clusters/test-cluster/values.yaml` for a good example
+
+
+## 2. Making Changes to Existing Apps/Clusters
+
+Look in `charts/base/values.yaml` in `valuesFiles` to see locations where default values files are defined for the app
+
+For cluster specific values - you'll have to look in `clusters/<cluster-name>/values.yaml` for an app declaration. Cluster-specific values files for an app are listed under `additionalValuesFiles` for the app definition (under `apps`) if set.
+
+**NOTE: make sure to update the Chart version if you make any changes to custom `templates` files**
+
+
+## 3. Making Version Changes to Apps
+
+To make updates to versions you can edit the `Chart.yaml` for the specific version you want to change and make a PR. 
+
+If you suspect it's a breaking change or something needs tweaking, follow the development workflow below. 
+
+Minor version changes should be fine to make a PR for without needing to make a fork, we can test on our staging clusters
+
+
+## 4. Adding a New Chart
+
+To add a new chart follow these steps
+
+
+
+# Testing Changes
+
+Whether you are contributing or reviewing changes, its a good idea to create a cluster to test changes before pushing to `main`.
+
+Here are the steps you would follow to test changes
 
 ## 1. Create a new K8s cluster for testing changes 
 
@@ -33,60 +74,47 @@ If you decide to make a fork follow these steps:
 
 Clone the forked repo onto your VM/local machine
 
-**Your first commit should be to:** 
-   - change the global `repoURL` in `charts/base/values.yaml` and
+**make a commit that:** 
+   - changes the global `repoURL` in `charts/base/values.yaml`
 
 ```
 # charts/base/values.yaml
 
 global:
-...
-spec:
-    ...
-    repoURL: <change this to your github fork link>
+  ...
+  spec:
+      ...
+      repoURL: <change this to your github fork link>
 ```
+This will make it so that when you deploy a cluster using this fork, it will use your latest changes on your fork rather than `stfc` repo.
 
 
 ## 2b. Make a branch off of this repo
 
 If you decide to make a branch follow these steps:
 
-create a branch for development off of main (`HEAD`)
+create a branch for development off of `main`
+
+**make a commit that:** 
+  - changes the `targetRevision` in `charts/base/values.yaml`
+
+ 
+```
+# clusters/<name-of-cluster>/values.yaml
+
+global:
+  ...
+  spec:
+    ...
+    targetRevision: <change this to your github branch or commit SHA>
+
+```
+
+This will make it so that when you deploy a cluster using this branch, it will use your latest changes on your branch rather than `main`.
 
 
 ## 3. Make your changes
-
-
-### 1. Adding a Cluster
-
-1. Add a directory in `clusters/<name-of-your-cluster>`
-
-2. Create `clusters/<name-of-your-cluster>/values.yaml` file and define apps and infra you'd like argocd to manage
-
-see `clusters/test-cluster/values.yaml` for a good example
-
-
-### 2. Making Changes to Existing Apps/Clusters
-
-Look in `charts/base/values.yaml` in `valuesFiles` to see locations where default values files are defined for the app
-
-For cluster specific values - you'll have to look in `clusters/<cluster-name>/values.yaml` for an app declaration. Cluster-specific values files for an app are listed under `additionalValuesFiles` for the app definition (under `apps`) if set.
-
-**NOTE: make sure to update the Chart version if you make any changes to custom `templates` files**
-
-
-### 3. Making Version Changes to Apps
-
-To make updates to versions you can edit the `Chart.yaml` for the specific version you want to change and make a PR. 
-
-If you suspect it's a breaking change or something needs tweaking, follow the development workflow below. 
-
-Minor version changes should be fine to make a PR for without needing to make a fork, we can test on our staging clusters
-
-
-### 4. Adding a New Chart
-
-To add a new chart follow these steps
+see Making Changes section below
 
 #### 1. Create a directory under `charts/` for your app
 - if its an app place in `charts/apps`
@@ -145,26 +173,6 @@ valueFiles:
 Then you can toggle on/off this app in existing clusters - best to test with the `test-cluster` archetype
 
 
-### 5b. If working from a branch
-
-Before you deploy your changes, commit them and get the latest git SHA hash.
-
-Make another commit to modify `targetRevision` for the cluster you want to deploy to
-
-```
-# clusters/<name-of-cluster>/values.yaml
-
-global:
-  spec:
-    source:
-      targetRevision: <git SHA here>
-
-```
-
-This will make it so that when you deploy your cluster, it will use your latest changes rather than `main` `HEAD`.
-
-**NOTE**: further commits will require an extra commit to update the git SHA so argocd pickes up the latest changes you make
-
 ### 4. Deploy your changes to your test cluster
 
 run the following to deploy your cluster
@@ -203,11 +211,11 @@ It's a good idea to keep the cluster around until the PR has been reviewed and a
 ### 6. Delete your testing cluster 
 
 ### 6a. If working on a fork
-Your last commit should be to change back the `repoURL` to this repo link: https://github.com/stfc/cloud-deployed-apps.git
+Your last commit should be to change back the `repoURL` to this repo link: `https://github.com/stfc/cloud-deployed-apps.git`
 
 
 ### 6b. If working on a branch
-Your last commit should be to change back the `gitRevision` back to `HEAD`
+Your last commit should be to change back the `gitRevision` back to `main`
 
 ### 7. Mark the PR ready for review and get it merged
 

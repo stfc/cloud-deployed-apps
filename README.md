@@ -128,10 +128,10 @@ This repository contains the following directories:
 ## Using targetRevision
 
 For this repo, we'll aim to keep a single branch `main` to be used by ArgoCD. 
-All clusters will use the config from the latest commit `HEAD`
+All clusters will use the config from the latest commit on `main` branch
 
 This has several advantages:
-     - `HEAD` will contain all up-to-date information for all our clusters
+     - `main` will contain all up-to-date information for all our clusters
      - small updates can be applied quickly to all applicable clusters
 
 However, this makes our production clusters potentially unstable. 
@@ -146,7 +146,7 @@ To set `targetRevision` for the whole cluster modify the file `clusters/<cluster
 global:
   spec:
     source:
-      targetRevision: <git commit SHA>
+      targetRevision: <git commit SHA or branch name>
 ```
 
 to set `targetRevision` for a specific app modify the file `clusters/<cluster-name>/values.yaml`:
@@ -154,7 +154,7 @@ to set `targetRevision` for a specific app modify the file `clusters/<cluster-na
 ```
 apps:
   - name: <app-name>
-    targetRevision: <git commit SHA>
+    targetRevision: <git commit SHA or banch name>
     ...
 ```
 
