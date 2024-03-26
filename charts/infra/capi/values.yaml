@@ -1,4 +1,5 @@
 openstack-cluster:
+  cloudCredentialsSecretName: "{{$.Values.clusterName}}-cloud-credentials"
 
   addons:
     monitoring:
