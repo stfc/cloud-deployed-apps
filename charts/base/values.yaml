@@ -9,7 +9,7 @@ global:
       
       # default target revision to use - branch "main" by default
       # can be overidden on a per-cluster basis
-      targetRevision: main
+      targetRevision: fooBar
       
       # namespace where the argocd applications will be installed to 
       namespace: argocd
