@@ -1,0 +1,12 @@
+
+openstack-cluster:
+
+  controlPlane: 
+    machineCount: 3
+  
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 2
+  
+  nodeGroupDefaults:
+    machineFlavor: l2.tiny
