@@ -12,15 +12,15 @@ fi
 CLUSTER_NAME=$1
 ARGOCD_NAMESPACE="argocd"
 
-# Install ArgoCD using Helm
-echo "Installing ArgoCD on cluster $CLUSTER_NAME using Helm..."
+echo "Adding the ArgoCD Helm repository..."
 helm repo add argo https://argoproj.github.io/argo-helm
+
+echo "Installing ArgoCD on cluster $CLUSTER_NAME using Helm..."
 helm upgrade --install argocd argo/argo-cd \
   --create-namespace \
   --namespace $ARGOCD_NAMESPACE \
   --wait
 
-# Wait for ArgoCD to be ready
 echo "Waiting for ArgoCD to be ready..."
 while ! kubectl get pods -n $ARGOCD_NAMESPACE -l app.kubernetes.io/name=argocd-server --field-selector=status.phase=Running 2>/dev/null | grep -q "Running"; do
   sleep 5
@@ -31,14 +31,12 @@ ARGOCD_PWD=$(kubectl -n $ARGOCD_NAMESPACE get secrets argocd-initial-admin-secre
 echo "THIS IS THE ARGOCD PASSWORD - CHANGE IT AFTER CREATION $ARGOCD_PWD"
 
 if [ ! -f /usr/local/bin/argocd ]; then
-  # Install the ArgoCD CLI
   echo "Installing ArgoCD CLI..."
   curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
   sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
   rm argocd-linux-amd64
 fi
 
-# Create the App of Apps
 echo "Creating App of Apps for cluster $CLUSTER_NAME..."
 helm upgrade --install argocd-apps ../charts/base -n argocd -f ../charts/base/values.yaml -f ../clusters/$CLUSTER_NAME/values.yaml --wait
 
