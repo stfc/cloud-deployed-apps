@@ -10,3 +10,5 @@ openstack-cluster:
   
   nodeGroupDefaults:
     machineFlavor: l2.tiny
+
+  cloudCredentialsSecretName: bootstrap-cluster-cloud-credentials

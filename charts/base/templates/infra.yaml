@@ -15,9 +15,6 @@ spec:
     targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
     path: charts/infra/{{ .chartName }}
     helm:
-      parameters:
-        - name: clusterName
-          value: {{ $.Values.global.clusterName }}
       valueFiles:
         {{- range $chartName, $paths := $.Values.valueFiles }}
         {{- if eq $chartName $infra.chartName }}
