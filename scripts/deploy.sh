@@ -13,7 +13,7 @@ ARGOCD_NAMESPACE="argocd"
 # Install ArgoCD using Helm
 echo "Installing ArgoCD on cluster $CLUSTER_NAME using Helm..."
 helm repo add argo https://argoproj.github.io/argo-helm
-helm install argocd argo/argo-cd \
+helm upgrade --install argocd argo/argo-cd \
   --create-namespace \
   --namespace $ARGOCD_NAMESPACE \
   --wait
