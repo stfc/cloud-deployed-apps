@@ -18,8 +18,6 @@ global:
 # NOTE: starts at the root level of the repo
 
 valueFiles:
-  argocd:
-  - charts/apps/argocd/values.yaml
   capi:
   - charts/infra/capi/values.yaml
   - charts/infra/capi/certs.yaml

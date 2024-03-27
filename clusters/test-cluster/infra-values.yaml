@@ -1,0 +1,52 @@
+# put apps you want argocd to manage here - charts for these apps should be located in charts/apps/
+
+global:
+  # name of the cluster 
+  # MUST MATCH THE DIRECTORY NAME
+  clusterName: test-cluster
+  spec:
+    source:
+      # change this to point to a different git SHA 
+      # useful when working on dev branches
+      targetRevision: main
+
+      # change this to point to a different fork 
+      # useful when working on dev forks
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git
+
+      # namespace where the argocd applications will be installed to 
+      namespace: argocd
+
+
+
+# specify the infrastructure to install on this cluster
+# argocd will manage this infrastructure
+
+# infra is NOT system agnostic - infra is dependent on the cluster its installed on
+
+
+infra:
+  # below is an example of how to have argocd self-manage a cluster
+
+  # name of argcod application
+  # NOTE: to set argo to manage the infrastructure required for 
+  # a self-managing CAPI cluster - this should match the cluster-name 
+  - name: test-cluster
+
+    # when true, will disable auto-sync and auto-heal on the argocd app
+    disableAutomated: false
+
+    # name of the chart to install - corresponds with chart name in charts/infra/
+    chartName: capi
+
+    # namespace where the chart contents will be installed to
+    namespace: clusters
+
+    # a list of filepaths to cluster-specific values for a given chart
+    # overrides defaults set in .valueFiles for that chart
+    additionalValueFiles: 
+      - clusters/test-cluster/overrides/cluster-self-manage.yaml
+
+    # (optional) can define the git SHA to sync against specific to the app
+    # This overrides global.spec.targetRevision
+    # targetRevision: main

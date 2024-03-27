@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: appofapps
+  name: argocd
   namespace: argocd
 spec:
   destination:
@@ -11,11 +11,11 @@ spec:
   source:
     repoURL: {{ $.Values.global.spec.source.repoURL }}
     targetRevision: {{ $.Values.global.spec.source.targetRevision }}
-    path: charts/base/
+    path: charts/argocd/
     helm:
       valueFiles:
         - ./values.yaml
-        - ../../clusters/{{ $.Values.global.clusterName }}/values.yaml
+        - ../../clusters/{{ $.Values.global.clusterName }}/argocd-values.yaml
   syncPolicy:
     automated:
       prune: true
@@ -23,3 +23,4 @@ spec:
       allowEmpty: true
     syncOptions:
       - CreateNamespace=true
+---
