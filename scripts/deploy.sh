@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 if [ -z "$1" ]; then
   echo "Please provide the cluster name as an argument."
   echo "Usage: $0 <cluster-name>"
