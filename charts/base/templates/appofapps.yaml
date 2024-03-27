@@ -14,8 +14,8 @@ spec:
     path: charts/base/
     helm:
       valueFiles:
-        - ../../clusters/{{ $.Values.global.clusterName }}/values.yaml
         - ./values.yaml
+        - ../../clusters/{{ $.Values.global.clusterName }}/values.yaml
   syncPolicy:
     automated:
       prune: true
