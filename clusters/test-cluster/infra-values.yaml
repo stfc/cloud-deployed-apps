@@ -45,7 +45,7 @@ infra:
     # a list of filepaths to cluster-specific values for a given chart
     # overrides defaults set in .valueFiles for that chart
     additionalValueFiles: 
-      - clusters/test-cluster/overrides/cluster-self-manage.yaml
+      - clusters/test-cluster/overrides/infra/cluster-self-manage.yaml
 
     # (optional) can define the git SHA to sync against specific to the app
     # This overrides global.spec.targetRevision
