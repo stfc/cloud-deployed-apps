@@ -1,0 +1,43 @@
+{{- if .Values.apps -}}
+{{- range $app := .Values.apps -}}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .name }}
+  namespace: argocd
+spec:
+  destination:
+    namespace: {{ .namespace }}
+    server: https://kubernetes.default.svc
+  project: {{ $.Values.global.spec.project }}
+  source:
+    repoURL: {{ $.Values.global.spec.source.repoURL }}
+    targetRevision: {{ default $.Values.global.spec.source.targetRevision .targetRevision }}
+    path: charts/apps/{{ .chartName }}
+    helm:
+      valueFiles:
+        {{- range $chartName, $paths := $.Values.valueFiles }}
+        {{- if eq $chartName $app.chartName }}
+        {{- range $path := $paths }}
+        - ../../../{{ $path }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+
+        {{- if .additionalValueFiles }}
+        {{- range $path := .additionalValueFiles }}
+        - ../../../{{ $path }}
+        {{- end }}
+        {{- end }}
+  syncPolicy:
+    {{- if not .disableAutomated }}
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    {{- end }}
+    syncOptions:
+      - CreateNamespace=true
+---
+{{- end }}
+{{- end }}
