@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: appofapps
+  name: cloud-deployed-infra
   namespace: argocd
 spec:
   destination:
@@ -11,11 +11,11 @@ spec:
   source:
     repoURL: {{ $.Values.global.spec.source.repoURL }}
     targetRevision: {{ $.Values.global.spec.source.targetRevision }}
-    path: charts/argocd-apps/
+    path: charts/argocd-infra/
     helm:
       valueFiles:
         - ./values.yaml
-        - ../../clusters/{{ $.Values.global.clusterName }}/app-values.yaml
+        - ../../clusters/{{ $.Values.global.clusterName }}/infra-values.yaml
   syncPolicy:
     automated:
       prune: true
