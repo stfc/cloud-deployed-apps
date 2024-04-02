@@ -1,4 +1,3 @@
-
 global:
   clusterName: staging-management-cluster
   spec:
@@ -12,8 +11,15 @@ infra:
     disableAutomated: false
     chartName: capi
     namespace: clusters
-    additionalValueFiles: 
+    additionalValueFiles:
       - clusters/staging-management-cluster/overrides/infra/cluster-self-manage.yaml
+
+  - name: staging-worker
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/staging-worker/overrides/infra/deployment.yaml
 
     # (optional) can define the git SHA to sync against specific to the app
     # This overrides global.spec.targetRevision
