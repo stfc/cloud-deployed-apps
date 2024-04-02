@@ -10,3 +10,14 @@ openstack-cluster:
     machineFlavor: l3.small
 
   cloudCredentialsSecretName: staging-management-cluster-cloud-credentials
+
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                # Temporary for testing DR scenario
+                loadBalancerIP: "130.246.211.226"
