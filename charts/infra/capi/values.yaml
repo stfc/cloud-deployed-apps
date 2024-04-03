@@ -1,4 +1,5 @@
 openstack-cluster:
+  # Default values applied to all clusters unless override supersedes it
 
   addons:
     monitoring:
@@ -11,14 +12,12 @@ openstack-cluster:
           availabilityZone: ceph
     
     ingress:
-      # manually have to set ingress floating ip once argo-cd is setup
       enabled: true 
       nginx:
         release:
           values:
-            # we'll add this manually
-            # service:
-            #   loadBalancerIP: # "130.x.y.z"
+            service:
+              loadBalancerIP:
 
             # need this for argocd ingress to work
             controller:
