@@ -20,7 +20,3 @@ infra:
     namespace: clusters
     additionalValueFiles:
       - clusters/staging-worker/overrides/infra/deployment.yaml
-
-    # (optional) can define the git SHA to sync against specific to the app
-    # This overrides global.spec.targetRevision
-    # targetRevision: main
