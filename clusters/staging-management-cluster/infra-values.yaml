@@ -20,3 +20,10 @@ infra:
     namespace: clusters
     additionalValueFiles:
       - clusters/staging-worker/overrides/infra/deployment.yaml
+
+  - name: david-harbor-test
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/david-harbor-test/overrides/infra/deployment.yaml
