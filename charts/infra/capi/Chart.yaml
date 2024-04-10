@@ -1,0 +1,7 @@
+apiVersion: v2
+name: capi-dependencies
+version: 1.0.0
+dependencies:
+- name: openstack-cluster
+  version: 0.4.1
+  repository: https://stackhpc.github.io/capi-helm-charts
