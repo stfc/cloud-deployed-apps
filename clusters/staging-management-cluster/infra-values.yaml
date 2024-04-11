@@ -27,3 +27,10 @@ infra:
     namespace: clusters
     additionalValueFiles:
       - clusters/david-harbor-test/overrides/infra/deployment.yaml
+
+  - name: akhil-harbor-test
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/akhil-harbor-test/overrides/infra/deployment.yaml
