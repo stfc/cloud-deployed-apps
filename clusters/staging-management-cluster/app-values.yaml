@@ -2,6 +2,6 @@ global:
   clusterName: staging-management-cluster
   spec:
     source:
-      targetRevision: multi-cluster
+      targetRevision: main
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd
