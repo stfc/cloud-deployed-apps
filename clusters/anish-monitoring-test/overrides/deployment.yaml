@@ -19,5 +19,4 @@ openstack-cluster:
           values:
             controller:
               service:
-                # Temp pending move to test.harbor.stfc.ac.uk
                 loadBalancerIP: "130.246.211.60"
