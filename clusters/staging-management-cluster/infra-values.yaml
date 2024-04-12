@@ -40,4 +40,4 @@ infra:
     chartName: capi
     namespace: clusters
     additionalValueFiles:
-      - clusters/anish-test/overrides/infra/deployment.yaml
+      - clusters/anish-monitoring-test/overrides/infra/deployment.yaml
