@@ -37,6 +37,7 @@ infra:
 
   - name: anish-monitoring-test
     disableAutomated: false
+    targetRevision: anish-test-cluster
     chartName: capi
     namespace: clusters
     additionalValueFiles:
