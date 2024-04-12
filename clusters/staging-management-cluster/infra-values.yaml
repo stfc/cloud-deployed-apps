@@ -34,3 +34,10 @@ infra:
     namespace: clusters
     additionalValueFiles:
       - clusters/akhil-harbor-test/overrides/infra/deployment.yaml
+
+  - name: anish-monitoring-test
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/anish-test/overrides/infra/deployment.yaml
