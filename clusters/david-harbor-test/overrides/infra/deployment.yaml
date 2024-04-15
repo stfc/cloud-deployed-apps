@@ -9,7 +9,7 @@ openstack-cluster:
   nodeGroupDefaults:
     machineFlavor: l3.tiny
 
-  cloudCredentialsSecretName: david-cloud-credentials
+  cloudCredentialsSecretName: david-prod-cloud-credentials
 
   addons:
     ingress:
@@ -19,5 +19,4 @@ openstack-cluster:
           values:
             controller:
               service:
-                # Temp pending move to test.harbor.stfc.ac.uk
-                loadBalancerIP: "130.246.211.217"
+                loadBalancerIP: "130.246.211.223"
