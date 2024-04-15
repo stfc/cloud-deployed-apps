@@ -9,7 +9,8 @@ longhorn:
     enabled: "true"
     ingressClassName: nginx
     host: longhorn.example.com
-    tls: false
+    tls: true
+    tlsSecret: tls-keypair
     secureBackends: false
     path: /
 
