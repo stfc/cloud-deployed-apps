@@ -1,6 +1,8 @@
 longhorn:
+
   preUpgradeChecker:
     jobEnabled: false
+
   service:
     ui:
       type: ClusterIP
@@ -16,7 +18,6 @@ longhorn:
 
   serviceMonitor:
     enabled: true
-
 
   longhornManager:
     nodeSelector: 

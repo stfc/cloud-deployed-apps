@@ -68,5 +68,56 @@ argo-cd:
     domain: "argocd.example.io" 
 ```
 
-## Chart Specific Documentation
-No apps yet!
+# Chart Specific Documentation
+
+# Longhorn
+
+Longhorn is a Cloud Native application for presistent block storage.  See [Longhorn docs](https://longhorn.io/docs/latest/).
+
+To deploy Longhorn we utilise the longhorn helm chart. See [Chart Repo](https://github.com/longhorn/longhorn/tree/master/chart).
+
+# Pre-deployment steps
+
+## 1. Label nodes to run longhorn on 
+
+Make sure you have labelled your nodes so that longhorn can use them as storage nodes. You want to label your worker nodes, the default label is `longhorn.demo.io/longhorn-storage-node=true` but you can change this in the cluster-specific values like so:
+
+```
+longhorn:
+  longhornManager:
+    nodeSelector: 
+      # change this to whatever label you want
+      longhorn.demo.io/longhorn-storage-node: "true"
+```
+
+**NOTE:** If you're using `capi` or any other `infra` that you're also managing with argocd - make sure you set these labels accordingly for your cluster. 
+
+For `capi` you can set node labels like so:
+
+```
+openstack-cluster:
+  nodeGroupDefaults:
+    nodeLabels:
+      # change this to whatever label you have set longhorn to use
+      longhorn.demo.io/longhorn-storage-node: true
+```
+
+# 2. Add tls secret 
+
+Longhorn is configured to use TLS by default, therefore a tls secret is required. 
+
+You can create a self-signed cert for testing like so:
+
+```
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out certificate.crt
+```
+
+and create the secret like so:
+
+```
+kubectl create secret tls tls-keypair --key /path/to/privateKey.key --cert /path/to/certificate.crt -n longhorn-system
+```
+
+# Post-deployement steps
+
+None - it should just work
