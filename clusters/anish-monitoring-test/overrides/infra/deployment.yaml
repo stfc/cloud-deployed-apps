@@ -36,12 +36,12 @@ openstack-cluster:
                 ingressClassName: nginx
                 enabled: true
                 hosts: 
-                  - alertmanager-test.staging.nubes.stfc.ac.uk
+                  - alertmanager.test.nubes.stfc.ac.uk
                 paths:
                   - "/"
                 tls: 
                   - hosts: 
-                    - alertmanager-test.staging.nubes.stfc.ac.uk
+                    - alertmanager.test.nubes.stfc.ac.uk
                     secretName: tls-keypair              
                 ingressPerReplica:
                   enabled: false
@@ -152,10 +152,10 @@ openstack-cluster:
                 enabled: true
                 path: /
                 hosts: 
-                  -  grafana-test.staging.nubes.stfc.ac.uk
+                  -  grafana.test.nubes.stfc.ac.uk
                 tls:
                   - hosts: 
-                    - "grafana-test.staging.nubes.stfc.ac.uk"
+                    - "grafana.test.nubes.stfc.ac.uk"
                     secretName: tls-keypair
 
 
@@ -174,10 +174,10 @@ openstack-cluster:
                 paths:
                   - /
                 hosts: 
-                  -  prometheus-test.staging.nubes.stfc.ac.uk
+                  -  prometheus.test.nubes.stfc.ac.uk
                 tls: 
                   - hosts: 
-                    - "prometheus-test.staging.nubes.stfc.ac.uk"
+                    - "prometheus.test.nubes.stfc.ac.uk"
                     secretName: tls-keypair
               
               prometheusSpec:
