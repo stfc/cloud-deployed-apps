@@ -1,25 +1,5 @@
 openstack-cluster:
-  controlPlane:
-    machineCount: 3
-
-  nodeGroups:
-    - name: default-md-0
-      machineCount: 2
-
-  nodeGroupDefaults:
-    machineFlavor: l3.tiny
-
-  cloudCredentialsSecretName: anish-cloud-credentials
-
   addons:
-    ingress:
-      enabled: true
-      nginx:
-        release:
-          values:
-            controller:
-              service:
-                loadBalancerIP: "130.246.211.60"
     monitoring:
       enabled: true
       lokiStack:
@@ -36,13 +16,13 @@ openstack-cluster:
                 ingressClassName: nginx
                 enabled: true
                 hosts: 
-                  - alertmanager-test.staging.nubes.stfc.ac.uk
+                  -  alertmanager.example.com
                 paths:
                   - "/"
                 tls: 
                   - hosts: 
-                    - alertmanager-test.staging.nubes.stfc.ac.uk
-                    secretName: tls-keypair              
+                    - "alertmanager.example.com"
+                    secretName: tls-keypair
                 ingressPerReplica:
                   enabled: false
 
@@ -152,10 +132,10 @@ openstack-cluster:
                 enabled: true
                 path: /
                 hosts: 
-                  -  grafana-test.staging.nubes.stfc.ac.uk
+                  -  grafana.example.com
                 tls:
                   - hosts: 
-                    - "grafana-test.staging.nubes.stfc.ac.uk"
+                    - "grafana.example.com"
                     secretName: tls-keypair
 
 
@@ -174,10 +154,10 @@ openstack-cluster:
                 paths:
                   - /
                 hosts: 
-                  -  prometheus-test.staging.nubes.stfc.ac.uk
+                  -  prometheus.example.com
                 tls: 
                   - hosts: 
-                    - "prometheus-test.staging.nubes.stfc.ac.uk"
+                    - "prometheus.example.com"
                     secretName: tls-keypair
               
               prometheusSpec:
