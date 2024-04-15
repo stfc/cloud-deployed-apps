@@ -7,6 +7,12 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
+
+            defaultRules:
+              additionalRuleLabels:
+                cluster: anish-monitoring-cluster
+                env: dev
+            
             alertmanager:
               enabled: true
               service:
@@ -34,7 +40,6 @@ openstack-cluster:
                   smtp_require_tls: false
 
                 route:
-                  group_by: ['cluster', 'service']
                   group_wait: 30m
                   group_interval: 30m
                   repeat_interval: 2d
@@ -75,11 +80,11 @@ openstack-cluster:
                     send_resolved: true
                     headers:
                       subject: |
-                        {% raw %}
+                        {%- raw %}
                         "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname }}"
-                        {% endraw %}
+                        {%- endraw %}
                     html: |-
-                      {% raw %}
+                      {%- raw %}
                       <h3>You have the following alerts:</h3>
                       {{ range .Alerts }}
                       <p><b>{{.Labels.alertname}}</b>
@@ -91,10 +96,9 @@ openstack-cluster:
                         {{ end }}</ul>
                         {{ .GeneratorURL }}</p>
                       {{ end }}
-                      {% endraw %}
-
+                      {%- endraw %}
                     text: |-
-                      {% raw %}
+                      {%- raw %}
                       You have the following alerts:
                       {{ range .Alerts }}
                       * {{.Labels.alertname}}
@@ -106,14 +110,12 @@ openstack-cluster:
                         {{ end }}
                         {{ .GeneratorURL }}
                       {{ end }}
-                      {% endraw %}
+                      {%- endraw %}
 
                 templates:
                   - '/etc/alertmanager/config/*.tmpl'
 
               alertmanagerSpec:
-                alertmanagerConfigMatcherStrategy: {}
-                alertmanagerConfigSelector: {}
                 # turn off persistent storage so cinder volume doesn't get created
                 # TODO: remove this when cinder creation issue resolved          
                 storage: 
