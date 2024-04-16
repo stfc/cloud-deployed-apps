@@ -1,0 +1,7 @@
+global:
+  clusterName: test-argocd-cluster
+  spec:
+    source:
+      targetRevision: mo-test-argo
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git
+      namespace: argocd
