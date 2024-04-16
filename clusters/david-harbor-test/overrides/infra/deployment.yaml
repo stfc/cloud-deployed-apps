@@ -11,7 +11,7 @@ openstack-cluster:
     nodeLabels:
       longhorn.demo.io/longhorn-storage-node: true
 
-  cloudCredentialsSecretName: david-prod-cloud-credentials
+  cloudCredentialsSecretName: david-cloud-credentials
 
   addons:
     ingress:
@@ -21,4 +21,4 @@ openstack-cluster:
           values:
             controller:
               service:
-                loadBalancerIP: "130.246.211.223"
+                loadBalancerIP: "130.246.211.217"
