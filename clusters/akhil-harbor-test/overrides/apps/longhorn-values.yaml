@@ -1,3 +1,0 @@
-longhorn:
-  ingress:
-    host: longhorn.akhil-harbor-test.com
