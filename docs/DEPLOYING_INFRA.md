@@ -48,6 +48,7 @@ infra:
       - clusters/test-cluster/overrides/infra/infra1.yaml
 
     # (optional) can define the git SHA to sync against specific to the app
+    # this is useful for testing version upgrades on the chart
     # This overrides global.spec.source.targetRevision
     # targetRevision: <other-branch>
 ```
@@ -58,7 +59,9 @@ infra:
 
 The `capi` chart  is used to configure and manage a CAPI cluster itself and any child clusters.  
 
-Cluster API is a tool for provisioning, and operating K8s clusters. We use this tool to run K8s on Openstack. We utilise StackHPCs CAPI Chart to do this - https://github.com/stackhpc/capi-helm-charts
+Cluster API is a tool for provisioning, and operating K8s clusters. We use this tool to run K8s on Openstack. 
+
+We utilise StackHPCs CAPI Chart to do this. See the docs [here](https://github.com/stackhpc/capi-helm-charts)
 
 ## Pre-deployment steps 
 
@@ -71,32 +74,104 @@ Cluster API is a tool for provisioning, and operating K8s clusters. We use this 
 
 **NOTE: By default we enable nginx ingress controller, you can turn this off and skip this step but it's not recommended.**
 
-3. create an file in `overrides/` (if not already done so) and set `cloudCredentialsSecretName: <name-of-cluster>-cloud-credentials` 
+3. create an file in `clusters/<cluster-name>/overrides/infra/deployment.yaml` (if not already done so) and set the following value: 
+
+```
+openstack-cluster:
+  cloudCredentialsSecretName: <name-of-cluster>-cloud-credentials` 
+  
+  # define any cluster-specific capi values here 
+```
 
 **For child cluster**
 
-1. Ensure that there is enough quota on your project to create the child cluster
-    - The child cluster will also require 2 new floating IPs that it will automatically provision
-
-2a. (Optional) create a new clouds.yaml credentials secret for your child cluster 
-
-`kubectl create secret generic <secret-name> --from-file=cacert=./cacert.txt --from-file=clouds.yaml=./clouds.yaml -n clusters`
-
-- `cacert.txt` is the certificate set here - https://github.com/stfc/cloud-capi-values/blob/master/values.yaml#L6-L130 
-
-- `clouds.yaml` is the application credential you want to use for setting up child cluster
-
-2b. (Alternatively) you can re-use the management cluster secret
-
-1. create a file in `overrides/` (if not already done so) for the child cluster and set `cloudCredentialsSecretName: <name-of-management-cluster>-cloud-credentials` 
+1. Ensure that there is enough quota on your project to create the child cluster. The child cluster will also require a new floating IP that it will automatically provision
 
 
-NOTE: we cannot specify the child cluster to use specific floating ips yet - this requires an upstream fix to allow setting these attributes from secrets.
+2. Create a new clouds.yaml credentials secret for your child cluster. 
+
+(Alternatively) you can re-use the management cluster secret - NOT RECOMMENDED. 
+```
+kubectl create secret generic <secret-name> --from-file=cacert=./cacert.txt --from-file=clouds.yaml=./clouds.yaml -n clusters
+```
+
+`cacert.txt` is the certificate set here - https://github.com/stfc/cloud-capi-values/blob/master/values.yaml#L6-L130. Copy this and create a file `/tmp/cacert.txt`
+
+`clouds.yaml` is the application credential you want to use for setting up child cluster
+
+3. Create a file in `clusters/<cluster-name>/overrides/infra/deployment.yaml` (if not already done so) for the child cluster and set the following value:
+```
+openstack-cluster:
+  cloudCredentialsSecretName: <secret-name>
   
+  # define any cluster-specific capi values here 
+```
+
+**NOTE: we cannot specify the child cluster to use specific floating ips yet - this requires an upstream fix to allow setting these attributes from secrets.**
+
+## Setup Nginx Ingress and TLS
+
+1. Specify FIP for Nginx Ingress
+
+nginx-ingress is enabled by default and so if you want it you can enable it and define the floating IP that it should use. Edit the file `deployment.yaml` and add the following
+
+```
+openstack-cluster:
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "xxx.xxx.xxx.xxx"
+```
+
+2. Add TLS Certs
+
+CAPI monitoring (which is enabled by default) requires TLS certs. 
+
+Create a self-signed cert or get one issued. 
+
+To create a self-signed cert:
+
+```
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out certificate.crt
+```
+
+Then to create a secret from a cert - the secret name is for Prometheus, Alertmanager and Grafana is expected to be `tls-keypair` by default:
+
+```
+kubectl create secret tls tls-keypair --cert certificate.crt --key pivateKey.key -n monitoring-system
+```
+
+## Optional Steps
+
+1. (optional) Enable sending monitoring alerts
+
+Monitoring is enabled by default but will not send alerts out unless configured to. 
+In order to turn on alerts - edit the file `deployment.yaml` and add the following
+
+```
+openstack-cluster:
+  addons:
+    monitoring:
+      kubePrometheusStack:
+        release:
+          values:
+            alertmanager:
+              enabled: true
+```
+
+**NOTE: make sure you follow the post-deployment steps too to configure sending emails**
 
 ## Post-deployment
 
-Once you deploy this application - see [Deploying Cluster](./DEPLOYING_CLUSTER.md) - You need to manually set the floating ip for the APIServer and nginx ingress controller
+You need to manually set a few secrets that capi requires - this includes: 
+1. The floating ip for the APIServer
+2. (Optional) The mail server to use to send alerts (If sending alerts)
+3. (Optional) Which email address to send alerts to. (If sending alerts)
 
 **For self-managed cluster**
 
@@ -109,8 +184,12 @@ spec:
       parameters:
       - name: openstack-cluster.apiServer.floatingIP
         value: <APIServer floating ip here>
-      - name: openstack-cluster.addons.ingress.nginx.release.values.controller.service.loadbalancerIP
-        value: <nginx ingress controller floating here>
+      - name: >-
+          openstack-cluster.addons.monitoring.kubePrometheusStack.release.values.alertmanager.config.global.smtp_smarthost
+        value: <hostname>:<port>
+      - name: >-
+          openstack-cluster.addons.monitoring.kubePrometheusStack.release.values.alertmanager.config.receivers[1].email_configs[0].to
+        value: <email-address>
 ```
 
 then you can run: 

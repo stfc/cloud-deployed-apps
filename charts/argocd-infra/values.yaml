@@ -22,3 +22,4 @@ valueFiles:
   - charts/infra/capi/values.yaml
   - charts/infra/capi/certs.yaml
   - charts/infra/capi/networking.yaml
+  - charts/infra/capi/addons/monitoring.yaml

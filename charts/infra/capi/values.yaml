@@ -2,9 +2,6 @@ openstack-cluster:
   # Default values applied to all clusters unless override supersedes it
 
   addons:
-    monitoring:
-      # disabled for now whilst working out how best to configure it
-      enabled: false
 
     openstack:
       csiCinder:
