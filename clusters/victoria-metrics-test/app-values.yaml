@@ -1,0 +1,15 @@
+global:
+  # name of the cluster 
+  # MUST MATCH THE DIRECTORY NAME
+  clusterName: victoria-metrics-test
+
+  spec:
+    source:
+      targetRevision: victoria-metrics-test
+
+      # change this if you're using a fork
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git 
+
+      # namespace where the argocd applications will be installed to 
+      namespace: argocd
+
