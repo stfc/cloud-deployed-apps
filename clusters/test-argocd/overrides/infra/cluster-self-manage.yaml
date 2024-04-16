@@ -1,6 +1,6 @@
 openstack-cluster:
   controlPlane:
-    machineCount: 3
+    machineCount: 5
 
   nodeGroups:
     - name: default-md-0
