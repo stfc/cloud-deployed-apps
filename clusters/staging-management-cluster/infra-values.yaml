@@ -45,7 +45,6 @@ infra:
 
   - name: victoria-metrics-test
     disableAutomated: false
-    targetRevision: victoria-metrics-test
     chartName: capi
     namespace: clusters
     additionalValueFiles:
