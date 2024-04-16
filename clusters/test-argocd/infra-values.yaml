@@ -1,0 +1,23 @@
+global:
+  clusterName: test-argocd-cluster
+  spec:
+    source:
+      targetRevision: mo-test-argo
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git
+      namespace: argocd
+
+infra:
+  - name: test-argocd-cluster
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/test-argocd-cluster/overrides/infra/cluster-self-manage.yaml
+
+#  - name: staging-worker
+#    disableAutomated: false
+#    chartName: capi
+#    namespace: clusters
+#    additionalValueFiles:
+#      - clusters/staging-worker/overrides/infra/deployment.yaml
+

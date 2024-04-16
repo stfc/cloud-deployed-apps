@@ -1,0 +1,22 @@
+openstack-cluster:
+  controlPlane:
+    machineCount: 3
+
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 2
+
+  nodeGroupDefaults:
+    machineFlavor: l3.nano
+
+  cloudCredentialsSecretName: test-argocd-cluster-cloud-credentials
+
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "130.246.211.200"
