@@ -8,6 +8,8 @@ openstack-cluster:
 
   nodeGroupDefaults:
     machineFlavor: l3.tiny
+    nodeLabels:
+      longhorn.demo.io/longhorn-storage-node: true
 
   cloudCredentialsSecretName: david-prod-cloud-credentials
 
