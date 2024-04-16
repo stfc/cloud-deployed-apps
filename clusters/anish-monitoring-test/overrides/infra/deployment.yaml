@@ -55,7 +55,7 @@ openstack-cluster:
                 global:
                   resolve_timeout: 5m
                   smtp_smarthost: 
-                  smtp_from:
+                  smtp_from: cloud-support@stfc.ac.uk
                   smtp_require_tls: false
 
                 route:

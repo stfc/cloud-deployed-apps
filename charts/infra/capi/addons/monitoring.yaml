@@ -14,7 +14,7 @@ openstack-cluster:
                 env: dev
             
             alertmanager:
-              enabled: true
+              enabled: false
               service:
                 type: ClusterIP
               
