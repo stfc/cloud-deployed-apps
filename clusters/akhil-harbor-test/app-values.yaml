@@ -1,0 +1,15 @@
+global:
+  clusterName: akhil-harbor-test
+  spec:
+    source:
+      targetRevision: test-longhorn
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git
+      namespace: argocd
+
+apps:
+  - name: longhorn
+    disableAutomated: false
+    chartName: longhorn
+    namespace: longhorn-system
+    additionalValueFiles:
+      - clusters/akhil-harbor-test/overrides/apps/longhorn-values.yaml
