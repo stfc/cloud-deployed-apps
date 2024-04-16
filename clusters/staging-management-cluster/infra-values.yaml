@@ -42,3 +42,11 @@ infra:
     namespace: clusters
     additionalValueFiles:
       - clusters/anish-monitoring-test/overrides/infra/deployment.yaml
+
+  - name: victoria-metrics-test
+    disableAutomated: false
+    targetRevision: victoria-metrics-test
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/victoria-metrics-test/overrides/infra/deployment.yaml
