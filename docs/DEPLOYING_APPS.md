@@ -120,4 +120,8 @@ kubectl create secret tls tls-keypair --key /path/to/privateKey.key --cert /path
 
 # Post-deployement steps
 
-None - it should just work
+Longhorn is already setup to be the default storageclass - if you're using CAPI you will need to drop csi-cinder storage class as being the default - you can do this by running
+
+```
+kubectl patch storageclass csi-cinder -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+```
