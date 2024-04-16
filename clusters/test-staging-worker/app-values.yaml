@@ -1,7 +1,7 @@
 global:
-  clusterName: staging-worker
+  clusterName: test-staging-worker
   spec:
     source:
-      targetRevision: multi-cluster
+      targetRevision: mo-test-argo
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd

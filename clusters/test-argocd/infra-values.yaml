@@ -14,10 +14,10 @@ infra:
     additionalValueFiles:
       - clusters/test-argocd/overrides/infra/cluster-self-manage.yaml
 
-#  - name: staging-worker
-#    disableAutomated: false
-#    chartName: capi
-#    namespace: clusters
-#    additionalValueFiles:
-#      - clusters/staging-worker/overrides/infra/deployment.yaml
+  - name: test-staging-worker
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/test-staging-worker/overrides/infra/deployment.yaml
 
