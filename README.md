@@ -9,6 +9,7 @@ We use ArgoCD to manage our clusters and each cluster, each cluster has its own 
 # Quick Start
 
 These links assume you have existing clusters or applications to deploy within the repository. If you want to setup a cluster from scratch, you'll need to define a new cluster from the below links first:
+- [Deploying a new cluster from staging cluster](docs/DeployNewCluster.md)
 - [Deploying infrastructure to a cluster](docs/DEPLOYING_INFRA.md) 
 - [Deploying apps to a cluster](docs/DEPLOYING_APPS.md)
 
