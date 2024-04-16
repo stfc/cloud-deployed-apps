@@ -102,21 +102,23 @@ openstack-cluster:
       longhorn.demo.io/longhorn-storage-node: true
 ```
 
-# 2. Add tls secret 
+# 2. (Optional) Add tls secret 
 
-Longhorn is configured to use TLS by default, therefore a tls secret is required. 
+Longhorn is configured to use TLS by default, by default it uses a self-signed certificate which is not secure - recommended to get a proper certificate for production systems.
 
-You can create a self-signed cert for testing like so:
-
-```
-openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out certificate.crt
-```
-
-and create the secret like so:
+you can create the tls secret like so:
 
 ```
-kubectl create secret tls tls-keypair --key /path/to/privateKey.key --cert /path/to/certificate.crt -n longhorn-system
+kubectl create secret tls longhorn-tls-keypair --key /path/to/privateKey.key --cert /path/to/certificate.crt -n longhorn-system
 ```
+
+and set longhorn to use it in cluster-specific values file like so:
+```
+longhorn:
+  ingress:
+    tlsSecret: longhorn-secret
+```
+
 
 # Post-deployement steps
 
@@ -125,3 +127,11 @@ Longhorn is already setup to be the default storageclass - if you're using CAPI 
 ```
 kubectl patch storageclass csi-cinder -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
+
+# Common Problems 
+
+## 1. Longhorn web UI is giving a 500 and ArgoCD is stuck processing
+
+Doing `kubectl get ds -n longhorn-system` shows a deployment with 0/0 instances
+
+**Solution**:  You may be missing annotations on your node, refer to pre-deployment step 1
