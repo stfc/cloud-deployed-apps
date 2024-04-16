@@ -1,0 +1,94 @@
+# Values for victoria-metrics.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+vmselect:
+  horizontalPodAutoscaler:
+    # -- Use HPA for vmselect component
+    enabled: true
+    # -- Maximum replicas for HPA to use to to scale the vmselect component
+    maxReplicas: 7
+    # -- Minimum replicas for HPA to use to scale the vmselect component
+    minReplicas: 3
+    # -- Metric for HPA to use to scale the vmselect component
+    metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 50
+
+  service:
+    type: LoadBalancer
+
+  ingress:
+    # -- Enable deployment of ingress for vmselect component
+    enabled: false
+    # -- Ingress annotations
+    annotations: {}
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: 'true'
+
+vminsert:
+  # Horizontal Pod Autoscaling
+  horizontalPodAutoscaler:
+    # -- Use HPA for vminsert component
+    enabled: true
+    # -- Maximum replicas for HPA to use to to scale the vminsert component
+    maxReplicas: 10
+    # -- Minimum replicas for HPA to use to scale the vminsert component
+    minReplicas: 2
+    # -- Metric for HPA to use to scale the vminsert component
+    metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 50
+
+  service:
+    type: LoadBalancer
+
+  ingress:
+    # -- Enable deployment of ingress for vminsert component
+    enabled: false
+    # -- Ingress annotations
+    annotations: {}
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: 'true'
+    extraLabels: {}
+    # -- Array of host objects
+    hosts: []
+    # - name: vminsert.local
+    #   path: /insert
+    #   port: http
+    # -- Array of TLS objects
+    tls: []
+    #   - secretName: vminsert-ingress-tls
+    #     hosts:
+    #       - vminsert.local
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # -- pathType is only for k8s >= 1.1=
+    pathType: Prefix
+
+vmstorage:
+  podDisruptionBudget:
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 1
+    labels: {}
+  # -- Data retention period. Supported values 1w, 1d, number without measurement means month, e.g. 2 = 2month
+  retentionPeriod: 1
+  replicaCount: 3
+
+  persistentVolume:
+    enabled: false
+    # --  Existing Claim name. Requires vmstorage.persistentVolume.enabled: true. If defined, PVC must be created manually before volume will be bound
+    existingClaim: ""
+
+    size: 100Gi
+    storageClass: ""

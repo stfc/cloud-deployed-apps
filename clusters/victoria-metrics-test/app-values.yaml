@@ -13,3 +13,9 @@ global:
       # namespace where the argocd applications will be installed to 
       namespace: argocd
 
+apps:
+  - name: victoria-metrics-cluster
+    disableAutomated: false
+    chartName: victoria-metrics
+    namespace: argocd    
+
