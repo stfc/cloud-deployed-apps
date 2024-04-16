@@ -9,7 +9,7 @@ openstack-cluster:
   nodeGroupDefaults:
     machineFlavor: l3.nano
 
-  cloudCredentialsSecretName: test-argocd-cluster-cloud-credentials
+  cloudCredentialsSecretName: test-argocd-cloud-credentials
 
   addons:
     ingress:
