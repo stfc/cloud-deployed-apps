@@ -24,6 +24,7 @@ longhorn:
       longhorn.demo.io/longhorn-storage-node: "true"
 
   defaultSettings:
+    taintToleration: "nvidia.com/gpu:NoSchedule"
     snapshotMaxCount: 10
     snapshotDataIntegrity: true
     snapshotDataIntegtrityCronjob: true
@@ -32,5 +33,7 @@ longhorn:
     allowVolumeCreationWithDegradedAvailability: true
 
   persistence:
+    defaultClassReplicaCount: 3
+    defaultDataLocality: disabled
     migratable: "true"
     
