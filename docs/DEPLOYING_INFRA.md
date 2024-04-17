@@ -164,6 +164,41 @@ openstack-cluster:
               enabled: true
 ```
 
+2. (optional) Change the ingress hostnames and or certs for monitoring endpoints
+
+```
+openstack-cluster:
+  addons:
+    monitoring:
+      kubePrometheusStack:
+        release:
+          values:
+            alertmanager:
+              ingress:
+                hosts:
+                  - <alertmanager-hostname>.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - <alertmanager-hostname>.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            prometheus:
+              ingress:
+                hosts:
+                  - <prometheus-hostname>.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - <prometheus-hostname>.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            grafana:
+              ingress:
+                hosts:
+                  - <grafana-hostname>.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - <grafana-hostname>.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+``` 
+
 **NOTE: make sure you follow the post-deployment steps too to configure sending emails**
 
 ## Post-deployment

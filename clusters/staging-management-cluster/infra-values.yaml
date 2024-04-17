@@ -12,7 +12,7 @@ infra:
     chartName: capi
     namespace: clusters
     additionalValueFiles:
-      - clusters/staging-management-cluster/overrides/infra/cluster-self-manage.yaml
+      - clusters/staging-management-cluster/overrides/infra/deployment.yaml
 
   - name: staging-worker
     disableAutomated: false
