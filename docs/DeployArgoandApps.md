@@ -48,6 +48,12 @@ touch charts/apps/<app-name>/values.yaml
 ```
 
 ## 2. Content of Chart.yaml
+>[!CAUTION]
+> `<app-name>` needs to match the helm chart you want to add
+
+>[!TIP]
+> You can get the name by doing helm search repo if you've added the repo beforehand
+
 The app-chart-repository is the location where the helm chart is hosted
 ```
 apiVersion: v2
@@ -55,6 +61,7 @@ name: <app-name>
 version: 1.0.0
 dependencies:
 - name: <app-name>
+  version: <chart-version>
   repository: <app-chart-repository>
 ```
 
@@ -100,10 +107,7 @@ apps:
  
    #namespace where the chart contents will be installed to
   namespace: argocd
- 
-   #(optional) can define the git SHA to sync against specific to the app
-   #This overrides global.spec.targetRevision
-  targetRevision: main
+
 ```
 
 ## 5. Applying changes

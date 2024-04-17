@@ -80,7 +80,7 @@ global:
 
 ## 6. Contents for argocd-values.yaml
 ### The domain name is set by you, if you are testing a good name to use is "test.argocd.stfc.nubes.ac.uk" and you will have to add it to your etc hosts link for this
-`https://www.wikihow.com/Edit-the-Hosts-File-on-Windows#:~:text=1%20Open%20the%20Start%20menu%2C%20and%20click%20%22Computer%22.,the%20file%20directly%20to%20your%20%22etc%22...%20See%20More`
+[Editing Hosts file on Windows](https://www.wikihow.com/Edit-the-Hosts-File-on-Windows#:~:text=1%20Open%20the%20Start%20menu%2C%20and%20click%20%22Computer%22.,the%20file%20directly%20to%20your%20%22etc%22...%20See%20More)
   
 ```
 argo-cd:
