@@ -1,7 +1,7 @@
-# Deploying a Worker Cluster from the Staging Cluster
+# Deploying a Worker Cluster from the management Cluster
 
-### In this doc there will be the steps needed to deploy a child cluster off of a staging cluster.
-(This expects that you have been given access to a Staging Cluster)
+### In this doc there will be the steps needed to deploy a child cluster off of a management cluster.
+(This expects that you have been given access to a management Cluster)
 
 ## Steps for the new cluster 
 (from a machine that can push to the github repo)
@@ -21,10 +21,13 @@ clusters/<your-cluster-name>/app-values.yaml
 clusters/<your-cluster-name>/argocd-values.yaml
 ```
 ## 3. Create a secret for the cluster to use
-From the staging cluster, create a directory to work in
+From the management cluster, create a directory to work in
+
 3a. Create a clouds.yaml in the directory (An application credential file for target project)
+
 3b. Create a file ca.cert.txt with the certificate here - https://github.com/stfc/cloud-capi-values/blob/master/values.yaml#L6-L130
-#Ensure you've only copied the two certs from -----BEGIN CERTIFICATE----- to -----END CERTIFICATE-----
+
+#### Ensure you've only copied the two certs from -----BEGIN CERTIFICATE----- to -----END CERTIFICATE-----
 
 3c. Lastly run `kubectl create secret generic <secret-name> --from-file=cacert=./cacert.txt --from-file=clouds.yaml=./clouds.yaml -n clusters` to create the secret
 
@@ -86,7 +89,7 @@ argo-cd:
     domain: "<your-domain-name>" 
 ```
 
-## 7. Add the cluster into the staging cluster
+## 7. Add the cluster into the management cluster
 inside `clusters/staging-management-cluster/infra-values.yaml`
 
 Add a section like above sections using template:
@@ -99,11 +102,39 @@ Add a section like above sections using template:
       - clusters/<your-cluster-name>/overrides/infra/deployment.yaml
 ```
 
-## 8. Once these changes are merged then the staging cluster will start to spin up your new cluster
+## 8. Accessing the new cluster
+
+Once these changes are merged then the management cluster will start to spin up your new cluster
 
 You will then be able to retrieve the kubeconfig for the new cluster once it is spun up
+
+(From the management cluster)
 
 Use `clusterctl describe cluster $CLUSTER_NAME -n clusters` to check the status of the cluster
 
 Use `clusterctl get kubeconfig $CLUSTER_NAME -n clusters > $CLUSTER_NAME.kubeconfig` to output the kubeconfig for the cluster
 
+You can then copy the kubeconfig into your own VM
+
+> [!TIP]
+> Copy the kubeconfig directly from host A to B (using the current SSH session), if you don't have agent forwarding
+> `scp -3 user@mgmt-ip:/tmp/worker.kubeconfig user@new-vm:/tmp`
+
+
+## 9. Deploy ArgoCD onto your new cluster
+
+9a. From the VM you have copied the kubeconfig onto you need to clone into the repo and switch to your branch
+
+```
+git clone https://github.com/stfc/cloud-deployed-apps.git
+cd cloud-deployed-apps
+git switch <your-branch>
+```
+9b. Deploy argoCD onto your cluster with the script
+
+```
+cd scripts
+./deploy.sh <your-cluster-name>
+```
+
+## You can then move onto [Adding apps into your Worker ArgoCD](DeployArgoandApps.md)
