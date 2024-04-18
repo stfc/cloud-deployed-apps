@@ -34,21 +34,22 @@ openstack-cluster:
 
               config:
                 global:
-                  resolve_timeout: 5m
+                  resolve_timeout: 1h
                   smtp_smarthost: 
                   smtp_from:
                   smtp_require_tls: false
 
                 route:
-                  group_wait: 30m
-                  group_interval: 30m
-                  repeat_interval: 2d
                   receiver: 'null'
                   routes:
                     - receiver: 'null'
                       matchers:
                       - alertname = "Watchdog"
                     - receiver: default-receiver
+                      group_wait: 30m
+                      group_interval: 30m
+                      repeat_interval: 2d
+                      group_by: ['cluster', 'service']
                       matchers:
                       - severity=~"critical|warning"
 
