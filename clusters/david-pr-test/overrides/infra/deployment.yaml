@@ -1,0 +1,6 @@
+openstack-cluster:
+  cloudCredentialsSecretName: david-cloud-credentials
+
+  addons:
+    ingress:
+      enabled: false
