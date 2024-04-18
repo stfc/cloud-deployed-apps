@@ -10,7 +10,7 @@ openstack-cluster:
 
             defaultRules:
               additionalRuleLabels:
-                cluster: anish-monitoring-cluster
+                cluster: test-cluster
                 env: dev
             
             alertmanager:

@@ -25,6 +25,10 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
+            defaultRules:
+              additionalRuleLabels:
+                cluster: staging-management-cluster
+                env: dev
             alertmanager:
               enabled: true
               ingress:

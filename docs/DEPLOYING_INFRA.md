@@ -143,7 +143,7 @@ openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.k
 Then to create a secret from a cert - the secret name is for Prometheus, Alertmanager and Grafana is expected to be `tls-keypair` by default:
 
 ```
-kubectl create secret tls tls-keypair --cert certificate.crt --key pivateKey.key -n monitoring-system
+kubectl create secret tls tls-keypair --cert certificate.crt --key privateKey.key -n monitoring-system
 ```
 
 ## Optional Steps
@@ -160,11 +160,15 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
+            defaultRules:
+              additionalRuleLabels:
+                cluster: <name of cluster>
+                env: <dev/prod>
             alertmanager:
               enabled: true
 ```
 
-2. (optional) Change the ingress hostnames and or certs for monitoring endpoints
+1. (optional) Change the ingress hostnames for monitoring endpoints
 
 ```
 openstack-cluster:
