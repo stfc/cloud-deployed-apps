@@ -16,7 +16,7 @@ longhorn:
 
   longhornManager:
     nodeSelector: 
-      longhorn.demo.io/longhorn-storage-node: "true"
+      longhorn.store.nodeselect/longhorn-storage-node: "true"
 
   defaultSettings:
     taintToleration: "nvidia.com/gpu:NoSchedule"

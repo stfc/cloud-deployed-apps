@@ -26,6 +26,8 @@ openstack-cluster:
       machineCount: 2
 
   nodeGroupDefaults:
+    nodeLabels:
+      longhorn.store.nodeselect/longhorn-storage-node: true
     autoscale: false
     machineFlavor: l3.micro
 

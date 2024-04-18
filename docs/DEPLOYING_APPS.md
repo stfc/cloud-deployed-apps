@@ -78,31 +78,7 @@ To deploy Longhorn we utilise the longhorn helm chart. See [Chart Repo](https://
 
 # Pre-deployment steps
 
-## 1. Label nodes to run longhorn on 
-
-Make sure you have labelled your nodes so that longhorn can use them as storage nodes. You want to label your worker nodes, the default label is `longhorn.demo.io/longhorn-storage-node=true` but you can change this in the cluster-specific values like so:
-
-```
-longhorn:
-  longhornManager:
-    nodeSelector: 
-      # change this to whatever label you want
-      longhorn.demo.io/longhorn-storage-node: "true"
-```
-
-**NOTE:** If you're using `capi` or any other `infra` that you're also managing with argocd - make sure you set these labels accordingly for your cluster. 
-
-For `capi` you can set node labels like so:
-
-```
-openstack-cluster:
-  nodeGroupDefaults:
-    nodeLabels:
-      # change this to whatever label you have set longhorn to use
-      longhorn.demo.io/longhorn-storage-node: true
-```
-
-# 2. (Optional) Add tls secret 
+# 1. (Optional) Add tls secret 
 
 Longhorn is configured to use TLS by default, by default it uses a self-signed certificate which is not secure - recommended to get a proper certificate for production systems.
 
