@@ -2,11 +2,11 @@
 
 This section outlines how to set up a cluster to run ArgoCD.
 
-[!NOTE]
-This documentation assumes that you already have a kubernetes cluster. To create a cluster, see [Cluster API Setup](https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup)
+> [!NOTE]
+> This documentation assumes that you already have a kubernetes cluster. To create a cluster, see [Cluster API Setup](https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup)
 
-[!TIP]
-Make sure you have a floating IP allocated to be used for ingress for ArgoCD.
+> [!TIP]
+> Make sure you have a floating IP allocated to be used for ingress for ArgoCD.
 
 
 **Starting From Scratch:** Start from [Deploying a new cluster](#deploying-a-new-cluster)
@@ -119,8 +119,8 @@ global:
       targetRevision: main 
 ```
 
-[!NOTE]
-Ensure that `app-values.yaml` cluster-specific global settings have been modified to point to your branch or fork **even if you are not deploying any apps.**
+> [!NOTE]
+> Ensure that `app-values.yaml` cluster-specific global settings have been modified to point to your branch or fork **even if you are not deploying any apps.**
 
 - This is because argocd uses global config set in `app-values.yaml` to configure and manage itself
 
@@ -147,8 +147,8 @@ For each app/infra you've enabled, see if there are any post-deployment steps yo
 Make a PR to add your new cluster config so it can be tracked in `main`. Get someone to review your changes - they should spin up the cluster themselves using your branch
 
 Once everyone is happy make one final commit.
-[!WARNING]
-This will likely make you cluster go out-of-sync
+> [!WARNING]
+> This will likely make your cluster go out-of-sync
 
 #### If using a branch
 
