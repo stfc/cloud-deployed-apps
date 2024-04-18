@@ -78,7 +78,7 @@ To deploy Longhorn we utilise the longhorn helm chart. See [Chart Repo](https://
 
 # Pre-deployment steps
 
-# 1. Label nodes to run longhorn on
+# 1. (Optional) Label nodes to run longhorn on
 
 Make sure you have labelled your nodes so that longhorn can use them as storage nodes. You want to label your worker nodes, the default label is `longhorn.demo.io/longhorn-storage-node=true` but you can change this in the cluster-specific values like so:	
 
