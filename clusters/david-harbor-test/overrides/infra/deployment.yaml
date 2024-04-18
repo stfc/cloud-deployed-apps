@@ -21,4 +21,5 @@ openstack-cluster:
           values:
             controller:
               service:
-                loadBalancerIP: "130.246.211.217"
+                # test.harbor.stfc.ac.uk
+                loadBalancerIP: "130.246.211.223"
