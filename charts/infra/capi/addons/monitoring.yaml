@@ -10,7 +10,8 @@ openstack-cluster:
 
             defaultRules:
               additionalRuleLabels:
-                cluster: test-cluster
+                # these values used for alerting only - part of the email subject tag-line
+                cluster: not-set
                 env: dev
             
             alertmanager:
