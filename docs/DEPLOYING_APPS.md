@@ -92,7 +92,7 @@ longhorn:
 
 **NOTE:** If you're NOT using `capi` - make sure you set these labels accordingly for your cluster. 	
 
-For `capi` you can set node labels like so:	
+If you want to change the node labels that capi uses - you can do so like this: 
 
 ```	
 openstack-cluster:	
