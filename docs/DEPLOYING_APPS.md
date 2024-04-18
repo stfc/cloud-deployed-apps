@@ -90,7 +90,7 @@ longhorn:
       longhorn.store.nodeselect/longhorn-storage-node: true	
 ```	
 
-**NOTE:** If you're using `capi` or any other `infra` that you're also managing with argocd - make sure you set these labels accordingly for your cluster. 	
+**NOTE:** If you're NOT using `capi` - make sure you set these labels accordingly for your cluster. 	
 
 For `capi` you can set node labels like so:	
 
