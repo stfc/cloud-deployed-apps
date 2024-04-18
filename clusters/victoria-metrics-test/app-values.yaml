@@ -19,3 +19,7 @@ apps:
     chartName: victoria-metrics
     namespace: argocd    
 
+  - name: longhorn
+    disableAutomated: false
+    chartName: longhorn
+    namespace: argocd

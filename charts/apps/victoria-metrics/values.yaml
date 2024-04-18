@@ -86,9 +86,9 @@ vmstorage:
   replicaCount: 3
 
   persistentVolume:
-    enabled: false
+    enabled: true
     # --  Existing Claim name. Requires vmstorage.persistentVolume.enabled: true. If defined, PVC must be created manually before volume will be bound
     existingClaim: ""
 
-    size: 100Gi
-    storageClass: ""
+    size: 10Gi
+    storageClass: "longhorn"
