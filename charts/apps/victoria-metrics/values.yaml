@@ -44,21 +44,14 @@ victoria-metrics-cluster:
       # ingressClassName: nginx
       # -- pathType is only for k8s >= 1.1=
       pathType: Prefix
-  
+
   vmstorage:
-    podDisruptionBudget:
-      enabled: false
-      # minAvailable: 1
-      # maxUnavailable: 1
-      labels: {}
-    # -- Data retention period. Supported values 1w, 1d, number without measurement means month, e.g. 2 = 2month
-    retentionPeriod: 1
+    retentionPeriod: "1" # month
     replicaCount: 3
-  
+
     persistentVolume:
       enabled: true
-      # --  Existing Claim name. Requires vmstorage.persistentVolume.enabled: true. If defined, PVC must be created manually before volume will be bound
       existingClaim: ""
-  
+
       size: 10Gi
       storageClass: "longhorn"
