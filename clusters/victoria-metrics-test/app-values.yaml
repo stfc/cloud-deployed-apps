@@ -1,23 +1,23 @@
 global:
-  # name of the cluster 
+  # name of the cluster
   # MUST MATCH THE DIRECTORY NAME
   clusterName: victoria-metrics-test
 
   spec:
     source:
-      targetRevision: victoria-metrics-test
+      targetRevision: victoria-metrics-pr
 
       # change this if you're using a fork
-      repoURL: https://github.com/stfc/cloud-deployed-apps.git 
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git
 
-      # namespace where the argocd applications will be installed to 
+      # namespace where the argocd applications will be installed to
       namespace: argocd
 
 apps:
   - name: victoria-metrics-cluster
     disableAutomated: false
     chartName: victoria-metrics
-    namespace: argocd    
+    namespace: argocd
 
   - name: longhorn
     disableAutomated: false
