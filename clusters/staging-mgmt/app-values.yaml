@@ -1,5 +1,5 @@
 global:
-  clusterName: staging-management-cluster
+  clusterName: staging-mgmt
   spec:
     source:
       targetRevision: main

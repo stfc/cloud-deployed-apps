@@ -1,5 +1,5 @@
 global:
-  clusterName: staging-management-cluster
+  clusterName: staging-mgmt
   spec:
     source:
       targetRevision: main
@@ -7,12 +7,12 @@ global:
       namespace: argocd
 
 infra:
-  - name: staging-management-cluster
+  - name: staging-mgmt-cluster
     disableAutomated: false
     chartName: capi
     namespace: clusters
     additionalValueFiles:
-      - clusters/staging-management-cluster/overrides/infra/deployment.yaml
+      - clusters/staging-mgmt-cluster/overrides/infra/deployment.yaml
 
   - name: staging-worker
     disableAutomated: false
