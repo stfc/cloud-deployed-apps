@@ -25,6 +25,11 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
+            defaultRules:
+              additionalRuleLabels:
+                # these values used for alerting only - part of the email subject tag-line
+                cluster: prod-mgmt
+                env: prod
             alertmanager:
               enabled: true
               ingress:
