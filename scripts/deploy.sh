@@ -38,6 +38,10 @@ if [ ! -f /usr/local/bin/argocd ]; then
 fi
 
 echo "Creating App of Apps for cluster $CLUSTER_NAME..."
+# Required to install cert-manager as a dependency
+helm dependency update ../charts/argocd-apps
+kubectl create namespace cert-manager || true
+
 helm upgrade --install argocd-apps ../charts/argocd-apps -n argocd -f ../charts/argocd-apps/values.yaml -f ../clusters/$CLUSTER_NAME/app-values.yaml --wait
 
 if [ -f "../clusters/$CLUSTER_NAME/infra-values.yaml" ]; then

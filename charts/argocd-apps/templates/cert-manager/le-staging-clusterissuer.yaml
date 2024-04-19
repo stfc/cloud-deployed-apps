@@ -1,0 +1,21 @@
+{{- if index .Values "cert-manager" "enabled" -}}
+{{- if index .Values "cert-manager" "le-staging" "enabled" -}}
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
+    # For staging we explicitly leave this blank, as we don't need renewal emails...etc.
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: le-staging-account-key
+    solvers:
+    - http01:
+        ingress:
+          # Assuming you have used the CAPI Addons Ingress Controller
+          ingressClassName: nginx
+{{- end }}
+{{- end }}

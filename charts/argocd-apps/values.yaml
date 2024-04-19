@@ -13,3 +13,20 @@ global:
 
       # namespace where the argocd applications will be installed to
       namespace: argocd
+
+cert-manager:
+  enabled: true
+
+  # Various issuers which are available
+  self-signed:
+    enabled: true
+
+  le-staging:
+    enabled: false
+
+  le-prod:
+    enabled: false
+
+  # From the cert-manager chart
+  namespace: cert-manager
+  installCRDs: true
