@@ -2,6 +2,11 @@ global:
   clusterName: prod-mgmt
   spec:
     source:
-      targetRevision: main
+      targetRevision: 000cf30993bd7fb191281ad3e5da7c4ddd95aba6
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd
+
+# repoint cloud-deployed-apps application to point to main so we pick up latest changes
+# in case we move global targetRevision 
+cloudDeployedApps:
+  targetRevision: main
