@@ -3,25 +3,10 @@
 # Declare variables to be passed into your templates.
 victoria-metrics-cluster:
   vmselect:
-    horizontalPodAutoscaler:
-      # -- Use HPA for vmselect component
-      enabled: true
-      # -- Maximum replicas for HPA to use to to scale the vmselect component
-      maxReplicas: 7
-      # -- Minimum replicas for HPA to use to scale the vmselect component
-      minReplicas: 3
-      # -- Metric for HPA to use to scale the vmselect component
-      metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 50
-  
+    replicaCount: 5
     service:
       type: LoadBalancer
-  
+
     ingress:
       # -- Enable deployment of ingress for vmselect component
       enabled: false
@@ -29,28 +14,13 @@ victoria-metrics-cluster:
       annotations: {}
       #   kubernetes.io/ingress.class: nginx
       #   kubernetes.io/tls-acme: 'true'
-  
+
   vminsert:
-    # Horizontal Pod Autoscaling
-    horizontalPodAutoscaler:
-      # -- Use HPA for vminsert component
-      enabled: true
-      # -- Maximum replicas for HPA to use to to scale the vminsert component
-      maxReplicas: 10
-      # -- Minimum replicas for HPA to use to scale the vminsert component
-      minReplicas: 2
-      # -- Metric for HPA to use to scale the vminsert component
-      metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 50
-  
+    replicaCount: 3
+
     service:
       type: LoadBalancer
-  
+
     ingress:
       # -- Enable deployment of ingress for vminsert component
       enabled: false
