@@ -1,0 +1,48 @@
+openstack-cluster:
+
+  cloudCredentialsSecretName: prod-mgmt-cloud-credentials
+
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "130.246.81.161"
+
+    monitoring:
+      kubePrometheusStack:
+        release:
+          values:
+            defaultRules:
+              additionalRuleLabels:
+                # these values used for alerting only - part of the email subject tag-line
+                cluster: prod-mgmt
+                env: prod
+            alertmanager:
+              enabled: true
+              ingress:
+                hosts:
+                  - alertmanager-mgmt.prod.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - alertmanager-mgmt.prod.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            prometheus:
+              ingress:
+                hosts:
+                  - prometheus-mgmt.prod.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - prometheus-mgmt.prod.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            grafana:
+              ingress:
+                hosts:
+                  - grafana-mgmt.prod.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - grafana-mgmt.prod.nubes.stfc.ac.uk
+                    secretName: tls-keypair

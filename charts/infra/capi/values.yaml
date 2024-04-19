@@ -45,11 +45,10 @@ openstack-cluster:
   additionalPackages: []
 
   controlPlane:
+    machineCount: 5
     remediationStrategy:
       retryPeriod: 20m0s
       minHealthyPeriod: 1h0m0s
-
-    machineCount: 5
     machineFlavor: l3.nano
 
   kubernetesVersion: "1.28.7"
