@@ -2,6 +2,6 @@ global:
   clusterName: prod-mgmt
   spec:
     source:
-      targetRevision: prod
+      targetRevision: main
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd

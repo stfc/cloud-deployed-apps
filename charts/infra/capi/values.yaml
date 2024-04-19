@@ -27,7 +27,7 @@ openstack-cluster:
 
   nodeGroupDefaults:
     autoscale: false
-    machineFlavor: l3.nano
+    machineFlavor: l3.micro
 
     healthCheck:
       enabled: true
@@ -45,7 +45,7 @@ openstack-cluster:
   additionalPackages: []
 
   controlPlane:
-    machineCount: 3
+    machineCount: 5
     remediationStrategy:
       retryPeriod: 20m0s
       minHealthyPeriod: 1h0m0s
