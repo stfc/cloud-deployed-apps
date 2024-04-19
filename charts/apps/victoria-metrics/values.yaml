@@ -1,8 +1,6 @@
 victoria-metrics-cluster:
   vmselect:
     replicaCount: 5
-    service:
-      type: Ingress
 
     ingress:
       enabled: true
@@ -18,9 +16,6 @@ victoria-metrics-cluster:
 
   vminsert:
     replicaCount: 3
-
-    service:
-      type: Ingress
 
     ingress:
       enabled: true
