@@ -18,6 +18,8 @@ apps:
     disableAutomated: false
     chartName: victoria-metrics
     namespace: argocd
+    additionalValueFiles:
+      - clusters/victoria-metrics-test/overrides/apps/victoria-metrics.yaml
 
   - name: longhorn
     disableAutomated: false
