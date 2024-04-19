@@ -17,7 +17,7 @@ apps:
   - name: victoria-metrics-cluster
     disableAutomated: false
     chartName: victoria-metrics
-    namespace: argocd
+    namespace: victoria-metrics
     additionalValueFiles:
       - clusters/victoria-metrics-test/overrides/apps/victoria-metrics.yaml
 
