@@ -10,7 +10,11 @@ spec:
   project: {{ $.Values.global.spec.project }}
   source:
     repoURL: {{ $.Values.global.spec.source.repoURL }}
-    targetRevision: {{ default $.Values.global.spec.source.targetRevision $.Values.cloudDeployedInfra.targetRevision }}
+    targetRevision: {{ if $.Values.cloudDeployedInfra }}
+      {{ default .Values.cloudDeployedInfra.targetRevision .Values.global.spec.source.targetRevision }}
+    {{ else }}
+      {{ .Values.global.spec.source.targetRevision }}
+    {{ end }}
     path: charts/argocd-infra/
     helm:
       valueFiles:
