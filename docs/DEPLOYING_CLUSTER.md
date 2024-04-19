@@ -6,7 +6,7 @@ This section outlines how to set up a cluster to run ArgoCD.
 > This documentation assumes that you already have a kubernetes cluster. To create a cluster, see [Cluster API Setup](https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup)
 
 > [!TIP]
-> Make sure you have a floating IP allocated to be used for ingress for ArgoCD.
+> Make sure you have a floating IP allocated if you are planning to use ingress.
 
 
 **Starting From Scratch:** Start from [Deploying a new cluster](#deploying-a-new-cluster)
@@ -43,34 +43,10 @@ clusters/
 If you want to modify an existing cluster, there should already be an existing directory in `clusters` with the same name as the cluster you want to modify. Clone this repository and create a new branch for development, or create a fork of the repo.
 
 
-### 4. (Optional) Configure cluster-specific values
+### 4 - (Optional) Configure cluster-specific values
 
 If not already done, you can specify which apps you want to `app-values.yaml`
-- If starting an ArgoCD cluster from scratch, you will need to configure the `cluster-self-manage.yaml` file. This shoudl look similar to this:
-```yaml
-openstack-cluster:
-  controlPlane:
-    machineCount: 3
-
-  nodeGroups:
-    - name: default-md-0
-      machineCount: 2
-
-  nodeGroupDefaults:
-    machineFlavor: l3.nano
-
-  cloudCredentialsSecretName: <CLUSTER-NAME>-cloud-credentials
-
-  addons:
-    ingress:
-      enabled: true
-      nginx:
-        release:
-          values:
-            controller:
-              service:
-                loadBalancerIP: "<FLOATING-IP>"
-```
+- If starting an ArgoCD cluster from scratch, you will need to configure the `cluster-self-manage.yaml` file. See `clusters/staging-management-cluster/overrides/infra/deployment.yaml` for reference.
 
 - see [Deploying Apps](./DEPLOYING_APPS.md) for how to configure apps and argocd
 
