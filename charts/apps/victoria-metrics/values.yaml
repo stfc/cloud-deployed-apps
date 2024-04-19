@@ -5,45 +5,37 @@ victoria-metrics-cluster:
   vmselect:
     replicaCount: 5
     service:
-      type: LoadBalancer
+      type: Ingress
 
     ingress:
-      # -- Enable deployment of ingress for vmselect component
-      enabled: false
-      # -- Ingress annotations
-      annotations: {}
-      #   kubernetes.io/ingress.class: nginx
-      #   kubernetes.io/tls-acme: 'true'
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - name: # select.vm.example.com
+          path: /
+          port: http
+      tls:
+        - secretName: vm-ingress-tls
+          hosts:
+            # - select.vm.example.com
 
   vminsert:
     replicaCount: 3
 
     service:
-      type: LoadBalancer
+      type: Ingress
 
     ingress:
-      # -- Enable deployment of ingress for vminsert component
-      enabled: false
-      # -- Ingress annotations
-      annotations: {}
-      #   kubernetes.io/ingress.class: nginx
-      #   kubernetes.io/tls-acme: 'true'
-      extraLabels: {}
-      # -- Array of host objects
-      hosts: []
-      # - name: vminsert.local
-      #   path: /insert
-      #   port: http
-      # -- Array of TLS objects
-      tls: []
-      #   - secretName: vminsert-ingress-tls
-      #     hosts:
-      #       - vminsert.local
-      # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-      # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-      # ingressClassName: nginx
-      # -- pathType is only for k8s >= 1.1=
-      pathType: Prefix
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - name: # insert.vm.example.com
+          path: /
+          port: http
+      tls:
+        - secretName: vm-ingress-tls
+          hosts:
+            # - insert.vm.example.com
 
   vmstorage:
     retentionPeriod: "1" # month
