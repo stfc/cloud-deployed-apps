@@ -1,0 +1,4 @@
+argo-cd:
+  global: 
+    # default is argocd.example.com
+    domain: "argocd-vm.cape.nubes.stfc.ac.uk" 

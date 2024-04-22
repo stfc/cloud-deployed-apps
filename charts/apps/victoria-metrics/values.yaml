@@ -6,32 +6,32 @@ victoria-metrics-cluster:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - name: # select.vm.example.com
+        - name: select.vm.example.com
           path: /
           port: http
       tls:
         - secretName: vm-ingress-tls
           hosts:
-            # - select.vm.example.com
+            - select.vm.example.com
 
   vminsert:
-    replicaCount: 3
+    replicaCount: 5
 
     ingress:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - name: # insert.vm.example.com
+        - name: insert.vm.example.com
           path: /
           port: http
       tls:
         - secretName: vm-ingress-tls
           hosts:
-            # - insert.vm.example.com
+            - insert.vm.example.com
 
   vmstorage:
     retentionPeriod: "1" # month
-    replicaCount: 3
+    replicaCount: 5
 
     persistentVolume:
       enabled: true

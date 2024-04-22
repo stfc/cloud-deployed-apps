@@ -1,0 +1,27 @@
+global:
+  # name of the cluster
+  # MUST MATCH THE DIRECTORY NAME
+  clusterName: victoria-metrics-prod
+
+  spec:
+    source:
+      targetRevision: victoria-metrics-pr
+
+      # change this if you're using a fork
+      repoURL: https://github.com/stfc/cloud-deployed-apps.git
+
+      # namespace where the argocd applications will be installed to
+      namespace: argocd
+
+apps:
+  - name: victoria-metrics-prod
+    disableAutomated: false
+    chartName: victoria-metrics
+    namespace: victoria-metrics
+    additionalValueFiles:
+      - clusters/victoria-metrics-prod/overrides/apps/victoria-metrics.yaml
+
+  - name: longhorn
+    disableAutomated: false
+    chartName: longhorn
+    namespace: argocd
