@@ -19,7 +19,7 @@ openstack-cluster:
           values:
             controller:
               service:
-                loadBalancerIP: "130.246.211.91"
+                loadBalancerIP: "130.246.211.178"
 
     monitoring:
       kubePrometheusStack:
