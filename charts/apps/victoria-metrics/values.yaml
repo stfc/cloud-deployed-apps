@@ -30,7 +30,7 @@ victoria-metrics-cluster:
             - insert.vm.example.com
 
   vmstorage:
-    retentionPeriod: "1" # month
+    retentionPeriod: 1 # month
     replicaCount: 5
 
     persistentVolume:
