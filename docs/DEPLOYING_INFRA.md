@@ -109,6 +109,15 @@ openstack-cluster:
 
 **NOTE: we cannot specify the child cluster to use specific floating ips yet - this requires an upstream fix to allow setting these attributes from secrets.**
 
+4. Set the external network ID for either prod or dev openstack
+Edit the file `clusters/<cluster-name>/overrides/infra/deployment.yaml`:
+```
+openstack-cluster:
+  externalNetworkId: # "External" network ID
+```
+You can find the "External" network's ID by looking in "Networks" on the openstack UI and cicking on the "External" network - the value for `ID` is what you want  
+
+
 ## Setup Nginx Ingress and TLS
 
 1. Specify FIP for Nginx Ingress
