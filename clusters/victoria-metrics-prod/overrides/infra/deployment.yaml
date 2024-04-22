@@ -9,7 +9,7 @@ openstack-cluster:
   nodeGroupDefaults:
     machineFlavor: l6.c32
 
-  cloudCredentialsSecretName: victoria-metrics-test-cloud-credentials
+  cloudCredentialsSecretName: victoria-metrics-project-app-creds
 
   clusterNetworking:
     externalNetworkId: 5283f642-8bd8-48b6-8608-fa3006ff4539 # Prod External network ID
