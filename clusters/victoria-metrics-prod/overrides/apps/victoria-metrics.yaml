@@ -1,0 +1,22 @@
+victoria-metrics-cluster:
+  vmselect:
+    ingress:
+      hosts:
+        - name: select.vm.cape.stfc.ac.uk
+          path: /
+          port: http
+      tls:
+        - secretName: vm-ingress-tls
+          hosts:
+            - select.vm.cape.stfc.ac.uk
+
+  vminsert:
+    ingress:
+      hosts:
+        - name: insert.vm.cape.stfc.ac.uk
+          path: /
+          port: http
+      tls:
+        - secretName: vm-ingress-tls
+          hosts:
+            - insert.vm.cape.stfc.ac.uk

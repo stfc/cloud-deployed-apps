@@ -1,0 +1,26 @@
+openstack-cluster:
+  controlPlane:
+    machineCount: 5
+
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 11
+
+  nodeGroupDefaults:
+    machineFlavor: l6.c32
+
+  cloudCredentialsSecretName: victoria-metrics-test-cloud-credentials
+
+  clusterNetworking:
+    externalNetworkId: 5283f642-8bd8-48b6-8608-fa3006ff4539 # Prod External network ID
+
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                # ingress ip in Victoria-Metrics project on prod
+                loadBalancerIP: "130.246.213.141"
