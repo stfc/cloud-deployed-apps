@@ -78,29 +78,44 @@ To deploy Longhorn we utilise the longhorn helm chart. See [Chart Repo](https://
 
 # Pre-deployment steps
 
-## 1. Label nodes to run longhorn on 
+# 1. (Optional) Label nodes to run longhorn on
 
-Make sure you have labelled your nodes so that longhorn can use them as storage nodes. You want to label your worker nodes, the default label is `longhorn.demo.io/longhorn-storage-node=true` but you can change this in the cluster-specific values like so:
+Make sure you have labelled your nodes so that longhorn can use them as storage nodes. 
 
-```
-longhorn:
-  longhornManager:
-    nodeSelector: 
-      # change this to whatever label you want
-      longhorn.demo.io/longhorn-storage-node: "true"
-```
+If you're also managing `capi`, these are set for you - so you don't need to do anything.  
 
-**NOTE:** If you're using `capi` or any other `infra` that you're also managing with argocd - make sure you set these labels accordingly for your cluster. 
+You want to label your worker nodes, the default label is `longhorn.store.nodeselect/longhorn-storage-node: "true`  
 
-For `capi` you can set node labels like so:
+You can change this in the cluster-specific values like so:	
 
-```
-openstack-cluster:
-  nodeGroupDefaults:
-    nodeLabels:
-      # change this to whatever label you have set longhorn to use
-      longhorn.demo.io/longhorn-storage-node: true
-```
+```	
+longhorn:	
+  longhornManager:	
+    nodeSelector: 	
+      # change this to whatever label you want	
+      longhorn.store.nodeselect/longhorn-storage-node: true	
+```	
+
+**NOTE:** If you're NOT using `capi` - make sure you set these labels accordingly for your cluster. 	
+
+If you want to change the node labels that capi uses - you can do so like this: 
+
+```	
+openstack-cluster:	
+  nodeGroupDefaults:	
+    nodeLabels:	
+      # change this to whatever label you have set longhorn to use	
+      longhorn.store.nodeselect/longhorn-storage-node: true
+```	
+
+# 2. (Optional) Add tls secret 	
+
+
+Longhorn is configured to use TLS by default, by default it uses a self-signed certificate which is not secure - recommended to get a proper certificate for production systems.	Longhorn is configured to use TLS by default, by default it uses a self-signed certificate which is not secure - recommended to get a proper certificate for production systems.
+
+
+Footer
+
 
 # 2. (Optional) Add tls secret 
 
