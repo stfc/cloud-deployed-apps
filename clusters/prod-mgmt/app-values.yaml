@@ -2,7 +2,7 @@ global:
   clusterName: prod-mgmt
   spec:
     source:
-      targetRevision: prod-v1.0.0
+      targetRevision: prod-v1.0.1-vm
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd
 

@@ -5,13 +5,16 @@ global:
 
   spec:
     source:
-      targetRevision: victoria-metrics-pr
+      targetRevision: prod-v1.0.1-vm
 
       # change this if you're using a fork
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
 
       # namespace where the argocd applications will be installed to
       namespace: argocd
+
+cloudDeployedApps:
+  targetRevision: main
 
 apps:
   - name: victoria-metrics-prod
