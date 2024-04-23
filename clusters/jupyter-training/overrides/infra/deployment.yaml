@@ -9,10 +9,10 @@ openstack-cluster:
       machineCount: 20
       machineFlavor: g-a4000-ref.x1
     - name: md-rtx4000
-      machineCount: 40
+      machineCount: 35
       machineFlavor: g-rtx4000-ref.x1
     - name: md-a4000
-      machineCount: 25
+      machineCount: 30
       machineFlavor: g-a4000.x1
 
   nodeGroupDefaults:
