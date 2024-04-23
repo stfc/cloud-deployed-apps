@@ -5,7 +5,7 @@ global:
 
   spec:
     source:
-      targetRevision: ee416c990aa8c5ced5469a854066985319e9b147
+      targetRevision: prod
 
       # change this if you're using a fork
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
