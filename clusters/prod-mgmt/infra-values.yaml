@@ -2,14 +2,9 @@ global:
   clusterName: prod-mgmt
   spec:
     source:
-      targetRevision: prod-v1.0.0
+      targetRevision: main
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd
-
-# repoint cloud-deployed-infra application to point to main so we pick up latest changes
-# in case we move global targetRevision 
-cloudDeployedInfra:
-  targetRevision: main
 
 infra:
   - name: prod-mgmt
@@ -18,3 +13,10 @@ infra:
     namespace: clusters
     additionalValueFiles:
       - clusters/prod-mgmt/overrides/infra/deployment.yaml
+
+  - name: victoria-metrics-prod
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/victoria-metrics-prod/overrides/infra/deployment.yaml
