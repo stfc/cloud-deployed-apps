@@ -23,3 +23,39 @@ openstack-cluster:
   # - if this is for setting up child cluster you can provide your own credentials secret or use the same one
   # kubectl get secrets -n clusters
   cloudCredentialsSecretName: jupyter-training-cloud-credentials
+
+  addons:
+    monitoring:
+    kubePrometheusStack:
+      release:
+        values:
+          defaultRules:
+            additionalRuleLabels:
+              # these values used for alerting only - part of the email subject tag-line
+              cluster: jupyter-training
+              env: prod
+          alertmanager:
+            enabled: true
+            ingress:
+              hosts:
+                - alertmanager-jupyter-training.prod.nubes.stfc.ac.uk
+              tls:
+                - hosts: 
+                  - alertmanager-jupyter-training.prod.nubes.stfc.ac.uk
+                  secretName: tls-keypair
+          prometheus:
+            ingress:
+              hosts:
+                - prometheus-jupyter-training.prod.nubes.stfc.ac.uk
+              tls:
+                - hosts: 
+                  - prometheus-jupyter-training.prod.nubes.stfc.ac.uk
+                  secretName: tls-keypair
+          grafana:
+            ingress:
+              hosts:
+                - grafana-jupyter-training.prod.nubes.stfc.ac.uk
+              tls:
+                - hosts: 
+                  - grafana-jupyter-training.prod.nubes.stfc.ac.uk
+                  secretName: tls-keypair
