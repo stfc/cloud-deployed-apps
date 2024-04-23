@@ -1,7 +1,7 @@
 global:
   # name of the cluster
   # MUST MATCH THE DIRECTORY NAME
-  clusterName: victoria-metrics-prod
+  clusterName: vm-prod
 
   spec:
     source:
@@ -14,12 +14,12 @@ global:
       namespace: argocd
 
 apps:
-  - name: victoria-metrics-prod
+  - name: vm-prod
     disableAutomated: false
     chartName: victoria-metrics
     namespace: victoria-metrics
     additionalValueFiles:
-      - clusters/victoria-metrics-prod/overrides/apps/victoria-metrics.yaml
+      - clusters/vm-prod/overrides/apps/victoria-metrics.yaml
 
   - name: longhorn
     disableAutomated: false
