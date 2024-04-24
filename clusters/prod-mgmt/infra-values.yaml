@@ -27,3 +27,10 @@ infra:
     namespace: clusters
     additionalValueFiles:
       - clusters/vm-prod/overrides/infra/deployment.yaml
+
+  - name: prod-worker
+    disableAutomated: false
+    chartName: capi
+    namespace: clusters
+    additionalValueFiles:
+      - clusters/prod-worker/overrides/infra/deployment.yaml
