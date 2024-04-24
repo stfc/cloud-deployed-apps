@@ -35,6 +35,7 @@ openstack-cluster:
 
               config:
                 global:
+                  # how long to wait until a resolved message comes in - if an alert has been sent and was subsequently resolved
                   resolve_timeout: 1h
                   smtp_smarthost: 
                   smtp_from:
@@ -47,8 +48,18 @@ openstack-cluster:
                       matchers:
                       - alertname = "Watchdog"
                     - receiver: default-receiver
-                      group_wait: 30m
-                      group_interval: 30m
+                      # how long the alert needs to be firing before we send an alert
+                      # this is high so more likely that issues k8s resolves by itself will be ignored
+                      group_wait: 1h
+
+                      # how long to wait before sending another alert 
+                      # - which ALSO contains more alerts belonging to the same group
+                      # - we don't want to clog up the ticket queue with the same alert - so just send the same ticket again after our SLA expires
+                      group_interval: 2d
+
+                      # how long to wait before sending the same alert if not fixed
+                      # - we don't want to clog up the ticket queue with the same alert - so just send the same ticket again after our SLA expires
+                      # different from group_interval - because it should contain the same info in the email
                       repeat_interval: 2d
                       group_by: ['cluster', 'service']
                       matchers:
