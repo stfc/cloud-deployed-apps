@@ -1,0 +1,41 @@
+openstack-cluster:
+  clusterNetworking:
+    externalNetworkId: 5283f642-8bd8-48b6-8608-fa3006ff4539 # Prod External network ID
+
+  cloudCredentialsSecretName: prod-mgmt-cloud-credentials
+
+  addons:
+    monitoring:
+      kubePrometheusStack:
+        release:
+          values:
+            defaultRules:
+              additionalRuleLabels:
+                # these values used for alerting only - part of the email subject tag-line
+                cluster: prod-worker
+                env: prod
+            alertmanager:
+              enabled: true
+              ingress:
+                hosts:
+                  - alertmanager-worker.prod.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - alertmanager-worker.prod.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            prometheus:
+              ingress:
+                hosts:
+                  - prometheus-worker.prod.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - prometheus-worker.prod.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            grafana:
+              ingress:
+                hosts:
+                  - grafana-worker.prod.nubes.stfc.ac.uk
+                tls:
+                  - hosts: 
+                    - grafana-worker.prod.nubes.stfc.ac.uk
+                    secretName: tls-keypair
