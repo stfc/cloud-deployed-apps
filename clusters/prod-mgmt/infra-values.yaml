@@ -21,9 +21,9 @@ infra:
     additionalValueFiles:
       - clusters/jupyter-training/overrides/infra/deployment.yaml
 
-  - name: victoria-metrics-prod
+  - name: vm-prod
     disableAutomated: false
     chartName: capi
     namespace: clusters
     additionalValueFiles:
-      - clusters/victoria-metrics-prod/overrides/infra/deployment.yaml
+      - clusters/vm-prod/overrides/infra/deployment.yaml
