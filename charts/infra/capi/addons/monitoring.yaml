@@ -50,7 +50,7 @@ openstack-cluster:
                     - receiver: default-receiver
                       # how long the alert needs to be firing before we send an alert
                       # this is high so more likely that issues k8s resolves by itself will be ignored
-                      group_wait: 1h
+                      group_wait: 30m
 
                       # how long to wait before sending another alert 
                       # - which ALSO contains any new alerts belonging to the same group (if they get triggered after the initial alert is sent)
