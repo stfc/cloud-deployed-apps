@@ -53,7 +53,7 @@ openstack-cluster:
                       group_wait: 1h
 
                       # how long to wait before sending another alert 
-                      # - which ALSO contains more alerts belonging to the same group
+                      # - which ALSO contains any new alerts belonging to the same group (if they get triggered after the initial alert is sent)
                       # - we don't want to clog up the ticket queue with the same alert - so just send the same ticket again after our SLA expires
                       group_interval: 2d
 
