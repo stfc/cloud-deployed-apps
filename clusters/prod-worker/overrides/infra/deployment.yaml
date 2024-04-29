@@ -1,7 +1,4 @@
 openstack-cluster:
-  clusterNetworking:
-    externalNetworkId: 5283f642-8bd8-48b6-8608-fa3006ff4539 # Prod External network ID
-
   cloudCredentialsSecretName: prod-mgmt-cloud-credentials
 
   addons:
