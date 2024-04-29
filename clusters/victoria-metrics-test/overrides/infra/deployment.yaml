@@ -9,9 +9,6 @@ openstack-cluster:
   nodeGroupDefaults:
     machineFlavor: l3.nano
 
-  clusterNetworking:
-    externalNetworkId: 0dc30001-edfb-4137-be76-8e51f38fd650 # Dev External network ID
-
   cloudCredentialsSecretName: victoria-metrics-test-cloud-credentials
 
   addons:
