@@ -1,6 +1,4 @@
 cert-manager:
-  enabled: true
-
   # Various issuers which are available
   self-signed:
     enabled: true

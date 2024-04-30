@@ -13,3 +13,7 @@ global:
 
       # namespace where the argocd applications will be installed to
       namespace: argocd
+
+cert-manager:
+  enabled: true
+  namespace: cert-manager

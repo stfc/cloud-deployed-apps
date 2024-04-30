@@ -5,12 +5,3 @@ global:
       targetRevision: Add_cert_manager
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd
-
-cert-manager:
-  enabled: true
-  self-signed:
-    enabled: true
-  le-staging:
-    enabled: true
-  le-prod:
-    enabled: true
