@@ -1,3 +1,0 @@
-# Ignore charts that are brought in as a dependency
-charts/
-Chart.lock
