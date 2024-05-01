@@ -6,6 +6,6 @@ dependencies:
   version: 0.4.1
   repository: https://stackhpc.github.io/capi-helm-charts
 # capi-addons
-- name: capi-addons
+- name: capi-addons/cluster-api-addon-provider
   version: 0.5.1
   repository: https://stackhpc.github.io/cluster-api-addon-provider
