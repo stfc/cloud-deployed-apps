@@ -5,6 +5,7 @@ dependencies:
 - name: openstack-cluster
   version: 0.4.1
   repository: https://stackhpc.github.io/capi-helm-charts
-- name: addon-provider
+# capi-addons
+- name: capi-addons
   version: 0.5.1
   repository: https://stackhpc.github.io/cluster-api-addon-provider
