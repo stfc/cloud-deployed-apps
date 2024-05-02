@@ -19,5 +19,5 @@ openstack-cluster:
           values:
             controller:
               service:
-                # ingress ip in Victoria-Metrics project on prod
+                # ingress ip in RJ-scratch space  project on dev
                 loadBalancerIP: "130.246.211.115"
