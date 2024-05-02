@@ -19,5 +19,38 @@ openstack-cluster:
           values:
             controller:
               service:
-                # Temporary for testing DR scenario
-                loadBalancerIP: "130.246.211.226"
+                loadBalancerIP: "130.246.211.106"
+    
+    kubePrometheusStack:
+      release:
+        values:
+          defaultRules:
+            additionalRuleLabels:
+              # these values used for alerting only - part of the email subject tag-line
+              cluster: staging-worker
+              env: dev
+          alertmanager:
+            enabled: true
+            ingress:
+              hosts:
+                - alertmanager-worker.staging.nubes.stfc.ac.uk
+              tls:
+                - hosts: 
+                  - alertmanager-worker.staging.nubes.stfc.ac.uk
+                  secretName: tls-keypair
+          prometheus:
+            ingress:
+              hosts:
+                - prometheus-worker.staging.nubes.stfc.ac.uk
+              tls:
+                - hosts: 
+                  - prometheus-worker.staging.nubes.stfc.ac.uk
+                  secretName: tls-keypair
+          grafana:
+            ingress:
+              hosts:
+                - grafana-worker.staging.nubes.stfc.ac.uk
+              tls:
+                - hosts: 
+                  - grafana-worker.staging.nubes.stfc.ac.uk
+                  secretName: tls-keypair
