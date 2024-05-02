@@ -35,9 +35,9 @@ infra:
     additionalValueFiles:
       - clusters/david-pr-test/overrides/infra/deployment.yaml
 
-  - name: victoria-metrics-test
+  - name: vm-stage
     disableAutomated: false
     chartName: capi
     namespace: clusters
     additionalValueFiles:
-      - clusters/victoria-metrics-test/overrides/infra/deployment.yaml
+      - clusters/vm-stage/overrides/infra/deployment.yaml

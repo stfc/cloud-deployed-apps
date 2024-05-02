@@ -1,11 +1,11 @@
 global:
   # name of the cluster
   # MUST MATCH THE DIRECTORY NAME
-  clusterName: victoria-metrics-test
+  clusterName: vm-stage
 
   spec:
     source:
-      targetRevision: victoria-metrics-pr
+      targetRevision: staging-vic-mets
 
       # change this if you're using a fork
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
@@ -14,12 +14,12 @@ global:
       namespace: argocd
 
 apps:
-  - name: victoria-metrics-cluster
+  - name: vm-stage
     disableAutomated: false
     chartName: victoria-metrics
     namespace: victoria-metrics
     additionalValueFiles:
-      - clusters/victoria-metrics-test/overrides/apps/victoria-metrics.yaml
+      - clusters/vm-stage/overrides/apps/victoria-metrics.yaml
 
   - name: longhorn
     disableAutomated: false

@@ -4,10 +4,10 @@ openstack-cluster:
 
   nodeGroups:
     - name: default-md-0
-      machineCount: 2
+      machineCount: 5
 
   nodeGroupDefaults:
-    machineFlavor: l3.nano
+    machineFlavor: l3.micro
 
   cloudCredentialsSecretName: victoria-metrics-test-cloud-credentials
 
@@ -19,5 +19,5 @@ openstack-cluster:
           values:
             controller:
               service:
-                # ingress ip in personal scratch space
+                # ingress ip in Victoria-Metrics project on prod
                 loadBalancerIP: "130.246.211.115"
