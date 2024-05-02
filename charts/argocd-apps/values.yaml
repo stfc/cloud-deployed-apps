@@ -3,20 +3,17 @@ global:
     # argocd project to use
     project: default
     source:
-      # specifies source repo 
+      # specifies source repo
       # you'll only want to change this if you make a fork
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
-      
+
       # default target revision to use - branch "main" by default
       # can be overidden on a per-cluster basis
       targetRevision: main
-      
-      # namespace where the argocd applications will be installed to 
+
+      # namespace where the argocd applications will be installed to
       namespace: argocd
 
-# sets the path to the default value files for each chart we manage in this repo 
-# NOTE: starts at the root level of the repo
-
-valueFiles:
-  longhorn:
-  - charts/apps/longhorn/values.yaml
+cert-manager:
+  enabled: true
+  namespace: cert-manager

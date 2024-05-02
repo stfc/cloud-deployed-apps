@@ -2,6 +2,6 @@ global:
   clusterName: david-pr-test
   spec:
     source:
-      targetRevision: longhorn-update
+      targetRevision: Add_cert_manager
       repoURL: https://github.com/stfc/cloud-deployed-apps.git
       namespace: argocd
