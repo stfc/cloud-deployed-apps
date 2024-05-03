@@ -28,13 +28,6 @@ infra:
     additionalValueFiles:
       - clusters/david-harbor-test/overrides/infra/deployment.yaml
 
-  - name: david-pr-test
-    disableAutomated: false
-    chartName: capi
-    namespace: clusters
-    additionalValueFiles:
-      - clusters/david-pr-test/overrides/infra/deployment.yaml
-
   - name: vm-stage
     disableAutomated: false
     chartName: capi
