@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cloud-deployed-apps
+  name: argocd
   namespace: argocd
 spec:
   destination:
@@ -10,21 +10,18 @@ spec:
   project: {{ $.Values.global.spec.project }}
   source:
     repoURL: {{ $.Values.global.spec.source.repoURL }}
-    targetRevision: {{ if $.Values.cloudDeployedApps }}
-      {{ default .Values.cloudDeployedApps.targetRevision .Values.global.spec.source.targetRevision }}
-    {{ else }}
-      {{ .Values.global.spec.source.targetRevision }}
-    {{ end }}
-    path: charts/argocd-apps/
+    targetRevision: {{ $.Values.global.spec.source.targetRevision }}
+    path: charts/deps/argocd
     helm:
       valueFiles:
         - ./values.yaml
-        - ../../clusters/{{ $.Values.global.clusterName }}/app-values.yaml
+        - ../../../clusters/{{ $.Values.global.clusterName }}/argocd-values.yaml
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
       allowEmpty: true
+      
     syncOptions:
       - CreateNamespace=true
 ---

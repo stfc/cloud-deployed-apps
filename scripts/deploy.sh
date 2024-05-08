@@ -38,10 +38,10 @@ if [ ! -f /usr/local/bin/argocd ]; then
 fi
 
 echo "Creating App of Apps for cluster $CLUSTER_NAME..."
-helm upgrade --install argocd-apps ../charts/argocd-apps -n argocd -f ../charts/argocd-apps/values.yaml -f ../clusters/$CLUSTER_NAME/app-values.yaml --wait
+helm upgrade --install argocd-apps ../charts/deps/argocd-apps -n argocd -f ../charts/deps/argocd-apps/values.yaml -f ../clusters/$CLUSTER_NAME/app-values.yaml --wait
 
 if [ -f "../clusters/$CLUSTER_NAME/infra-values.yaml" ]; then
-  helm upgrade --install argocd-infra ../charts/argocd-infra -n argocd -f ../charts/argocd-infra/values.yaml -f ../clusters/$CLUSTER_NAME/infra-values.yaml  --wait
+  helm upgrade --install argocd-infra ../charts/deps/argocd-infra -n argocd -f ../charts/deps/argocd-infra/values.yaml -f ../clusters/$CLUSTER_NAME/infra-values.yaml  --wait
 fi
 
 echo "ArgoCD installation and configuration completed for cluster $CLUSTER_NAME."

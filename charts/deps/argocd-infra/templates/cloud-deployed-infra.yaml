@@ -15,11 +15,11 @@ spec:
     {{ else }}
       {{ .Values.global.spec.source.targetRevision }}
     {{ end }}
-    path: charts/argocd-infra/
+    path: charts/deps/argocd-infra/
     helm:
       valueFiles:
         - ./values.yaml
-        - ../../clusters/{{ $.Values.global.clusterName }}/infra-values.yaml
+        - ../../../clusters/{{ $.Values.global.clusterName }}/infra-values.yaml
   syncPolicy:
     automated:
       prune: true
