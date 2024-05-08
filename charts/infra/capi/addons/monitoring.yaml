@@ -20,16 +20,16 @@ openstack-cluster:
                 type: ClusterIP
               
               ingress:
+                annotations:
+                  cert-manager.io/cluster-issuer: "self-signed"
+                
                 ingressClassName: nginx
                 enabled: true
                 hosts: 
                   -  alertmanager.example.com
                 paths:
                   - "/"
-                tls: 
-                  - hosts: 
-                    - "alertmanager.example.com"
-                    secretName: tls-keypair
+
                 ingressPerReplica:
                   enabled: false
 
@@ -143,16 +143,14 @@ openstack-cluster:
                 type: ClusterIP
               
               ingress:
+                annotations:
+                  cert-manager.io/cluster-issuer: "self-signed"
+                
                 ingressClassName: nginx
                 enabled: true
                 path: /
                 hosts: 
                   -  grafana.example.com
-                tls:
-                  - hosts: 
-                    - "grafana.example.com"
-                    secretName: tls-keypair
-
 
             prometheus-operator:
               enabled: true
@@ -164,16 +162,14 @@ openstack-cluster:
                 type: ClusterIP
 
               ingress:
+                annotations:
+                  cert-manager.io/cluster-issuer: "self-signed"
                 ingressClassName: nginx
                 enabled: true
                 paths:
                   - /
                 hosts: 
                   -  prometheus.example.com
-                tls: 
-                  - hosts: 
-                    - "prometheus.example.com"
-                    secretName: tls-keypair
               
               prometheusSpec:
                 # turn off persistent storage so cinder volume doesn't get created
