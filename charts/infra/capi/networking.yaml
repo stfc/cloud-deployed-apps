@@ -11,9 +11,6 @@ openstack-cluster:
         - 10.8.0.0/13
     serviceDomain: cluster.local
 
-  clusterNetworking:
-    externalNetworkId: External
-
   registryMirrors: { docker.io: ["https://dockerhub.stfc.ac.uk"] }
 
   apiServer:
