@@ -24,6 +24,7 @@ openstack-cluster:
             alertmanager:
               enabled: true
               ingress:
+                annotations: ""
                 hosts:
                   - alertmanager-mgmt.prod.nubes.stfc.ac.uk
                 tls:
@@ -32,6 +33,7 @@ openstack-cluster:
                     secretName: tls-keypair
             prometheus:
               ingress:
+                annotations: ""
                 hosts:
                   - prometheus-mgmt.prod.nubes.stfc.ac.uk
                 tls:
@@ -40,6 +42,7 @@ openstack-cluster:
                     secretName: tls-keypair
             grafana:
               ingress:
+                annotations: ""
                 hosts:
                   - grafana-mgmt.prod.nubes.stfc.ac.uk
                 tls:

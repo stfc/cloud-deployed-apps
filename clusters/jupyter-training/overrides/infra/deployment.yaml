@@ -37,6 +37,7 @@ openstack-cluster:
           alertmanager:
             enabled: true
             ingress:
+              annotations: ""
               hosts:
                 - alertmanager-jupyter-training.prod.nubes.stfc.ac.uk
               tls:
@@ -45,6 +46,7 @@ openstack-cluster:
                   secretName: tls-keypair
           prometheus:
             ingress:
+              annotations: ""
               hosts:
                 - prometheus-jupyter-training.prod.nubes.stfc.ac.uk
               tls:
@@ -53,6 +55,7 @@ openstack-cluster:
                   secretName: tls-keypair
           grafana:
             ingress:
+              annotations: ""
               hosts:
                 - grafana-jupyter-training.prod.nubes.stfc.ac.uk
               tls:
