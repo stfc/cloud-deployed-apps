@@ -1,0 +1,15 @@
+openstack-cluster:
+
+  cloudCredentialsSecretName: test-capi-addons-2-credentials
+
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "130.246.215.209"
+
+ 
