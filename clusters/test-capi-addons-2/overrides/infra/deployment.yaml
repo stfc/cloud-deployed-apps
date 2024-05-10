@@ -1,6 +1,6 @@
 openstack-cluster:
 
-  cloudCredentialsSecretName: test-capi-addons-2-credentials
+  cloudCredentialsSecretName: test-capi-addons-2-cloud-credentials
 
   addons:
     ingress:
