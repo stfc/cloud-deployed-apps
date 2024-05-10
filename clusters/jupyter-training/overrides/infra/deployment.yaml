@@ -4,15 +4,15 @@ openstack-cluster:
 
   nodeGroups:
     - name: default-md-0
-      machineCount: 2
+      machineCount: 3
     - name: md-a4000-ref
-      machineCount: 20
+      machineCount: 25
       machineFlavor: g-a4000-ref.x1
     - name: md-rtx4000
-      machineCount: 35
+      machineCount: 0
       machineFlavor: g-rtx4000-ref.x1
     - name: md-a4000
-      machineCount: 30
+      machineCount: 40
       machineFlavor: g-a4000.x1
 
   nodeGroupDefaults:
