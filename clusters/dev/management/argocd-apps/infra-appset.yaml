@@ -1,0 +1,78 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cloud-deployed-infra
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+        revision: HEAD
+        files:
+        # grab all infra values for all clusters in environment
+        - path: "clusters/dev/*/infra-values.yaml"
+
+  project: default
+  destination:
+    namespace: clusters
+    server: https://kubernetes.default.svc
+
+  template:
+    metadata:
+      name: '{{path.basename}}-cluster'
+      # All applications need to go into the ArgoCD namespace
+      namespace: argocd
+    spec:
+      project: default
+      destination:
+        namespace: clusters
+        server: https://kubernetes.default.svc
+      sources:
+        - chart: openstack-cluster
+          repoURL: https://stackhpc.github.io/capi-helm-charts
+          targetRevision: "0.6.0"
+          helm:
+            releaseName: '{{path.basename}}'
+            valueFiles:
+              # Bring in default values
+              - "$capi-values/values.yaml"
+              - "$capi-values/flavors.yaml"
+              - "$capi-values/user-values.yaml"
+              # Bring in values that are specific to this application
+              - '$values/{{path}}/{{path.filename}}'
+        - repoURL: https://github.com/stfc/cloud-deployed-apps.git
+          targetRevision: HEAD
+          ref: values
+        - repoURL: "https://github.com/stfc/cloud-capi-values.git"
+          targetRevision: "master"
+          ref: capi-values
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-api-addon-provider
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: clusters
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/stfc/cloud-deployed-apps.git
+    targetRevision: HEAD
+    path: charts/dev/deps/capi-addons
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true

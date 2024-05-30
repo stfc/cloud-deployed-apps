@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - self-app.yaml
+  - deps.yaml
+  - infra-appset.yaml
+
+# An example of how you patch out specific parts
+# here we are patching target revision because we are working on a feature branch
+
+patches:
+  - target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: Application
+    patch: |-
+      - op: replace
+        path: /spec/source/targetRevision
+        value: folder-flows
+  - target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: ApplicationSet
+    patch: |-
+      - op: replace
+        path: /spec/generators/0/git/revision
+        value: folder-flows
