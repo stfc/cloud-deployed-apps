@@ -16,7 +16,7 @@ addons:
         values:
           controller:
             service:
-              loadBalancerIP: "130.246.80.38"
+              loadBalancerIP: "130.246.80.12"
 
   monitoring:
     kubePrometheusStack:
@@ -24,30 +24,30 @@ addons:
         values:
           defaultRules:
             additionalRuleLabels:
-              cluster: staging-management
+              cluster: staging-worker
               env: dev
           alertmanager:
             enabled: true
             ingress:
               hosts:
-                - alertmanager-mgmt.staging.nubes.stfc.ac.uk
+                - alertmanager-worker.staging.nubes.stfc.ac.uk
               tls:
-                - hosts:
-                    - alertmanager-mgmt.staging.nubes.stfc.ac.uk
+                - hosts: 
+                  - alertmanager-worker.staging.nubes.stfc.ac.uk
                   secretName: tls-keypair
           prometheus:
             ingress:
               hosts:
-                - prometheus-mgmt.staging.nubes.stfc.ac.uk
+                - prometheus-worker.staging.nubes.stfc.ac.uk
               tls:
-                - hosts:
-                    - prometheus-mgmt.nubes.stfc.ac.uk
+                - hosts: 
+                  - prometheus-worker.nubes.stfc.ac.uk
                   secretName: tls-keypair
           grafana:
             ingress:
               hosts:
-                - grafana-mgmt.staging.nubes.stfc.ac.uk
+                - grafana-worker.staging.nubes.stfc.ac.uk
               tls:
-                - hosts:
-                    - grafana-mgmt.staging.nubes.stfc.ac.uk
+                - hosts: 
+                  - grafana-worker.staging.nubes.stfc.ac.uk
                   secretName: tls-keypair
