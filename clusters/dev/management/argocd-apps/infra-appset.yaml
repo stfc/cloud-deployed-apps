@@ -11,12 +11,6 @@ spec:
         files:
         # grab all infra values for all clusters in environment
         - path: "clusters/dev/*/infra-values.yaml"
-
-  project: default
-  destination:
-    namespace: clusters
-    server: https://kubernetes.default.svc
-
   template:
     metadata:
       name: '{{path.basename}}-cluster'
@@ -50,13 +44,13 @@ spec:
           targetRevision: "master"
           ref: capi-values
   
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-      allowEmpty: true
-    syncOptions:
-      - CreateNamespace=true
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: true
+        syncOptions:
+          - CreateNamespace=true
 
 ---
 
