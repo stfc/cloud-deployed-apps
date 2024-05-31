@@ -14,7 +14,7 @@ spec:
     path: charts/dev/deps/argocd
     helm:
       valueFiles:
-        - clusters/dev/management/argocd-values.yaml
+        - ../../../../clusters/dev/management/argocd-values.yaml
   syncPolicy:
     automated:
       prune: true
