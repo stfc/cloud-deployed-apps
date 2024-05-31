@@ -35,8 +35,8 @@ spec:
               # Bring in values that are specific to this application
               - '$values/{{path}}/{{path.filename}}'
               # Bring in secrets that are specific to this application
-              - '$values/secrets/{{path.segments.[1]}}/{{path/segments.[2]}}/api-server-fip.yaml'
-              - '$values/secrets/{{path.segments.[1]}}/{{path/segments.[2]}}/app-creds.yaml'
+              - '$values/secrets/{{path.segments.[1]}}/{{path.segments.[2]}}/api-server-fip.yaml'
+              - '$values/secrets/{{path.segments.[1]}}/{{path.segments.[2]}}/app-creds.yaml'
         - repoURL: https://github.com/stfc/cloud-deployed-apps.git
           targetRevision: HEAD
           ref: values
