@@ -8,8 +8,15 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+if [ -z "$2" ]; then
+  echo "Please provide the environment as an argument (prod/staging)."
+  echo "Usage: $0 <cluster-name> <environment>"
+  exit 1
+fi
+
 
 CLUSTER_NAME=$1
+ENVIRONMENT=$2
 
 echo "Adding the ArgoCD Helm repository..."
 helm repo add argo https://argoproj.github.io/argo-helm
@@ -38,6 +45,6 @@ if [ ! -f /usr/local/bin/argocd ]; then
 fi
 
 echo "Creating App of Apps for cluster $CLUSTER_NAME..."
-kubectl apply -k ../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-apps.yaml
+kubectl apply -k ../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-apps
 
 echo "ArgoCD installation and configuration completed for cluster $CLUSTER_NAME."
