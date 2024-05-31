@@ -26,3 +26,7 @@ patches:
       - op: replace
         path: /spec/generators/0/git/revision
         value: add-argo-apps
+      
+      - op: replace
+        path: /spec/template/spec/sources/1/targetRevision
+        value: add-argo-apps
