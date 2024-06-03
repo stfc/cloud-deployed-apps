@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: folder-flows
+    targetRevision: folder_flows
     path: clusters/dev/management/apps.yaml
   syncPolicy:
     automated:
@@ -59,7 +59,7 @@ spec:
         project: default
         source:
           repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-          targetRevision: folder-flows
+          targetRevision: folder_flows
           path: "charts/dev/{{chartName}}"
           helm:
             valueFiles:
@@ -80,7 +80,7 @@ spec:
   generators:
     - git:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        revision: folder-flows
+        revision: folder_flows
         files:
         # grab all infra values for all clusters in environment
         - path: "clusters/dev/*/infra-values.yaml"
@@ -111,7 +111,7 @@ spec:
               - '$values/secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml'
               - '$values/secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml'
         - repoURL: https://github.com/stfc/cloud-deployed-apps.git
-          targetRevision: folder-flows
+          targetRevision: folder_flows
           ref: values
         - repoURL: "https://github.com/stfc/cloud-capi-values.git"
           targetRevision: "master"
