@@ -45,6 +45,6 @@ if [ ! -f /usr/local/bin/argocd ]; then
 fi
 
 echo "Creating App of Apps for cluster $CLUSTER_NAME..."
-kubectl apply -k ../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-apps
+kubectl apply -f ../clusters/$ENVIRONMENT/$CLUSTER_NAME/apps.yaml
 
 echo "ArgoCD installation and configuration completed for cluster $CLUSTER_NAME."

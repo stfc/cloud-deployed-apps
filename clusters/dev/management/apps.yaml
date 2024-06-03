@@ -1,0 +1,119 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloud-deployed-apps
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/stfc/cloud-deployed-apps.git
+    targetRevision: add-argo-apps
+    path: clusters/dev/management/apps.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+    name: management-apps-appset
+    namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+        - name: "argocd"
+          chartName: argocd
+          # relative path from local chart filepath in charts/dev/argocd-values.yaml
+          valuesFile: ../../../clusters/dev/management/argocd-values.yaml
+          namespace: argocd
+        - name: "capi-addons"
+          chartName: capi-addons
+          valuesFile: ""
+          namespace: clusters
+        - name: "cert-manager"
+          chartName: cert-manager
+          valuesFile: ""
+          namespace: cert-manager
+
+  template:
+      metadata:
+        name: '{{name}}'
+        namespace: argocd
+      spec:
+        project: default
+        source:
+          repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+          targetRevision: "add-argo-apps"
+          path: "charts/dev/{{chartName}}"
+          helm:
+            valueFiles:
+              - "{{valuesFile}}"
+        destination:
+            server: https://kubernetes.default.svc
+            namespace: "{{namespace}}"
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: management-infra-appset
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+        revision: add-argo-apps
+        files:
+        # grab all infra values for all clusters in environment
+        - path: "clusters/dev/*/infra-values.yaml"
+  template:
+    metadata:
+      name: '{{path.basename}}-cluster'
+      # All applications need to go into the ArgoCD namespace
+      namespace: argocd
+    spec:
+      project: default
+      destination:
+        namespace: clusters
+        server: https://kubernetes.default.svc
+      sources:
+        - chart: openstack-cluster
+          repoURL: https://stackhpc.github.io/capi-helm-charts
+          targetRevision: "0.6.0"
+          helm:
+            releaseName: '{{path.basename}}'
+            valueFiles:
+              # Bring in default values
+              - "$capi-values/values.yaml"
+              - "$capi-values/flavors.yaml"
+              - "$capi-values/user-values.yaml"
+              # Bring in values that are specific to this application
+              - '$values/{{path}}/{{path.filename}}'
+              # Bring in secrets that are specific to this application
+              - '$values/secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml'
+              - '$values/secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml'
+        - repoURL: https://github.com/stfc/cloud-deployed-apps.git
+          targetRevision: add-argo-apps
+          ref: values
+        - repoURL: "https://github.com/stfc/cloud-capi-values.git"
+          targetRevision: "master"
+          ref: capi-values
+  
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: true
+        syncOptions:
+          - CreateNamespace=true
