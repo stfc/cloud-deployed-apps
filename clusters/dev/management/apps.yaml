@@ -84,6 +84,8 @@ spec:
         files:
         # grab all infra values for all clusters in environment
         - path: "clusters/dev/*/infra-values.yaml"
+  syncPolicy:
+    preserveResourcesOnDeletion: true
   template:
     metadata:
       name: '{{path.basename}}-cluster'
@@ -124,4 +126,3 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
-        preserveResourcesOnDeletion: true
