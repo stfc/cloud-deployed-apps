@@ -63,6 +63,7 @@ spec:
           path: "charts/dev/{{chartName}}"
           helm:
             valueFiles:
+              - values.yaml
               - "{{valuesFile}}"
         destination:
             server: https://kubernetes.default.svc
