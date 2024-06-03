@@ -38,11 +38,9 @@ spec:
           namespace: argocd
         - name: "capi-addons"
           chartName: capi-addons
-          valuesFile: ""
           namespace: clusters
         - name: "cert-manager"
           chartName: cert-manager
-          valuesFile: ""
           namespace: cert-manager
 
   template:
