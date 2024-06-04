@@ -162,13 +162,11 @@ openstack-cluster:
         defaultStorageClass:
           availabilityZone: ceph
 
-  ---
   # user-values.yaml
   controlPlane:
     machineCount: 5
     machineFlavor: l3.nano
 
-  ---
   # Flavors.yaml
   nodeGroups:
       name: default-md-0
