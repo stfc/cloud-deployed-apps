@@ -21,11 +21,11 @@ argo-cd:
         # This is overriden per-cluster in the cluster's argo-values.yaml
         name: "self-signed"
 
-  config:
-    helm.valuesFileSchemes: >-
-      secrets+age-import, secrets+age-import-kubernetes,
-      secrets,secrets+literal,
-      https
+    config:
+      helm.valuesFileSchemes: >-
+        secrets+age-import, secrets+age-import-kubernetes,
+        secrets,secrets+literal,
+        https
 
   # Inject Helm-Secrets into the ArgoCD server
   repoServer:
