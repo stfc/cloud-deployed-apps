@@ -167,6 +167,10 @@ openstack-cluster:
     machineCount: 5
     machineFlavor: l3.nano
 
+    remediationStrategy:
+      retryPeriod: 20m0s
+      minHealthyPeriod: 1h0m0s
+
   # Flavors.yaml
   nodeGroups:
     - name: default-md-0
