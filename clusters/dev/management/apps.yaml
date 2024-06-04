@@ -96,28 +96,18 @@ spec:
       destination:
         namespace: clusters
         server: https://kubernetes.default.svc
-      sources:
-        - chart: openstack-cluster
-          repoURL: https://stackhpc.github.io/capi-helm-charts
-          targetRevision: "0.6.0"
-          helm:
-            releaseName: '{{path.basename}}'
-            valueFiles:
-              # Bring in default values
-              - "$capi-values/values.yaml"
-              - "$capi-values/flavors.yaml"
-              - "$capi-values/user-values.yaml"
-              # Bring in values that are specific to this application
-              - '$values/{{path}}/{{path.filename}}'
-              # Bring in secrets that are specific to this application
-              - '$values/secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml'
-              - '$values/secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml'
-        - repoURL: https://github.com/stfc/cloud-deployed-apps.git
-          targetRevision: folder_flows
-          ref: values
-        - repoURL: "https://github.com/stfc/cloud-capi-values.git"
-          targetRevision: "master"
-          ref: capi-values
+      source:
+        repoURL: https://github.com/stfc/cloud-deployed-apps.git
+        targetRevision: "folder_flows"
+        path: charts/dev/capi-infra
+        helm:
+          releaseName: '{{path.basename}}'
+          valueFiles:
+            # Bring in values that are specific to this application
+            - '{{path.filename}}'
+            # Bring in secrets that are specific to this application
+            - 'secrets://../../../secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml'
+            - 'secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml'
   
       syncPolicy:
         automated:
