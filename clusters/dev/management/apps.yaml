@@ -46,8 +46,8 @@ spec:
           namespace: cert-manager
           valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
         
-        - name: "capi-addons"
-          chartName: capi-addons
+        - name: cluster-api-addon-provider
+          chartName: cluster-api-addon-provider
           namespace: clusters
           valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
 
