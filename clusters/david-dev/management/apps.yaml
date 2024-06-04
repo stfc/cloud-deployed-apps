@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
     targetRevision: fix_secrets_argo
-    path: clusters/david-dev/management/apps.yaml
+    path: clusters/david-dev/management
   syncPolicy:
     automated:
       prune: true

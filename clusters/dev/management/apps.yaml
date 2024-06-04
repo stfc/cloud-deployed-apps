@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
     targetRevision: folder_flows
-    path: clusters/dev/management/apps.yaml
+    path: clusters/dev/management
   syncPolicy:
     automated:
       prune: true
