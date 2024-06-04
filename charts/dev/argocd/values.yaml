@@ -51,7 +51,7 @@ argo-cd:
       - name: HELM_SECRETS_VALUES_ALLOW_ABSOLUTE_PATH
         value: "true"
       - name: HELM_SECRETS_VALUES_ALLOW_PATH_TRAVERSAL
-        value: "false"
+        value: "true"
       - name: HELM_SECRETS_WRAPPER_ENABLED
         value: "false"
       - name: HELM_SECRETS_DECRYPT_SECRETS_IN_TMP_DIR
