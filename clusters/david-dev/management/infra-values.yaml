@@ -1,13 +1,14 @@
-controlPlane:
-  machineCount: 3
+openstack-cluster:
+  controlPlane:
+    machineCount: 3
 
-nodeGroups:
-  - name: default-md-0
-    machineCount: 2
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 2
 
-nodeGroupDefaults:
-  machineFlavor: l3.nano
+  nodeGroupDefaults:
+    machineFlavor: l3.nano
 
-addons:
-  ingress:
-    enabled: true
+  addons:
+    ingress:
+      enabled: true

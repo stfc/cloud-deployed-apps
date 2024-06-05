@@ -1,56 +1,57 @@
-controlPlane:
-  machineCount: 3
+openstack-cluster:
+  controlPlane:
+    machineCount: 3
 
-nodeGroups:
-  - name: default-md-0
-    machineCount: 2
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 2
 
-nodeGroupDefaults:
-  machineFlavor: l3.nano
+  nodeGroupDefaults:
+    machineFlavor: l3.nano
 
-addons:
-  ingress:
-    enabled: true
-    nginx:
-      release:
-        values:
-          controller:
-            service:
-              loadBalancerIP: "130.246.80.12"
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "130.246.80.12"
 
-  monitoring:
-    enabled: true
-    lokiStack:
-      enabled: false
-    kubePrometheusStack:
-      release:
-        values:
-          defaultRules:
-            additionalRuleLabels:
-              cluster: dev-worker
-              env: dev
-          alertmanager:
-            enabled: false
-            ingress:
-              hosts:
-                - alertmanager-worker.dev.nubes.stfc.ac.uk
-              tls:
-                - hosts: 
+    monitoring:
+      enabled: true
+      lokiStack:
+        enabled: false
+      kubePrometheusStack:
+        release:
+          values:
+            defaultRules:
+              additionalRuleLabels:
+                cluster: dev-worker
+                env: dev
+            alertmanager:
+              enabled: false
+              ingress:
+                hosts:
                   - alertmanager-worker.dev.nubes.stfc.ac.uk
-                  secretName: tls-keypair
-          prometheus:
-            ingress:
-              hosts:
-                - prometheus-worker.dev.nubes.stfc.ac.uk
-              tls:
-                - hosts: 
+                tls:
+                  - hosts: 
+                    - alertmanager-worker.dev.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            prometheus:
+              ingress:
+                hosts:
                   - prometheus-worker.dev.nubes.stfc.ac.uk
-                  secretName: tls-keypair
-          grafana:
-            ingress:
-              hosts:
-                - grafana-worker.dev.nubes.stfc.ac.uk
-              tls:
-                - hosts: 
+                tls:
+                  - hosts: 
+                    - prometheus-worker.dev.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            grafana:
+              ingress:
+                hosts:
                   - grafana-worker.dev.nubes.stfc.ac.uk
-                  secretName: tls-keypair
+                tls:
+                  - hosts: 
+                    - grafana-worker.dev.nubes.stfc.ac.uk
+                    secretName: tls-keypair

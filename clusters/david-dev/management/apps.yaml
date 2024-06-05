@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: fix_secrets_argo
+    targetRevision: folder_flows
     path: clusters/david-dev/management
   syncPolicy:
     automated:
@@ -44,8 +44,8 @@ spec:
           namespace: cert-manager
           valuesFile: ../../../clusters/david-dev/management/argocd-setup-values.yaml
         
-        - name: "capi-addons"
-          chartName: capi-addons
+        - name: cluster-api-addon-provider
+          chartName: cluster-api-addon-provider
           namespace: clusters
           valuesFile: ../../../clusters/david-dev/management/argocd-setup-values.yaml
 
@@ -57,7 +57,7 @@ spec:
         project: default
         source:
           repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-          targetRevision: fix_secrets_argo
+          targetRevision: folder_flows
           path: "charts/dev/{{chartName}}"
           helm:
             valueFiles:
@@ -83,7 +83,7 @@ spec:
   generators:
     - git:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        revision: fix_secrets_argo
+        revision: folder_flows
         files:
         # grab all infra values for all clusters in environment
         - path: "clusters/david-dev/*/infra-values.yaml"
@@ -101,7 +101,7 @@ spec:
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
-        targetRevision: "fix_secrets_argo"
+        targetRevision: folder_flows
         path: charts/dev/capi-infra
         helm:
           releaseName: '{{path.basename}}'
