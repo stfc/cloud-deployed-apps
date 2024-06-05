@@ -10,8 +10,8 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: folder_flows
-    path: clusters/dev/management
+    targetRevision: fix_secrets_argo
+    path: clusters/david-dev/management
   syncPolicy:
     automated:
       prune: true
@@ -33,23 +33,21 @@ spec:
         elements:
         - name: "argocd"
           chartName: argocd
-
           # NOTE: each chart needs a valuesFile for this to work 
           # so create one for each chart - even if its empty
-          
           # argocd and all dependencies use the same file "argocd-setup-values.yaml" 
-          valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+          valuesFile: ../../../clusters/david-dev/management/argocd-setup-values.yaml
           namespace: argocd
 
         - name: "cert-manager"
           chartName: cert-manager
           namespace: cert-manager
-          valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+          valuesFile: ../../../clusters/david-dev/management/argocd-setup-values.yaml
         
-        - name: cluster-api-addon-provider
-          chartName: cluster-api-addon-provider
+        - name: "capi-addons"
+          chartName: capi-addons
           namespace: clusters
-          valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+          valuesFile: ../../../clusters/david-dev/management/argocd-setup-values.yaml
 
   template:
       metadata:
@@ -59,7 +57,7 @@ spec:
         project: default
         source:
           repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-          targetRevision: folder_flows
+          targetRevision: fix_secrets_argo
           path: "charts/dev/{{chartName}}"
           helm:
             valueFiles:
@@ -68,14 +66,11 @@ spec:
         destination:
             server: https://kubernetes.default.svc
             namespace: "{{namespace}}"
-        
         syncPolicy:
           automated:
             prune: false
             selfHeal: true
             allowEmpty: true
-          syncOptions:
-            - CreateNamespace=true
 
 ---
 
@@ -88,10 +83,10 @@ spec:
   generators:
     - git:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        revision: folder_flows
+        revision: fix_secrets_argo
         files:
         # grab all infra values for all clusters in environment
-        - path: "clusters/dev/*/infra-values.yaml"
+        - path: "clusters/david-dev/*/infra-values.yaml"
   syncPolicy:
     preserveResourcesOnDeletion: true
   template:
@@ -106,7 +101,7 @@ spec:
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
-        targetRevision: "folder_flows"
+        targetRevision: "fix_secrets_argo"
         path: charts/dev/capi-infra
         helm:
           releaseName: '{{path.basename}}'
@@ -116,7 +111,7 @@ spec:
             # Bring in secrets that are specific to this application
             - 'secrets://../../../secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml'
             - 'secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml'
-
+  
       syncPolicy:
         automated:
           prune: false

@@ -162,16 +162,18 @@ openstack-cluster:
         defaultStorageClass:
           availabilityZone: ceph
 
-  ---
   # user-values.yaml
   controlPlane:
     machineCount: 5
     machineFlavor: l3.nano
 
-  ---
+    remediationStrategy:
+      retryPeriod: 20m0s
+      minHealthyPeriod: 1h0m0s
+
   # Flavors.yaml
   nodeGroups:
-      name: default-md-0
+    - name: default-md-0
       machineCount: 2
 
   # Defaults for node groups
