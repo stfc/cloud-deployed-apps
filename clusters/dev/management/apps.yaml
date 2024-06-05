@@ -13,8 +13,9 @@ spec:
     targetRevision: folder_flows
     path: clusters/dev/management
   syncPolicy:
+    preserveResourcesOnDeletion: true     
     automated:
-      prune: true
+      prune: false
       selfHeal: true
       allowEmpty: true
     syncOptions:
@@ -45,11 +46,20 @@ spec:
           chartName: cert-manager
           namespace: cert-manager
           valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
-        
+
         - name: cluster-api-addon-provider
           chartName: cluster-api-addon-provider
           namespace: clusters
           valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+
+  syncPolicy:
+    preserveResourcesOnDeletion: true 
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
 
   template:
       metadata:
@@ -63,15 +73,16 @@ spec:
           path: "charts/dev/{{chartName}}"
           helm:
             valueFiles:
-              - values.yaml
               - "{{valuesFile}}"
         destination:
             server: https://kubernetes.default.svc
             namespace: "{{namespace}}"
         
+        # apps are easy to deploy - so we can cascade delete them
         syncPolicy:
+          preserveResourcesOnDeletion: false  
           automated:
-            prune: false
+            prune: true
             selfHeal: true
             allowEmpty: true
           syncOptions:
@@ -93,7 +104,13 @@ spec:
         # grab all infra values for all clusters in environment
         - path: "clusters/dev/*/infra-values.yaml"
   syncPolicy:
-    preserveResourcesOnDeletion: true
+    preserveResourcesOnDeletion: true     
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
   template:
     metadata:
       name: '{{path.basename}}-cluster'
@@ -118,8 +135,9 @@ spec:
             - 'secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml'
 
       syncPolicy:
+        preserveResourcesOnDeletion: false   
         automated:
-          prune: false
+          prune: true
           selfHeal: true
           allowEmpty: true
         syncOptions:
