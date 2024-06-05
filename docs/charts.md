@@ -16,6 +16,7 @@ Each chart contains:
 
 - `Chart.yaml` - which is boilerplate, the version of the chart is not currently used.
 - `requirements.yaml` - this should contain the upstream chart(s) and versions. See [Helm Documentation](https://v2.helm.sh/docs/developing_charts/#managing-dependencies-with-requirements-yaml)
+(NOTE: `requirements.yaml` is deprecated and will be merged into `Charts.yaml`)
 - `values.yaml` files that applies to all environments, but are tailored to our platform.
 
 Note: environment specific values, e.g. domain names, go alongside the AppSet in the [TODO] directory.
