@@ -39,3 +39,10 @@ ArgoCD needs access to the private key to decrypt the secrets. This is done by a
 ```
 kubectl -n argocd create secret generic helm-secrets-private-keys --from-file=key.txt=age-key.txt
 ```
+
+
+## VSCode integration
+
+An extension exists for SOPS for vscode that will automatically decrypt/encrypt files. 
+
+You can find it here: https://github.com/signageos/vscode-sops
