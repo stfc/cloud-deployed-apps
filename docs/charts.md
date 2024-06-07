@@ -46,7 +46,7 @@ Note: Applications can be held back from a full release if required, e.g. if a p
 
 - Simply use `helm install` to install the chart on a test cluster to see if it works, iterating on the chart until it does.
 
-- Note any environment specific values that cannot ever be shared between environments, e.g. domain name, monitoring....etc. 
+- Note: Ensure there are no environment specific values are present in the values file e.g. domain name, monitoring....etc. If you have env specific values we cannot promote by simply copying the charts. As a rule of thumb, if you need to consider a value per cluster (e.g. domain name) place it into the clusters dir
 
 - You should store these values alongside the cluster you are using to test these changes - see [Deploying Apps to a cluster](deploying-apps.md)
 

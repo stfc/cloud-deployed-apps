@@ -104,7 +104,9 @@ NOTE: the application credential does not need to point to the same project that
 2. Ensure enough quota for the cluster (RAM, CPU, instances etc)
 3. Provision a floating ip on your project for kubernetes API Server access
 4. (Optional) Provision a second floating IP for nginx ingress controller
-5. Create a self-managed cluster called `management` - see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup
+5. Create a self-managed cluster called `management` 
+   - see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup. 
+   - Ensure the name is `management` as CAPI cannot rename a cluster.
 
 ## Motivation
 You may want to make your own environment so you can test gitOps config or charts idependently of running clusters on test/feature branches
