@@ -1,5 +1,2 @@
 charts/
 Chart.lock
-
-# Ignore files starting with .decrypted in the secrets directory and its subdirectories - if using the vscode sops extension
-secrets/**/.decrypted*
