@@ -39,8 +39,11 @@ spec:
 NOTE: IGNORE THE EXISTING ELEMENTS
 
 `name`: name of ArgoCD-Application
+
 `chartName`: name of chart - matching directory name should be in `charts/<environment>/`
+
 `valuesFile`: path to cluster-specific values file for chart (relative to chart location in repo)
+
     - NOTE: this `valuesFile` parameter is NON-OPTIONAL - you must provide a file, even if its blank
 
 NOTE: remember to encase any cluster-specific values for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
