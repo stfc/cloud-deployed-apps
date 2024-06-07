@@ -52,7 +52,7 @@ See [Secrets](secrets.md) for more information
 In this file you will define age public keys for those who can decrypt/encrypt secrets belonging to that cluster
 NOTE: Make sure that the management cluster for the same environment can decrypt those secrets. Make sure that the management cluster's public key is added to `.sops.yaml`
 
-7. create file `api-server-fip.yaml` with the following info:
+7. create file `api-server-fip.yaml` using `sops api-server-fip.yaml`. Add the following config
 
 ```
 openstack-cluster
@@ -61,9 +61,8 @@ openstack-cluster
 ```
 
 This file contains the floating ip in which Kubernetes API server can be accessed
-MAKE SURE TO ENCRYPT THIS FILE BEFORE COMMITTING - see [Secrets](secrets.md)
 
-8. create file `app-creds.yaml` with the following info:
+8. create file `app-creds.yaml` using `sops app-creds.yaml`. Add the following config
 
 ```
 openstack-cluster:
@@ -88,16 +87,14 @@ openstack-cluster:
 
 ```
 
-
 This file contains the credentials for creating and managing that cluster on openstack
-MAKE SURE TO ENCRYPT THIS FILE BEFORE COMMITTING - see [Secrets](secrets.md)
 
 NOTE: the application credential must be created and valid for the project you want to create the cluster on
 NOTE: the application credential does not need to point to the same project that the management cluster is running on
 
 9. Make a PR and get it reviewed.
 
-10. Once merged, your new cluster should spin to life
+10.  Once merged, your new cluster should spin to life
 
 
 # Deploying a new environment

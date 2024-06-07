@@ -2,15 +2,18 @@
 
 ## Prerequisites 
 To deploy a new app onto the cluster - make sure a chart exists for it. 
+
 A chart must be defined in `charts/<environment>/<chart-name>` 
     - where `<environment>` is the environment of the cluster you want to deploy the app to
     - see [charts](charts.md) for more info
-  
+
+An Understanding of [ArgoCD Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/), particularly [ApplicationSets](https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/applicationset-specification/) 
+
 ## Steps
 
 1. Make a branch for your changes
 
-1. Edit the `apps.yaml` file to add a new app. 
+2. Edit the `apps.yaml` file to add a new app. 
    - make a change to `ApplicationSet` with the `metadata.name` entry matching `<cluster-name>-apps` 
    - where `<cluster-name>` is the name of the cluster
 
@@ -49,6 +52,6 @@ argo-cd:
 
 because `argo-cd` is the name of the subchart that installs argocd
 
-2. Commit and make a PR
+3. Commit and make a PR
 
-3. Once its merged, the new application to spring to life
+4. Once its merged, the new application to spring to life
