@@ -13,7 +13,6 @@ spec:
     targetRevision: folder_flows
     path: clusters/dev/management
   syncPolicy:
-    preserveResourcesOnDeletion: true
     automated:
       prune: false
       selfHeal: true
