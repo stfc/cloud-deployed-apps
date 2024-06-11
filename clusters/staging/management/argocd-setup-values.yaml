@@ -1,0 +1,4 @@
+argo-cd:
+  global:
+    domain: staging.example.com
+
