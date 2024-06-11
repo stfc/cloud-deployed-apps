@@ -54,13 +54,6 @@ spec:
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
-    automated:
-      # apps are easy to re-deploy, a git revert will bring it back
-      prune: true
-      selfHeal: true
-      allowEmpty: true
-    syncOptions:
-      - CreateNamespace=true
 
   template:
     metadata:
@@ -103,13 +96,7 @@ spec:
           - path: "clusters/dev/*/infra-values.yaml"
   syncPolicy:
     preserveResourcesOnDeletion: true
-    automated:
-      # Infra requires more effort to re-deploy, so don't prune automatically
-      prune: false
-      selfHeal: true
-      allowEmpty: true
-    syncOptions:
-      - CreateNamespace=true
+
   template:
     metadata:
       name: "{{path.basename}}-cluster"
