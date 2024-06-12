@@ -6,21 +6,6 @@ This repo acts as the "central repository" of all configuration information for 
 
 We use ArgoCD to manage our clusters. Each cluster has its own argocd deployment that uses this repo as its source of truth
 
-# Quick Start
-
-These links assume you have existing clusters or applications to deploy within the repository. If you want to setup a cluster from scratch, you'll need to define a new cluster from the below links first:
-
-### Step-by-step-guides
-- [Deploying a new cluster](docs/clusters.md)
-- [Adding a new chart to this repo](docs/charts.md)
-- [Deploying a chart onto a cluster](docs/deploying-apps.md)
-
-
-### More information
-- [How it works - folder-based flow & promotion flowchart](docs/folder-based-flow.md)
-- [Deploying secrets](docs/secrets.md)  
-
-
 # Repository Structure
 
 This repository contains the following directories:
