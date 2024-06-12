@@ -20,8 +20,9 @@ ENVIRONMENT=$2
 
 echo "Installing ArgoCD on cluster $CLUSTER_NAME using Helm..."
 echo "THIS COULD TAKE A WHILE"
-helm dependencies build "../charts/$ENVIRONMENT/argocd"
+helm dependencies update "../charts/$ENVIRONMENT/argocd"
 helm upgrade --install argocd "../charts/$ENVIRONMENT/argocd" \
+  -f "../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-setup-values.yaml" \
   --create-namespace \
   --namespace argocd \
   --wait

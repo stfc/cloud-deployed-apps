@@ -17,10 +17,7 @@ if [ -z "$SOPS_PRIVATE_KEY_FP" ]; then
   exit 1
 fi
 
-# Extract the third line from the SOPS private key file
-sed -n '3p' "$SOPS_PRIVATE_KEY_FP" > /tmp/key.txt
-chmod 600 /tmp/key.txt
-kubectl -n argocd create secret generic helm-secrets-private-keys --from-file=key.txt=/tmp/key.txt --namespace argocd
-rm /tmp/key.txt
+kubectl apply -f "bootstrap_yaml/argocd-ns.yaml"
+kubectl -n argocd create secret generic helm-secrets-private-keys --from-file=key.txt="$SOPS_PRIVATE_KEY_FP" --namespace argocd
 
 echo "Argo CD secret "helm-secrets-private-keys" created successfully in the argocd namespace."
