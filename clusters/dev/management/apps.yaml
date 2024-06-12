@@ -13,7 +13,6 @@ spec:
     targetRevision: folder_flows
     path: clusters/dev/management
   syncPolicy:
-    preserveResourcesOnDeletion: true     
     automated:
       prune: false
       selfHeal: true
@@ -22,74 +21,65 @@ spec:
       - CreateNamespace=true
 
 ---
-
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-    name: management-apps
-    namespace: argocd
+  name: management-apps
+  namespace: argocd
 spec:
   generators:
     - list:
         elements:
-        - name: "argocd"
-          chartName: argocd
+          - name: "argocd"
+            chartName: argocd
 
-          # NOTE: each chart needs a valuesFile for this to work 
-          # so create one for each chart - even if its empty
-          
-          # argocd and all dependencies use the same file "argocd-setup-values.yaml" 
-          valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
-          namespace: argocd
+            # NOTE: each chart needs a valuesFile for this to work
+            # so create one for each chart - even if its empty
 
-        - name: "cert-manager"
-          chartName: cert-manager
-          namespace: cert-manager
-          valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+            # argocd and all dependencies use the same file "argocd-setup-values.yaml"
+            valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+            namespace: argocd
 
-        - name: cluster-api-addon-provider
-          chartName: cluster-api-addon-provider
-          namespace: clusters
-          valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+          - name: "cert-manager"
+            chartName: cert-manager
+            namespace: cert-manager
+            valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
+
+          - name: cluster-api-addon-provider
+            chartName: cluster-api-addon-provider
+            namespace: clusters
+            valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
 
   syncPolicy:
-    preserveResourcesOnDeletion: true 
-    automated:
-      prune: true
-      selfHeal: true
-      allowEmpty: true
-    syncOptions:
-      - CreateNamespace=true
+    # Don't remove everything if we remove the appset
+    preserveResourcesOnDeletion: true
 
   template:
-      metadata:
-        name: '{{name}}'
-        namespace: argocd
-      spec:
-        project: default
-        source:
-          repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-          targetRevision: folder_flows
-          path: "charts/dev/{{chartName}}"
-          helm:
-            valueFiles:
-              - "{{valuesFile}}"
-        destination:
-            server: https://kubernetes.default.svc
-            namespace: "{{namespace}}"
-        
-        # apps are easy to deploy - so we can cascade delete them
-        syncPolicy:
-          preserveResourcesOnDeletion: false  
-          automated:
-            prune: true
-            selfHeal: true
-            allowEmpty: true
-          syncOptions:
-            - CreateNamespace=true
+    metadata:
+      name: "{{name}}"
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+        targetRevision: folder_flows
+        path: "charts/dev/{{chartName}}"
+        helm:
+          valueFiles:
+            - "{{valuesFile}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: true
+        syncOptions:
+          - CreateNamespace=true
 
 ---
-
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -101,19 +91,14 @@ spec:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
         revision: folder_flows
         files:
-        # grab all infra values for all clusters in environment
-        - path: "clusters/dev/*/infra-values.yaml"
+          # grab all infra values for all clusters in environment
+          - path: "clusters/dev/*/infra-values.yaml"
   syncPolicy:
-    preserveResourcesOnDeletion: true     
-    automated:
-      prune: false
-      selfHeal: true
-      allowEmpty: true
-    syncOptions:
-      - CreateNamespace=true
+    preserveResourcesOnDeletion: true
+
   template:
     metadata:
-      name: '{{path.basename}}-cluster'
+      name: "{{path.basename}}-cluster"
       # All applications need to go into the ArgoCD namespace
       namespace: argocd
     spec:
@@ -126,17 +111,17 @@ spec:
         targetRevision: "folder_flows"
         path: charts/dev/capi-infra
         helm:
-          releaseName: '{{path.basename}}'
+          releaseName: "{{path.basename}}"
           valueFiles:
             # Bring in values that are specific to this application
-            - '../../../{{path}}/{{path.filename}}'
+            - "../../../{{path}}/{{path.filename}}"
             # Bring in secrets that are specific to this application
-            - 'secrets://../../../secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml'
-            - 'secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml'
+            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml"
+            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml"
 
       syncPolicy:
-        preserveResourcesOnDeletion: false   
         automated:
+          # Remove anything that isn't in the helm chart output
           prune: true
           selfHeal: true
           allowEmpty: true
