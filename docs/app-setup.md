@@ -2,15 +2,15 @@
 
 This section details some pre/post deployment steps for setting up specific apps
 
-# Longhorn
+## Longhorn
 
 Longhorn is a Cloud Native application for presistent block storage.  See [Longhorn docs](https://longhorn.io/docs/latest/).
 
 To deploy Longhorn we utilise the longhorn helm chart. See [Chart Repo](https://github.com/longhorn/longhorn/tree/master/chart).
 
-# Pre-deployment steps
+### Pre-deployment steps
 
-# 1. (Optional) Label nodes to run longhorn on
+#### 1. **(Optional)** Label nodes to run longhorn on
 
 Make sure you have labelled your nodes so that longhorn can use them as storage nodes. 
 
@@ -28,7 +28,9 @@ longhorn:
       longhorn.store.nodeselect/longhorn-storage-node: true	
 ```	
 
-**NOTE:** If you're NOT using `capi` - make sure you set these labels accordingly for your cluster. 	
+> [!WARNING]
+> If you are **NOT** using `capi` - make sure to set these labels accordingly for your cluster
+ 	
 
 If you want to change the node labels that capi uses - you can do so like this: 
 
@@ -40,20 +42,15 @@ openstack-cluster:
       longhorn.store.nodeselect/longhorn-storage-node: true
 ```	
 
-# 2. (Optional) Add tls secret 	
+#### 2. **(Optional)** Add TLS secret 	
 
+Longhorn is configured to use TLS by default, by default it uses a self-signed certificate.
 
-Longhorn is configured to use TLS by default, by default it uses a self-signed certificate which is not secure - recommended to get a proper certificate for production systems.	Longhorn is configured to use TLS by default, by default it uses a self-signed certificate which is not secure - recommended to get a proper certificate for production systems.
+> [!CAUTION]
+> For Production Systems, use a production certificate.
+> Do **NOT** use a self-signed certificate.
 
-
-Footer
-
-
-# 2. (Optional) Add tls secret 
-
-Longhorn is configured to use TLS by default, by default it uses a self-signed certificate which is not secure - recommended to get a proper certificate for production systems.
-
-you can create the tls secret like so:
+You can create the TLS secret like so:
 
 ```
 kubectl create secret tls longhorn-tls-keypair --key /path/to/privateKey.key --cert /path/to/certificate.crt -n longhorn-system
@@ -67,7 +64,7 @@ longhorn:
 ```
 
 
-# Post-deployement steps
+## Post-deployement steps
 
 Longhorn is already setup to be the default storageclass - if you're using CAPI you will need to drop csi-cinder storage class as being the default - you can do this by running
 
@@ -75,9 +72,9 @@ Longhorn is already setup to be the default storageclass - if you're using CAPI 
 kubectl patch storageclass csi-cinder -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 
-# Common Problems 
+## Common Problems 
 
-## 1. Longhorn web UI is giving a 500 and ArgoCD is stuck processing
+### 1. Longhorn web UI is giving a 500 and ArgoCD is stuck processing
 
 Doing `kubectl get ds -n longhorn-system` shows a deployment with 0/0 instances
 

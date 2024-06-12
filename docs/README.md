@@ -26,3 +26,9 @@ See [Adding a New Chart to This Repo](charts.md)
 
 ### Deploying a Chart onto a Cluster?
 See [Deploying a Chart Onto a Cluster](deploying-apps.md)
+
+### Need to Set Up Longhorn App?
+See [App Setup Steps](app-setup.md)
+
+### Need to Set Up Specific Infra?
+See [Infra Setup Steps](infra-setup.md)
