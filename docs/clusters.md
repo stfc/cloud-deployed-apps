@@ -1,7 +1,7 @@
 # Deploying a new environment
 
 > [!NOTE]
-> The following documentation outlines how to deploy a **new** ArgoCD envrionment
+> The following documentation outlines how to deploy a **new** ArgoCD envrionment onto a `management` cluster.
 > See [Deploying a Child Cluster](child-clusters.md) if you are deploying a cluster using an existing environment.
 
 
