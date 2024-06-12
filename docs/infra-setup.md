@@ -10,7 +10,7 @@ We utilise StackHPCs CAPI Chart to do this. See the docs [here](https://github.c
 
 ## Pre-deployment steps
 
-1. (Optional) Add TLS Certs - for CAPI Monitoring
+1. **(Optional)** Add TLS Certs - for CAPI Monitoring
 
 CAPI monitoring (which is enabled by default) requires TLS certs. 
 
@@ -29,7 +29,7 @@ kubectl create secret tls tls-keypair --cert certificate.crt --key privateKey.ke
 ```
 
 
-2. (optional) Enable sending monitoring alerts
+2. **(Optional)** Enable sending monitoring alerts
 
 Monitoring is enabled by default but will not send alerts out unless configured to. 
 In order to turn on alerts - edit the file `clusters/<environment>/<cluster-name>infra-values.yaml` and add the following
@@ -50,7 +50,7 @@ openstack-cluster:
 ```
 
 
-1. (optional) Change the ingress hostnames for monitoring endpoints
+3. **(Optional)** Change the ingress hostnames for monitoring endpoints
 
 ```
 openstack-cluster:
@@ -85,14 +85,16 @@ openstack-cluster:
                     secretName: tls-keypair
 ``` 
 
-**NOTE: make sure you follow the post-deployment steps too to configure sending emails**
+> [!NOTE]
+> Make sure to follow post-deployment steps below for configuring sending emails
+
 
 ## Post-deployment
 
-NOTE: this will likely be deprecated for using secrets
+> [!WARNING]
+> This will likely be deprecated for using secrets
 
-If you have enabled monitoring. 
-You need to manually set a few secrets that capi requires - this includes: 
+If you have enabled monitoring. You need to manually set a few secrets that capi requires - this includes: 
 
 1. The mail server to use to send alerts (If sending alerts)
 2. Which email address to send alerts to. (If sending alerts)
@@ -112,6 +114,6 @@ spec:
         value: <email-address>
 ```
 
-then you can run: 
+Then you can run: 
 `kubectl patch -n argocd app <cluster-name> --patch-file /tmp/capi_patch.yaml --type merge`
  
