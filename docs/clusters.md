@@ -1,7 +1,7 @@
 # Deploying a new environment
 
 > [!NOTE]
-> The following documentation outlines how to deploy a new ArgoCD envrionment
+> The following documentation outlines how to deploy a **new** ArgoCD envrionment
 > See [Deploying a Child Cluster](child-clusters.md) if you are deploying a cluster using an existing environment.
 
 
@@ -13,6 +13,11 @@
 5. Create a self-managed cluster called `management` 
    - see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup. 
    - Ensure the name is `management` as CAPI cannot rename a cluster.
+
+
+| :exclamation:  Make sure you already have a CAPI cluster deployed before proceeding with rest of the documentation   |
+|----------------------------------------------------------------------------------------------------------------------|
+
 
 ## Motivation
 You may want to make your own environment so you can test gitOps config or charts idependently of running clusters on test/feature branches
@@ -58,7 +63,10 @@ Repeat for all other clusters you want to add
 
 11. **(Optional)** If this is not a temporary environment - and you want to keep it around long term in `main` make a PR for it and get it merged
 
-12. Deploy age private key secret to management cluster - see [secrets](secrets.md) for more info
+12. Deploy age private key secret to management cluster
+
+**New to generating age keys and generating secrets?** See [secrets](secrets.md) for more information
+
 ``` cd scripts; ./deploy-helm-secret.sh <path-to-age-private-key>``` 
 
 13. Run deploy.sh on your self-managed cluster `management` like so:
