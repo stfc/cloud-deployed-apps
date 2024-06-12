@@ -1,13 +1,16 @@
-# Deploying a new app onto a cluster
+# Deploying a New App Onto a Cluster
 
 ## Prerequisites 
-To deploy a new app onto the cluster - make sure a chart exists for it. 
 
-A chart must be defined in `charts/<environment>/<chart-name>` 
-    - where `<environment>` is the environment of the cluster you want to deploy the app to
-    - see [charts](charts.md) for more info
+- Chart for the application
+  - This must be defined in `charts/<environment>/<chart-name>`, where `<environment>` is the environment of the cluster (e.g. dev/staging) you want to deploy the app to
+  - See [Charts](charts.md) for more information
 
-An Understanding of [ArgoCD Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/), particularly [ApplicationSets](https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/applicationset-specification/) 
+
+- Understanding of core ArgoCD Concepts: See [ArgoCD Concepts](https://argo-cd.readthedocs.io/en/stable/core_concepts/)
+  - In particular [ApplicationSets](https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/applicationset-specification/) 
+
+To deploy a new app onto the cluster - make sure a chart exists for it.  
 
 ## Steps
 
@@ -36,7 +39,8 @@ spec:
 
 ```
 
-NOTE: IGNORE THE EXISTING ELEMENTS
+> [!NOTE]
+> IGNORE THE EXISTING ELEMENTS
 
 `name`: name of ArgoCD-Application
 
@@ -46,14 +50,16 @@ NOTE: IGNORE THE EXISTING ELEMENTS
 
     - NOTE: this `valuesFile` parameter is NON-OPTIONAL - you must provide a file, even if its blank
 
-NOTE: remember to encase any cluster-specific values for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
+> [!NOTE]
+> Remember to encase any cluster-specific values for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
+
 ```
 argo-cd:
    val1: foo
    val2: bar
 ```
 
-because `argo-cd` is the name of the subchart that installs argocd
+This is because `argo-cd` is the name of the subchart that installs argocd
 
 3. Commit and make a PR
 
