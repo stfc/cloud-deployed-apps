@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: test_staging
+    targetRevision: folder_flows
     path: clusters/staging/management
   syncPolicy:
     automated:
@@ -62,7 +62,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: test_staging
+        targetRevision: folder_flows
         path: "charts/staging/{{chartName}}"
         helm:
           valueFiles:
@@ -108,7 +108,7 @@ spec:
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
-        targetRevision: test_staging
+        targetRevision: folder_flows
         path: charts/staging/capi-infra
         helm:
           releaseName: "{{path.basename}}"
