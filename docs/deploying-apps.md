@@ -39,9 +39,6 @@ spec:
 
 ```
 
-> [!NOTE]
-> IGNORE THE EXISTING ELEMENTS
-
 `name`: name of ArgoCD-Application
 
 `chartName`: name of chart - matching directory name should be in `charts/<environment>/`

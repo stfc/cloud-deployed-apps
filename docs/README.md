@@ -12,7 +12,7 @@ This documentation outlines how to set up clusters managed by ArgoCD in the STFC
 ### Deploying a New ArgoCD Environment?
 If you are starting from scratch and need to set up a new environment (e.g. deploying a new dev ArgoCD cluster), start with: [Deploying a new cluster](clusters.md)
 
-> [!INFO]
+> [!NOTE]
 > This guide assumes you already have a CAPI cluster already deployed to configure into a new ArgoCD environment.
 
 ### Need to Deploy Secrets?

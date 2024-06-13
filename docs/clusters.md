@@ -15,7 +15,7 @@
    - Ensure the name is `management` as CAPI cannot rename a cluster.
 
 
-| :exclamation:  Make sure you already have a CAPI cluster deployed before proceeding with rest of the documentation   |
+| :exclamation:  Make sure you already have a Kubernetes cluster deployed before proceeding with rest of the documentation   |
 |----------------------------------------------------------------------------------------------------------------------|
 
 
