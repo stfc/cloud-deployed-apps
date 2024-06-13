@@ -1,12 +1,12 @@
 # Deploying a child cluster on an existing environment
 
 > [!NOTE]
-> The following documentation outlines how to deploy child clusters in an existing environment.
+> The following documentation outlines how to deploy child clusters in an **existing** environment.
 > See [Deploying a new environment](clusters.md) if deploying a new ArgoCD environment
 
 ## Prerequisites: 
-1. Create an application credential for your new cluster on your project
-2. Ensure enough quota for the cluster (RAM, CPU, instances etc)
+1. Create an application credential for the project the child cluster should be deployed in
+2. Ensure the project has enough quota for the cluster (RAM, CPU, instances etc)
 3. Provision a floating ip on your project for kubernetes API Server access
 4. (Optional) Provision a second floating IP for nginx ingress controller
 
