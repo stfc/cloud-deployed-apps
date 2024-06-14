@@ -8,15 +8,21 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+if [ -z "$2" ]; then
+  echo "Please provide the environment as an argument (prod/staging)."
+  echo "Usage: $0 <cluster-name> <environment>"
+  exit 1
+fi
+
 
 CLUSTER_NAME=$1
-
-echo "Adding the ArgoCD Helm repository..."
-helm repo add argo https://argoproj.github.io/argo-helm
+ENVIRONMENT=$2
 
 echo "Installing ArgoCD on cluster $CLUSTER_NAME using Helm..."
 echo "THIS COULD TAKE A WHILE"
-helm upgrade --install argocd argo/argo-cd \
+helm dependencies update "../charts/$ENVIRONMENT/argocd"
+helm upgrade --install argocd "../charts/$ENVIRONMENT/argocd" \
+  -f "../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-setup-values.yaml" \
   --create-namespace \
   --namespace argocd \
   --wait
@@ -33,15 +39,11 @@ done
 if [ ! -f /usr/local/bin/argocd ]; then
   echo "Installing ArgoCD CLI..."
   curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-  sudo install -m 755 argocd-linux-amd64 /usr/local/bin/argocd
+  sudo install -m 755 argocd-linux-amd64 "/usr/local/bin/argocd"
   rm argocd-linux-amd64
 fi
 
 echo "Creating App of Apps for cluster $CLUSTER_NAME..."
-helm upgrade --install argocd-apps ../charts/argocd-apps -n argocd -f ../charts/argocd-apps/values.yaml -f ../clusters/$CLUSTER_NAME/app-values.yaml --wait
-
-if [ -f "../clusters/$CLUSTER_NAME/infra-values.yaml" ]; then
-  helm upgrade --install argocd-infra ../charts/argocd-infra -n argocd -f ../charts/argocd-infra/values.yaml -f ../clusters/$CLUSTER_NAME/infra-values.yaml  --wait
-fi
+kubectl apply -f "../clusters/$ENVIRONMENT/$CLUSTER_NAME/apps.yaml"
 
 echo "ArgoCD installation and configuration completed for cluster $CLUSTER_NAME."

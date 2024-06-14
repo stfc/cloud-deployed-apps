@@ -1,0 +1,3 @@
+apiVersion: v2
+name: victoria-metrics-cluster
+version: 1.0.0
