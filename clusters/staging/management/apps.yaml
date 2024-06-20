@@ -98,7 +98,7 @@ spec:
 
   template:
     metadata:
-      name: "{{path.basename}}-cluster"
+      name: "staging-{{path.basename}}-cluster"
       # All applications need to go into the ArgoCD namespace
       namespace: argocd
     spec:
