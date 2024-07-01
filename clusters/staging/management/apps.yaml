@@ -111,7 +111,6 @@ spec:
         targetRevision: main
         path: charts/staging/capi-infra
         helm:
-          releaseName: "{{path.basename}}"
           valueFiles:
             # Bring in values that are specific to this application
             - "../../../{{path}}/{{path.filename}}"
