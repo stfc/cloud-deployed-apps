@@ -9,7 +9,7 @@ openstack-cluster:
   nodeGroupDefaults:
     machineFlavor: l3.nano
 
-addons:
+  addons:
     ingress:
       enabled: true
       nginx:
