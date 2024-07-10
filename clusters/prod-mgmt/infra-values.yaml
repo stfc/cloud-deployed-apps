@@ -14,13 +14,6 @@ infra:
     additionalValueFiles:
       - clusters/prod-mgmt/overrides/infra/deployment.yaml
 
-  - name: jupyter-training
-    disableAutomated: false
-    chartName: capi
-    namespace: clusters
-    additionalValueFiles:
-      - clusters/jupyter-training/overrides/infra/deployment.yaml
-
   - name: vm-prod
     disableAutomated: false
     chartName: capi
