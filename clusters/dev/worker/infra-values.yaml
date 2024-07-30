@@ -17,7 +17,7 @@ openstack-cluster:
           values:
             controller:
               service:
-                loadBalancerIP: "130.246.80.12"
+                loadBalancerIP: "130.246.211.169"
 
     monitoring:
       enabled: true
