@@ -21,7 +21,8 @@ To deploy a new app onto the cluster - make sure a chart exists for it.
    - where `<cluster-name>` is the name of the cluster
 
 To add an app provide the following
-```
+
+```yaml
 spec:
   generators:
     - list:
@@ -34,9 +35,9 @@ spec:
           chartName: "chart-name" 
 
         # THIS NEEDS TO BE INCLUDED - NON-OPTIONAL (but can be blank)
-        # PATH TO CLUSTER-SPECIFIC CHART VALUES HERE (relative to chart location in repo)
-          valuesFile: ../../../clusters/<environment>/<cluster-name>/<cluster-specific-values-file>.yaml
-
+        # PATH TO CLUSTER-SPECIFIC CHART VALUES HERE 
+        # (relative to chart location in repo)
+          valuesFile: ../../../clusters/<environment>/<cluster-name>/<cluster-values-file>.yaml
 ```
 
 `name`: name of ArgoCD-Application
@@ -50,7 +51,7 @@ spec:
 > [!NOTE]
 > Remember to encase any cluster-specific values for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
 
-```
+```yaml
 argo-cd:
    val1: foo
    val2: bar

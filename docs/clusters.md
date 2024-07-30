@@ -6,6 +6,7 @@
 
 
 ## Prerequisites: 
+
 1. Create an application credential for your new cluster on your project
 2. Ensure enough quota for the cluster (RAM, CPU, instances etc)
 3. Provision a floating ip on your project for kubernetes API Server access
@@ -67,10 +68,15 @@ Repeat for all other clusters you want to add
 
 **New to generating age keys and generating secrets?** See [secrets](secrets.md) for more information
 
-``` cd scripts; ./deploy-helm-secret.sh <path-to-age-private-key>``` 
+```bash
+cd scripts; ./deploy-helm-secret.sh <path-to-age-private-key>
+``` 
 
 13. Run deploy.sh on your self-managed cluster `management` like so:
-``` cd scripts; ./deploy.sh <cluster-name> <your-environment> ```
+
+```bash
+cd scripts; ./deploy.sh <cluster-name> <your-environment> 
+```
 
 14.  Wait for argocd to deploy and it should spring to life and spin up any other clusters you've defined
 

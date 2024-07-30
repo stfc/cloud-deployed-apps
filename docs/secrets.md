@@ -36,7 +36,7 @@ sops example-secret.yaml
 
 ArgoCD needs access to the private key to decrypt the secrets. This is done by adding the private key to the ArgoCD application as a secret:
 
-```
+```bash
 kubectl -n argocd create secret generic helm-secrets-private-keys --from-file=key.txt=age-key.txt
 ```
 

@@ -20,7 +20,7 @@ You want to label your worker nodes, the default label is `longhorn.store.nodese
 
 You can change this in the cluster-specific values like so:	
 
-```	
+```yaml
 longhorn:	
   longhornManager:	
     nodeSelector: 	
@@ -34,7 +34,7 @@ longhorn:
 
 If you want to change the node labels that capi uses - you can do so like this: 
 
-```	
+```yaml	
 openstack-cluster:	
   nodeGroupDefaults:	
     nodeLabels:	
@@ -52,12 +52,13 @@ Longhorn is configured to use TLS by default, by default it uses a self-signed c
 
 You can create the TLS secret like so:
 
-```
+```bash
 kubectl create secret tls longhorn-tls-keypair --key /path/to/privateKey.key --cert /path/to/certificate.crt -n longhorn-system
 ```
 
 and set longhorn to use it in cluster-specific values file like so:
-```
+
+```yaml
 longhorn:
   ingress:
     tlsSecret: longhorn-secret
@@ -68,7 +69,7 @@ longhorn:
 
 Longhorn is already setup to be the default storageclass - if you're using CAPI you will need to drop csi-cinder storage class as being the default - you can do this by running
 
-```
+```bash
 kubectl patch storageclass csi-cinder -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 

@@ -38,22 +38,22 @@ Note: Applications can be held back from a full release if required, e.g. if a p
 
 ## Deploying a new app, or modifying an existing app
 
-- Create a test cluster - either a self-managed cluster or a child cluster of dev/management - see [Deploying a new cluster](clusters.md)
+1. Create a test cluster - either a self-managed cluster or a child cluster of dev/management - see [Deploying a new cluster](clusters.md)
 
-- Create a branch for development off of `main` for making changes
+2. Create a branch for development off of `main` for making changes
 
-- Create a new directory under `charts/dev` (or similar) for your new chart - you can also choose to deploy a new cluster for testing - see [Deploying a new cluster](clusters.md)
+3. Create a new directory under `charts/dev` (or similar) for your new chart - you can also choose to deploy a new cluster for testing - see [Deploying a new cluster](clusters.md)
 
-- Simply use `helm install` to install the chart on a test cluster to see if it works, iterating on the chart until it does.
+4. Simply use `helm install` to install the chart on a test cluster to see if it works, iterating on the chart until it does.
 
-- Note: Ensure there are no environment specific values are present in the values file e.g. domain name, monitoring....etc. If you have env specific values we cannot promote by simply copying the charts. As a rule of thumb, if you need to consider a value per cluster (e.g. domain name) place it into the clusters dir
+5. Ensure there are no environment specific values are present in the values file e.g. domain name, monitoring....etc. If you have env specific values we cannot promote by simply copying the charts. As a rule of thumb, if you need to consider a value per cluster (e.g. domain name) place it into the clusters dir
 
-- You should store these values alongside the cluster you are using to test these changes - see [Deploying Apps to a cluster](deploying-apps.md)
+6. You should store these (non-sensitive) cluster-specific values alongside the cluster you are using to test these changes - see [Deploying Apps to a cluster](deploying-apps.md)
 
-- Follow the instructions for adding your application to the appset as described in [Deploying Apps to a cluster](deploying-apps.md)
+7. Follow the instructions for adding your application to the appset as described in [Deploying Apps to a cluster](deploying-apps.md)
 
-- Create a PR
+8. Create a PR and get it reviewed and merged
 
-- Delete your test cluster
+9. Delete your test cluster
 
-- Follow steps in [promotion workflow](promotion.md) for promoting your new app/app changes to staging and then production
+10. Follow steps in [promotion workflow](promotion.md) for promoting your new app/app changes to staging and then production
