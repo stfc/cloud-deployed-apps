@@ -18,13 +18,13 @@ Create a self-signed cert or get one issued.
 
 To create a self-signed cert:
 
-```
+```bash
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout privateKey.key -out certificate.crt
 ```
 
 Then to create a secret from a cert - the secret name is for Prometheus, Alertmanager and Grafana is expected to be `tls-keypair` by default:
 
-```
+```bash
 kubectl create secret tls tls-keypair --cert certificate.crt --key privateKey.key -n monitoring-system
 ```
 
@@ -34,7 +34,7 @@ kubectl create secret tls tls-keypair --cert certificate.crt --key privateKey.ke
 Monitoring is enabled by default but will not send alerts out unless configured to. 
 In order to turn on alerts - edit the file `clusters/<environment>/<cluster-name>infra-values.yaml` and add the following
 
-```
+```yaml
 openstack-cluster:
   addons:
     monitoring:
@@ -43,8 +43,8 @@ openstack-cluster:
           values:
             defaultRules:
               additionalRuleLabels:
-                cluster: <name of cluster>
-                env: <dev/prod>
+                cluster: foo # name of cluster
+                env: dev # dev/prod
             alertmanager:
               enabled: true
 ```
@@ -52,14 +52,18 @@ openstack-cluster:
 
 3. **(Optional)** Change the ingress hostnames for monitoring endpoints
 
-```
+```yaml
 openstack-cluster:
   addons:
     monitoring:
       kubePrometheusStack:
         release:
           values:
+            defaultRules: # see above
+              cluster: foo # name of cluster
+              env: dev # dev/prod
             alertmanager:
+              enabled: true # see above
               ingress:
                 hosts:
                   - <alertmanager-hostname>.nubes.stfc.ac.uk
@@ -101,7 +105,8 @@ If you have enabled monitoring. You need to manually set a few secrets that capi
 
 Create a temporary file `/tmp/capi_patch.yaml`
 
-```
+```yaml
+# /tmp/capi_patch.yaml
 spec:
   source:
     helm:
@@ -115,5 +120,7 @@ spec:
 ```
 
 Then you can run: 
-`kubectl patch -n argocd app <cluster-name> --patch-file /tmp/capi_patch.yaml --type merge`
+```bash
+kubectl patch -n argocd app <cluster-name> --patch-file /tmp/capi_patch.yaml --type merge
+```
  

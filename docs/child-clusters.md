@@ -13,13 +13,14 @@
 ## Steps
 To deploy a new child cluster on an existing environment follow these steps:
 
-
 1. Create a branch off of main
 2. Create a new folder under `clusters/<environment>/<cluster-name>`
 3. Create a file in `clusters/<environment>/<cluster-name>/infra-values.yaml` 
 4. Populate the `infra-values.yaml` file with cluster-specific values for the chart in `capi-infra` chart. 
+
 It could look like this:
-```
+
+```yaml
 openstack-cluster:
 
 # defining the number of control-plane nodes
@@ -35,7 +36,8 @@ openstack-cluster:
   nodeGroupDefaults:
     machineFlavor: l3.nano
 
-# addon config for the cluster - here we're defining an nginx ingress controller service
+# addon config for the cluster 
+# here we define an nginx ingress controller service
   addons:
     ingress:
       enabled: true
@@ -44,7 +46,8 @@ openstack-cluster:
           values:
             controller:
               service:
-                loadBalancerIP: "130.xxx.yyy.zzz"
+                # create a floatip for ingress on your project and put it here
+                loadBalancerIP: "130.xxx.yyy.zzz" 
 
 ```
 
@@ -62,17 +65,18 @@ In this file you will define age **public** keys for those who can decrypt/encry
 
 7. Create file `api-server-fip.yaml` using `sops api-server-fip.yaml`. Add the following config:
 
-```
-openstack-cluster
+```yaml
+openstack-cluster:
     apiServer:
-        floatingIP: 130.xxx.yyy.zzz
+        # create a floatip for accessing your K8s cluster and put it here
+        floatingIP: 130.xxx.yyy.zzz 
 ```
 
 This file contains the floating ip in which Kubernetes API server can be accessed
 
 8. Create file `app-creds.yaml` using `sops app-creds.yaml`. Add the following config
 
-```
+```yaml
 openstack-cluster:
     # COPY YOUR OPENSTACK APP-CREDS INFO HERE
 
@@ -85,7 +89,7 @@ openstack-cluster:
                 application_credential_id: ""
                 application_credential_secret: ""
 
-                # ADD THE PROJECT_ID MANUALLY
+                # REMEMBER TO ADD THE PROJECT_ID MANUALLY
                 project_id: ""
                 
             region_name: ""
