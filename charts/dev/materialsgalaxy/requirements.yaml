@@ -1,0 +1,4 @@
+dependencies:
+  - repository: https://raw.githubusercontent.com/CloudVE/helm-charts/master/
+    name: galaxy
+    version: 5.15.0

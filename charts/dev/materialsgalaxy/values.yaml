@@ -1,0 +1,347 @@
+galaxy:
+  image:
+    #- Repository containing the Galaxy image.
+    repository: quay.io/galaxyproject/galaxy-min
+    #- Galaxy Docker image tag (generally corresponds to the desired Galaxy version)
+    tag: "24.0.2"  # Value must be quoted
+    pullPolicy: IfNotPresent
+
+  workflowHandlers:
+    replicaCount: 1
+  
+  webHandlers:
+    replicaCount: 1
+
+  jobHandlers:
+    replicaCount: 1
+
+  # celery handles time-consuming jobs that may block other galaxy services
+  celery:
+    replicaCount: 1
+
+  # celery scheduler
+  celeryBeat:
+    replicaCount: 1
+
+  # prometheus metrics
+  metrics:
+    enabled: false
+
+  # TODO: look into galaxy job role based access control
+  rbac:
+    enabled: true
+
+  persistence:
+    enabled: true
+    # must support readwritemany
+    storageClass: longhorn
+    size: 10Gi
+
+  setupJob:
+    createDatabase: true
+    # turn off installing default tools    
+    downloadToolConfs:
+      enabled: false
+
+  #- install materials galaxy tools by cloning repos into shared volume
+  extraInitContainers: 
+    - name: clone-muon-tools
+      applyToJob: false
+      applyToWeb: true
+      applyToWorkflow: false
+      image: "alpine/git:latest"
+      command: ['sh', '-c', 'if [ ! -d {{.Values.persistence.mountPath}}/muon-galaxy-tools ]; then git clone https://github.com/muon-spectroscopy-computational-project/muon-galaxy-tools.git {{.Values.persistence.mountPath}}/muon-galaxy-tools; fi']
+      volumeMounts:
+        - name: galaxy-data
+          mountPath: "{{.Values.persistence.mountPath}}"
+    - name: clone-larch-tools
+      applyToJob: false
+      applyToWeb: true
+      applyToWorkflow: false
+      image: "alpine/git:latest"
+      command: ['sh', '-c', 'if [ ! -d {{.Values.persistence.mountPath}}/larch-tools ]; then git clone https://github.com/MaterialsGalaxy/larch-tools.git {{.Values.persistence.mountPath}}/larch-tools; fi']
+      volumeMounts:
+        - name: galaxy-data
+          mountPath: "{{.Values.persistence.mountPath}}"
+
+
+  ingress:
+    # used in galaxy configuration
+    path: "/"
+
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+
+    canary:
+      enabled: false
+
+    hosts:
+      - host: "galaxy-dev.nubes.stfc.ac.uk"
+        paths:
+          - path: "/"
+
+  # set default storage
+  # this should be higher if there's more users
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1G
+      ephemeral-storage: 1Gi
+    limits:
+      cpu: 3
+      memory: 7G
+      ephemeral-storage: 10Gi
+
+  # standalone db to reduce galaxy memory footprint
+  postgresql:
+    enabled: true
+
+    # TODO: postgresql operator should really be installed as separate dependency
+    # to allow for more than one galaxy service to be run on same cluster
+    deploy: true
+
+  # do not mount cloud-hosted Galaxy reference data and tools
+  refdata:
+    enabled: false
+
+  # 
+  configs:
+    # TODO: define how to use other job runners here:
+    # slurm - job_conf.yml:
+
+    # galaxy configuration
+    galaxy.yml:
+      galaxy:
+        # testing with no authentication
+        use_remote_user: false
+        single_user: galaxy-user@example.com
+
+    integrated_tool_panel.xml: |-
+      <?xml version='1.0' encoding='utf-8'?>
+      <toolbox monitor="true">
+        <section id="get_data" name="Get Data">
+        </section>
+        <label id="muon_label" text="Muons" />
+        <section id="muspinsim" name="MuSpinSim">
+        </section>
+        <section id="muon_stopping_sites" name="Muon Stopping Sites">
+        </section>
+        <section id="muon_other" name="Other Muon Tools">
+        </section>
+        <label id="xas_label" text="xas" />
+        <label id="other_tools" text="Other Tools" />
+        <section id="file_conversion" name="File Conversion">
+        </section>
+        <section id="collection_operations" name="Collection Operations">
+        </section>
+      </toolbox>
+
+    tool_conf.xml: |-
+      <?xml version='1.0' encoding='utf-8'?>
+      <toolbox monitor="true">
+        <section id="get_data" name="Get Data">
+          <tool file="data_source/upload.xml" />
+        </section>
+        <label id="muon_label" text="Muons" />
+        <section id="muspinsim" name="MuSpinSim">
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/muspinsim_combine/muspinsim_combine.xml"/>
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/muspinsim_config/muspinsim_config.xml"/>
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/muspinsim_plot/muspinsim_plot.xml"/>
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/muspinsim/muspinsim.xml"/>
+        </section>
+        <section id="muon_stopping_sites" name="Muon Stopping Sites">
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/pm_muairss_read/pm_muairss_read.xml"/>
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/pm_uep_opt/pm_uep_opt.xml"/>
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/pm_symmetry/pm_symmetry.xml"/>
+        </section>
+        <section id="muon_other" name="Other Muon Tools">
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/mudirac/mudirac.xml"/>
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/pm_asephonons/pm_asephonons.xml"/>
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/pm_nq/pm_nq.xml"/>
+        </section>
+        <label id="xas_label" text="xas" />
+        <tool file="{{.Values.persistence.mountPath}}/larch-tools/larch_select_paths/larch_select_paths.xml" />
+        <tool file="{{.Values.persistence.mountPath}}/larch-tools/larch_plot/larch_plot.xml" />
+        <tool file="{{.Values.persistence.mountPath}}/larch-tools/larch_athena/larch_athena.xml" />
+        <tool file="{{.Values.persistence.mountPath}}/larch-tools/larch_artemis/larch_artemis.xml" />
+        <tool file="{{.Values.persistence.mountPath}}/larch-tools/larch_feff/larch_feff.xml" />
+        <tool file="{{.Values.persistence.mountPath}}/larch-tools/larch_lcf/larch_lcf.xml" />
+        <tool file="{{.Values.persistence.mountPath}}/larch-tools/larch_criteria_report/larch_criteria_report.xml" />
+        <label id="other_tools" text="Other Tools" />
+        <section id="file_conversion" name="File Conversion">
+          <tool file="{{.Values.persistence.mountPath}}/muon-galaxy-tools/cif2cell/cif2cell.xml" />
+        </section>
+        <section id="collection_operations" name="Collection Operations">
+          <tool file="${model_tools_path}/unzip_collection.xml" />
+          <tool file="${model_tools_path}/zip_collection.xml" />
+          <tool file="${model_tools_path}/filter_failed_collection.xml" />
+          <tool file="${model_tools_path}/filter_empty_collection.xml" />
+          <tool file="${model_tools_path}/flatten_collection.xml" />
+          <tool file="${model_tools_path}/merge_collection.xml" />
+          <tool file="${model_tools_path}/relabel_from_file.xml" />
+          <tool file="${model_tools_path}/filter_from_file.xml" />
+          <tool file="${model_tools_path}/sort_collection_list.xml" />
+          <tool file="${model_tools_path}/tag_collection_from_file.xml" />
+          <tool file="${model_tools_path}/apply_rules.xml" />
+          <tool file="${model_tools_path}/build_list.xml" />
+          <tool file="${model_tools_path}/extract_dataset.xml" />
+        </section>
+      </toolbox>
+
+  extraFileMappings:
+    /galaxy/server/static/welcome.html:
+      useSecret: false
+      applyToJob: false
+      applyToWeb: true
+      applyToSetupJob: true
+      applyToWorkflow: false
+      applyToNginx: true
+      tpl: true
+      # taken from materialsgalaxy.stfc.ac.uk
+      content: |
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+                <link rel="stylesheet" href="dist/base.css" type="text/css" />
+            </head>
+            <body class="m-0">
+                <div class="py-4">
+                    <div class="container">
+                        <h1>Welcome to <strong>Materials Galaxy</strong>! powered by STFC Cloud CAPE</h1>
+                    </div>
+                    <br>
+                    <div class="container">
+                        <p>Materials Galaxy provides access to tools for tackling computational challenges in muon spectroscopy and X-ray absorption spectroscopy.
+                        </p>
+                        <p>
+                        Materials Galaxy is based on the Galaxy framework, which guarantees simple access, easy extension, 
+                        flexible adaption to personal and security needs, and sophisticated analyses independent of command-line knowledge.
+                        </p>
+                    </div>
+                    <div class="container">
+                        <h2>New to Materials Galaxy?</h2>
+                        <p>Take an interactive tour:
+                            <a target="_parent" href="../tours/core.galaxy_ui" class="btn btn-secondary btn-sm">Galaxy UI</a>
+                            <a target="_parent" href="../tours/core.history" class="btn btn-secondary btn-sm">History</a>
+                            <a target="_parent" href="../tours/core.scratchbook" class="btn btn-secondary btn-sm">Scratchbook</a>
+                        </p>
+                        <p>Or try these tutorials:
+                            </p><ul>
+                                <li>
+                                    <a href="https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-101-everyone/tutorial.html">Galaxy 101 for everyone</a>
+                                </li>
+                                <li>
+                                    <a href="https://training.galaxyproject.org/training-material/topics/materials-science/tutorials/muon-stopping-sites-muairss-uep/tutorial.html"> Finding muon stopping sites with PyMuonSuite </a>
+                                </li>
+                                <li>
+                                    Modelling spin dynamics with MuSpinSim (coming soon)
+                                </li>
+                            </ul>
+                        <p></p>
+                    </div>
+                    <div class="container">
+                        <h2>Reproducibility &amp; Transparency</h2>
+                        <p>The history is the foundation of reproducibility and transparency in Galaxy. 
+                        It captures inputs, parameters, and versions of the used tools. It can be shared with everyone, even outside the Galaxy framework.</p>
+                        <p>
+                        Galaxy provides also a powerful workflow system.
+                        Workflows can be created by extraction of workflows from histories or from scratch with drag-and-drop. 
+                        They are downloadable and shareable with everyone, no vendor lock-in.
+                        Click 'All Workflows' in the tool panel to see the available public workflows or build your own.</p>
+                        
+                    </div>
+                    <div class="container">
+                        <h2>Contact Us</h2>
+                        <p>
+                        Materials Galaxy is run by members of the 
+                        <a target="_blank" class="reference" href="https://muon-spectroscopy-computational-project.github.io">Muon Spectroscopy Computational Project</a>.
+                        You can contact us in the
+                        <a target="_blank" class="reference" href="https://matrix.to/#/#galaxyproject_materials-science:matrix.org">Galaxy for Materials Science Matrix channel</a>.
+                        We have expertise in applying computational muon science tools (including those present in Materials Galaxy) to complex physical systems. 
+                        We are happy to provide support with learning Galaxy, learning our muon and XAS science tools, and applying these tools to particular physical systems.
+                        </p>
+                    </div>
+                    <div class="container">
+                        <h2>Acknowledgment</h2>
+                        <p>
+                        We are aiming to maintain high competency and provide high-quality data analysis services to all our Galaxy users.
+                        </p>
+                        <p>      
+                        Therefore, we request that you acknowledge this service by including the members of the Muon Spectroscopy Computational Project as co-authors 
+                        if they have made a significant intellectual and/or organizational contribution to the work described 
+                        (conceptualization, design, data analysis, data interpretation and/or input into drafting, revising or writing any portion of the manuscript).
+                        </p>
+                        <p>
+                        Individuals who have contributed to the project, but whose contributions do not rise to the level justifying authorship, 
+                        can be recognized in the acknowledgements section of the manuscript as follows:
+                        </p>
+                        <blockquote>
+                            <p><em>
+                                The authors acknowledge the support of the Muon Spectroscopy Computational Project: 
+                                Person X and Person Z, Science and Technology Facilities Council, UK Research and Innovation, 
+                                co-funded by the Ada Lovelace Centre, Scientific Computing Department, STFC, UKRI, 
+                                and Horizon Europe grant 101057388 (EuroScienceGateway).
+                            </em></p>
+                        </blockquote>                
+                        <p>
+                        Additional funding of projects as well as the provision of material expenses is welcome to support our growing Galaxy community. Please also cite the 
+                        <a target="_blank" class="reference" href="https://doi.org/10.1093/nar/gkac247">main Galaxy publication</a>.
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div class="container">
+                    <footer>
+                    <p>
+                        <a target="_blank" class="reference" href="http://galaxyproject.org/">
+                        Galaxy</a> is an open platform for supporting data intensive
+                        research. Galaxy is developed by <a target="_blank" class="reference" href="https://galaxyproject.org/galaxy-team/">The Galaxy Team</a>
+                        with the support of  <a target="_blank" class="reference" href="https://github.com/galaxyproject/galaxy/blob/dev/CONTRIBUTORS.md">many contributors</a>.
+                    </p>
+                        <p>This site is maintained by members of the
+                        <a target="_blank" class="reference" href="https://muon-spectroscopy-computational-project.github.io">Muon Spectroscopy Computational Project</a> (MSCP) 
+                        within the 
+                        <a target="_blank" class="reference" href="http://stfc.ac.uk">Science and Technology Facilities Council</a> (STFC), UK Research and Innovation, 
+                        with financial support from the
+                        <a target="_blank" class="reference" href="https://www.infraportal.org.uk/infrastructure/ada-lovelace-centre">Ada Lovelace Centre</a>
+                        and Horizon Europe grant 101057388
+                        (<a target="_blank" class="reference" href="https://elixir-italy.org/project/eurosciencegateway/">EuroScienceGateway</a>).
+                        Additional support for the MSCP comes from STFC
+                        <!--<a target="_blank" class="reference" href="https://www.isis.stfc.ac.uk">ISIS Neutron and Muon Source</a>-->
+                        and the
+                        <a target="_blank" class="reference" href="https://www.software.ac.uk">Software Sustainability Institute</a>.</p>
+                        
+                        <div id="version-footer" height="40px" style="text-align:center;line-height:40px;height:40px;">
+                            <p class="text-center"><small>Galaxy version v{{ .Chart.AppVersion }}, Helm Chart v{{ .Chart.Version }}</small></p>
+                        </div>
+                    </footer>
+                </div>
+            </body>
+        </html>
+
+
+  # disable influxdb database - used by metrics scraper tool
+  influxdb:
+    enabled: false
+
+  # turn off file transfering for now
+  tusd:
+    enabled: false
+
+  # we need a message queue so galaxy components can talk to each other
+  rabbitmq:
+    enabled: true
+    deploy: true
+    persistence:
+      storageClassName: longhorn
+
+  # don't need cvmfs since its only needed to copy in default galaxy tools/reference data
+  cvmfs:
+    deploy: false
+
+  # don't need s3 since we don't use that to copy in galaxy tools/reference data
+  s3csi:
+    deploy: false
