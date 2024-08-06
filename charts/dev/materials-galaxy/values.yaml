@@ -35,7 +35,7 @@ galaxy:
   persistence:
     enabled: true
     # must support readwritemany
-    storageClass: csi-cinder
+    storageClass: csi-manila-cephfs
     size: 10Gi
 
   # TODO - find out how to install existing galaxy suite
