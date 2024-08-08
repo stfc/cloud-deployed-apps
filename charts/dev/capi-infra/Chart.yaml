@@ -1,3 +1,3 @@
 apiVersion: v2
-name: openstack-cluster
+name: capi-openstack-cluster
 version: 1.0.0
