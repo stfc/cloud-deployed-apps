@@ -1,4 +1,4 @@
 dependencies:
   - repository: https://stackhpc.github.io/cluster-api-addon-provider
     name: cluster-api-addon-provider
-    version: 0.5.6
+    version: 0.5.9
