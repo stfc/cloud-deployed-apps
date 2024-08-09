@@ -43,6 +43,7 @@ You can optionally copy or create any other cluster subfolders you want to be in
 
 - Any entries that begin with `path` should use charts from the new environment
 - Any entries that begin with `valuesFiles` should use paths from the new environment
+- remember to change `spec.template.metadata.name` so the prefix matches your environment name 
   
 - **(Optional)** Any entries with `targetRevision` or `revision` should point to your new branch if you are using this branch for testing or as a feature branch and not intending on keeping it long-term
 
