@@ -108,10 +108,9 @@ spec:
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
-        targetRevision: "main"
+        targetRevision: main
         path: charts/dev/capi-infra
         helm:
-          releaseName: "{{path.basename}}"
           valueFiles:
             # Bring in values that are specific to this application
             - "../../../{{path}}/{{path.filename}}"
