@@ -20,25 +20,12 @@ openstack-cluster:
                 loadBalancerIP: "130.246.211.178"
 
     monitoring:
-      enabled: true
-      lokiStack:
-        enabled: false
       kubePrometheusStack:
         release:
           values:
             defaultRules:
               additionalRuleLabels:
                 cluster: dev-management
-                env: dev
-            alertmanager:
-              enabled: false
-              ingress:
-                hosts:
-                  - alertmanager-mgmt.dev.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - alertmanager-mgmt.dev.nubes.stfc.ac.uk
-                    secretName: tls-keypair
             prometheus:
               ingress:
                 hosts:
