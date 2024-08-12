@@ -1,0 +1,7 @@
+argo-cd:
+  global:
+    domain: argocd-galaxy.dev.nubes.stfc.ac.uk
+
+longhorn:
+  ingress:
+    host: "longhorn-galaxy.dev.nubes.stfc.ac.uk"
