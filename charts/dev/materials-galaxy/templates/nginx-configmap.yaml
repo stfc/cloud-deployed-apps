@@ -1,0 +1,116 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "galaxy.fullname" . }}-nginx-conf
+  labels:
+    {{- include "galaxy.labels" . | nindent 4 }}
+data:
+  nginx.conf: |
+    worker_processes  4;
+
+    events {
+        worker_connections  1024;
+    }
+
+    http {
+        default_type  application/octet-stream;
+        include /etc/nginx/mime.types;
+        sendfile        on;
+        keepalive_timeout  65;
+        index   index.html index.php index.htm;
+
+        gzip  on;
+        gzip_http_version 1.1;
+        gzip_vary on;
+        gzip_comp_level 6;
+        gzip_proxied any;
+        gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript;
+        gzip_buffers 16 8k;
+        proxy_read_timeout 600;
+        client_max_body_size {{ .Values.galaxy.nginx.conf.client_max_body_size }};
+
+        map $http_x_forwarded_proto $proxy_x_forwarded_proto {
+          default $http_x_forwarded_proto;
+          '' $scheme;
+        }
+
+        server {
+            listen {{ .Values.galaxy.nginx.containerPort }};
+            server_name galaxy;
+            underscores_in_headers on;
+
+            location {{ template "galaxy.add_trailing_slash" .Values.galaxy.ingress.path }}static {
+                alias {{ .Values.galaxy.nginx.galaxyStaticDir }};
+                expires 24h;
+            }
+
+            # Auth request configuration
+            location /oauth2 {
+                proxy_pass http://oauth2-proxy:80;
+                proxy_set_header X-Original-URI $request_uri;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Host $host;
+            }
+
+            location {{ template "galaxy.add_trailing_slash" .Values.galaxy.ingress.path }} {
+                auth_request /oauth2/auth;
+                error_page 401 = /oauth2/sign_in;
+                auth_request_set $email $upstream_http_x_auth_request_email;
+
+                proxy_set_header Host $http_host;
+                proxy_set_header REMOTE_USER $email;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
+                proxy_set_header X-Url-Scheme $proxy_x_forwarded_proto;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_pass http://{{ template "galaxy.fullname" . }}-galaxy:8080;
+            }
+
+            location ^~ {{ template "galaxy.add_trailing_slash" .Values.galaxy.ingress.path }}admin_toolshed/static {
+                auth_request /oauth2/auth;
+                error_page 401 = /oauth2/sign_in;
+                auth_request_set $email $upstream_http_x_auth_request_email;
+
+                proxy_set_header Host $http_host;
+                proxy_set_header REMOTE_USER $email;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
+                proxy_set_header X-Url-Scheme $proxy_x_forwarded_proto;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_pass http://{{ template "galaxy.fullname" . }}-galaxy:8080;
+                expires 24h;
+            }
+
+            location ~ ^{{ template "galaxy.add_trailing_slash" .Values.galaxy.ingress.path }}api/dataset_collections/([^/]+)/download/?$ {
+                proxy_buffering off;
+                auth_request /oauth2/auth;
+                error_page 401 = /oauth2/sign_in;
+                auth_request_set $email $upstream_http_x_auth_request_email;
+
+                proxy_set_header Host $http_host;
+                proxy_set_header REMOTE_USER $email;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
+                proxy_set_header X-Url-Scheme $proxy_x_forwarded_proto;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_pass http://{{ template "galaxy.fullname" . }}-galaxy:8080;
+                proxy_buffering off;
+            }
+
+            location {{ template "galaxy.add_trailing_slash" .Values.galaxy.ingress.path }}_x_accel_redirect/ {
+                internal;
+                alias /;
+                add_header X-Frame-Options SAMEORIGIN;
+                add_header X-Content-Type-Options nosniff;
+            }
+{{- if .Values.galaxy.trainingHook.enabled }}
+            location /training-material/ {
+                proxy_pass {{ .Values.galaxy.trainingHook.url }};
+            }
+{{- end }}
+
+        # end server
+        }
+    # end http
+    }
