@@ -127,8 +127,8 @@ galaxy:
         remote_user_secret: null
 
         # admin user config
-        # comma spaced list of admin emails
-        admin_users: "anish.mudaraddi@stfc.ac.uk"
+        # comma spaced list of admin emails - need to change this to have admins
+        admin_users: "example@example.com"
         allow_user_deletion: true
         allow_user_impersonation: true
 
@@ -401,9 +401,6 @@ oauth2-proxy:
     pass-user-headers: "true"
     auth-logging: "true"
     cookie-refresh: 15m
-
-    # group to check against to allow access
-    allowed-group: "stfc-cloud/admins"
 
   ingress:
     enabled: false    
