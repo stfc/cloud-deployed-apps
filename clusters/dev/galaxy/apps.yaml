@@ -54,7 +54,12 @@ spec:
             chartName: longhorn
             namespace: longhorn-system
             valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
-
+          
+          - name: manila-csi
+            chartName: manila-csi
+            namespace: manila-csi
+            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+          
           - name: materials-galaxy
             chartName: materials-galaxy
             namespace: materials-galaxy
