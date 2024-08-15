@@ -7,7 +7,7 @@ openstack-cluster:
       machineCount: 3
 
   nodeGroupDefaults:
-    machineFlavor: l3.nano
+    machineFlavor: l3.tiny
     nodeLabels:	
       # we're running longhorn on this cluster
       # set label so worker nodes can host longhorn volumes

@@ -1,6 +1,3 @@
-global: 
-   hostname: &global-hostname "galaxy.example.com" 
-
 galaxy:
 
   image:
@@ -82,12 +79,12 @@ galaxy:
     canary:
       enabled: false
     hosts:
-    - host: *global-hostname
+    - host: "galaxy.example.com"
       paths:
         - path: "/"
     tls:
-    - hosts: 
-      - *global-hostname
+    - hosts:
+      - "galaxy.example.com"
       secretName: galaxy-tls
 
   resources:
@@ -387,8 +384,8 @@ oauth2-proxy:
     existingSecret: iris-iam-credentials
 
   extraArgs:
-    upstream: "{{.Release.Name}}-{{.Chart.Name}}-nginx"
-    redirect-url: "http://{{.Values.global.hostname}}/oauth2/callback"
+    upstream: "{{.Release.Name}}-nginx"
+    redirect-url: "http://galaxy.example.com/oauth2/callback"
     email-domain: "*"
     provider: oidc
     provider-display-name: "iris-iam"
