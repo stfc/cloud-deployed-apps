@@ -35,7 +35,7 @@ galaxy:
   persistence:
     enabled: true
     # must support readwritemany
-    storageClass: longhorn
+    storageClass: csi-cinder
     size: 10Gi
 
   # TODO - find out how to install existing galaxy suite
@@ -384,8 +384,8 @@ oauth2-proxy:
     existingSecret: iris-iam-credentials
 
   extraArgs:
-    upstream: "{{.Release.Name}}-nginx"
-    redirect-url: "http://galaxy.example.com/oauth2/callback"
+    upstream: "http://{{.Release.Name}}-nginx"
+    redirect-url: "https://galaxy.example.com/oauth2/callback"
     email-domain: "*"
     provider: oidc
     provider-display-name: "iris-iam"
