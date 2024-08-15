@@ -3,6 +3,6 @@ dependencies:
 - name: openstack-manila-csi
   version: 2.30.0
   repository: https://kubernetes.github.io/cloud-provider-openstack
-- name: cephceph-csi-cephfs
+- name: ceph-csi-cephfs
   version: 3.11.0
   repository: https://ceph.github.io/csi-charts
