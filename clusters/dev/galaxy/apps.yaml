@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: add-materials-galaxy
+    targetRevision: main
     path: clusters/dev/galaxy
   syncPolicy:
     automated:
@@ -80,7 +80,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: add-materials-galaxy
+        targetRevision: main
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
@@ -98,6 +98,20 @@ spec:
           - CreateNamespace=true
 
   templatePatch: |
+    {{- if eq .name "manila-csi" }}
+      spec:
+        ignoreDifferences:
+          - group: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: manila-csi-openstack-manila-csi-controllerplugin
+            jsonPointers:
+              - /rules
+          - group: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: manila-csi-openstack-manila-csi-nodeplugin
+            jsonPointers:
+              - /rules
+    {{- end }}
     {{- if eq .name "manila-csi" }}
       spec:
         ignoreDifferences:
