@@ -20,6 +20,18 @@ ENVIRONMENT=$2
 
 echo "Installing ArgoCD on cluster $CLUSTER_NAME using Helm..."
 echo "THIS COULD TAKE A WHILE"
+
+if ! kubectl get namespace argocd &> /dev/null; then
+    echo "Namespace 'argocd' does not exist. Creating it..."
+    kubectl create namespace argocd
+fi
+
+if ! kubectl get secret helm-secrets-private-keys -n argocd &> /dev/null; then
+    echo "Secret 'helm-secrets-private-keys' does not exist. Creating an empty secret..."
+    # Create an empty secret
+    kubectl create secret generic helm-secrets-private-keys -n argocd
+fi
+
 helm dependencies update "../charts/$ENVIRONMENT/argocd"
 helm upgrade --install argocd "../charts/$ENVIRONMENT/argocd" \
   -f "../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-setup-values.yaml" \
