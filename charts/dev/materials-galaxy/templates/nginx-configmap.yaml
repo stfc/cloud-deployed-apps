@@ -47,7 +47,7 @@ data:
 
             # Auth request configuration
             location /oauth2 {
-                proxy_pass http://oauth2-proxy:80;
+                proxy_pass http://{{.Release.Name}}-oauth2-proxy:80;
                 proxy_set_header X-Original-URI $request_uri;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header Host $host;
@@ -95,7 +95,6 @@ data:
                 proxy_set_header X-Url-Scheme $proxy_x_forwarded_proto;
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_pass http://{{ template "galaxy.fullname" . }}-galaxy:8080;
-                proxy_buffering off;
             }
 
             location {{ template "galaxy.add_trailing_slash" .Values.galaxy.ingress.path }}_x_accel_redirect/ {

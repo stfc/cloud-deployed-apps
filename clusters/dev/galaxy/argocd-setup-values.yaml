@@ -5,3 +5,6 @@ argo-cd:
 longhorn:
   ingress:
     host: "longhorn-galaxy.dev.nubes.stfc.ac.uk"
+  persistence:
+    # can't be set for RWX
+    migratable: false

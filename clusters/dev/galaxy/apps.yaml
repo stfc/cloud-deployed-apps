@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: add-materials-galaxy
     path: clusters/dev/galaxy
   syncPolicy:
     automated:
@@ -21,12 +21,14 @@ spec:
       - CreateNamespace=true
 
 ---
+
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: management-apps
   namespace: argocd
 spec:
+  goTemplate: true
   generators:
     - list:
         elements:
@@ -59,11 +61,12 @@ spec:
             chartName: manila-csi
             namespace: manila-csi
             valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
-          
+
           - name: materials-galaxy
             chartName: materials-galaxy
             namespace: materials-galaxy
             valuesFile: ../../../clusters/dev/galaxy/materials-galaxy-values.yaml
+
 
   syncPolicy:
     # Don't remove everything if we remove the appset
@@ -71,20 +74,20 @@ spec:
 
   template:
     metadata:
-      name: "{{name}}"
+      name: "{{.name}}"
       namespace: argocd
     spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
-        path: "charts/dev/{{chartName}}"
+        targetRevision: add-materials-galaxy
+        path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
-            - "{{valuesFile}}"
+            - "{{.valuesFile}}"
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{namespace}}"
+        namespace: "{{.namespace}}"
 
       syncPolicy:
         automated:
@@ -93,3 +96,19 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
+
+  templatePatch: |
+    {{- if eq .name "manila-csi" }}
+      spec:
+        ignoreDifferences:
+          - group: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: manila-csi-openstack-manila-csi-controllerplugin
+            jsonPointers:
+              - /rules
+          - group: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: manila-csi-openstack-manila-csi-nodeplugin
+            jsonPointers:
+              - /rules
+    {{- end }}

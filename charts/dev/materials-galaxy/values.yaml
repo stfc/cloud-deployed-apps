@@ -35,11 +35,12 @@ galaxy:
   persistence:
     enabled: true
     # must support readwritemany
-    storageClass: csi-manila-cephfs
+    storageClass: longhorn
     size: 10Gi
 
   # TODO - find out how to install existing galaxy suite
   setupJob:
+    ttlSecondsAfterFinished: null
     createDatabase: true
     
     # Download configuration files and the tools directory from an archive via a job at startup
@@ -101,9 +102,7 @@ galaxy:
   postgresql:
     enabled: true
 
-    # TODO: postgresql operator should really be installed as separate dependency
-    # to allow for more than one galaxy service to be run on same cluster
-    deploy: true
+    deploy: false
 
   # do not mount cloud-hosted Galaxy reference data and tools
   refdata:
@@ -362,9 +361,7 @@ galaxy:
   # we need a message queue so galaxy components can talk to each other
   rabbitmq:
     enabled: true
-    # TODO: rabbitmq operator should really be installed as separate dependency
-    # to allow for more than one galaxy service to be run on same cluster
-    deploy: true
+    deploy: false
     persistence:
       storageClassName: longhorn
 
