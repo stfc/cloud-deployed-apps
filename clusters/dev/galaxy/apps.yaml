@@ -25,7 +25,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: management-apps
+  name: galaxy-apps
   namespace: argocd
 spec:
   goTemplate: true
@@ -98,20 +98,6 @@ spec:
           - CreateNamespace=true
 
   templatePatch: |
-    {{- if eq .name "manila-csi" }}
-      spec:
-        ignoreDifferences:
-          - group: rbac.authorization.k8s.io
-            kind: ClusterRole
-            name: manila-csi-openstack-manila-csi-controllerplugin
-            jsonPointers:
-              - /rules
-          - group: rbac.authorization.k8s.io
-            kind: ClusterRole
-            name: manila-csi-openstack-manila-csi-nodeplugin
-            jsonPointers:
-              - /rules
-    {{- end }}
     {{- if eq .name "manila-csi" }}
       spec:
         ignoreDifferences:
