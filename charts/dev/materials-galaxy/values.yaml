@@ -2,7 +2,7 @@ galaxy:
 
   # RBAC is defined by admins once service is up
   rbac:
-    enabled: true2
+    enabled: true
 
   persistence:
     enabled: true
