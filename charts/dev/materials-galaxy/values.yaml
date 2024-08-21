@@ -1,36 +1,8 @@
 galaxy:
 
-  image:
-    #- Repository containing the Galaxy image.
-    repository: quay.io/galaxyproject/galaxy-min
-    #- Galaxy Docker image tag (generally corresponds to the desired Galaxy version)
-    tag: "24.0.2"  # Value must be quoted
-    pullPolicy: IfNotPresent
-
-  workflowHandlers:
-    replicaCount: 1
-  
-  webHandlers:
-    replicaCount: 1
-
-  jobHandlers:
-    replicaCount: 1
-
-  # celery handles time-consuming jobs that may block other galaxy services
-  celery:
-    replicaCount: 1
-
-  # celery scheduler
-  celeryBeat:
-    replicaCount: 1
-
-  # prometheus metrics
-  metrics:
-    enabled: false
-
-  # TODO: look into galaxy job role based access control
+  # RBAC is defined by admins once service is up
   rbac:
-    enabled: true
+    enabled: true2
 
   persistence:
     enabled: true
@@ -38,23 +10,26 @@ galaxy:
     storageClass: longhorn
     size: 10Gi
 
-  # TODO - find out how to install existing galaxy suite
   setupJob:
     ttlSecondsAfterFinished: null
     createDatabase: true
     
     # Download configuration files and the tools directory from an archive via a job at startup
+    # You can enable it to install "default" galaxy tools
+    # since these tools are mostly for biological sciences - this is disabled in materials galaxy   
     downloadToolConfs:
       enabled: false
 
   #- Allow users to specify extra init containers
+  # We use init containers to install tools which aren't available via galaxy toolshed
+  # TODO: find a better way to do this so we can change tool versions easily
   extraInitContainers: 
     - name: clone-muon-tools
       applyToJob: false
       applyToWeb: true
       applyToWorkflow: false
       image: "alpine/git:latest"
-      command: ['sh', '-c', 'if [ ! -d {{.Values.persistence.mountPath}}/muon-galaxy-tools ]; then git clone https://github.com/muon-spectroscopy-computational-project/muon-galaxy-tools.git {{.Values.persistence.mountPath}}/muon-galaxy-tools; fi']
+      command: ['sh', '-c', 'git clone https://github.com/muon-spectroscopy-computational-project/muon-galaxy-tools.git --depth 1 --branch main {{.Values.persistence.mountPath}}/muon-galaxy-tools || true']
       volumeMounts:
         - name: galaxy-data
           mountPath: "{{.Values.persistence.mountPath}}"
@@ -63,7 +38,7 @@ galaxy:
       applyToWeb: true
       applyToWorkflow: false
       image: "alpine/git:latest"
-      command: ['sh', '-c', 'if [ ! -d {{.Values.persistence.mountPath}}/larch-tools ]; then git clone https://github.com/MaterialsGalaxy/larch-tools.git {{.Values.persistence.mountPath}}/larch-tools; fi']
+      command: ['sh', '-c', 'git clone https://github.com/MaterialsGalaxy/larch-tools.git --depth 1 --branch main {{.Values.persistence.mountPath}}/larch-tools || true']
       volumeMounts:
         - name: galaxy-data
           mountPath: "{{.Values.persistence.mountPath}}"
