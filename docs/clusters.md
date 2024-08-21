@@ -11,9 +11,9 @@
 2. Ensure enough quota for the cluster (RAM, CPU, instances etc)
 3. Provision a floating ip on your project for kubernetes API Server access
 4. **(Optional)** Provision a second floating IP for nginx ingress controller
-5. Create a self-managed cluster called `management` 
+5. Create a self-managed cluster called `*-management-cluster` - replace `*` with the environment - either `prod` `dev` or `staging` 
    - see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup. 
-   - Ensure the name is `management` as CAPI cannot rename a cluster.
+   - Ensure the name matches `*-management-cluster` (with * as either `prod`, `dev` or `staging`) as CAPI cannot rename a cluster.
 
 
 | :exclamation:  Make sure you already have a Kubernetes cluster deployed before proceeding with rest of the documentation   |
@@ -73,10 +73,17 @@ Repeat for all other clusters you want to add
 cd scripts; ./deploy-helm-secret.sh <path-to-age-private-key>
 ``` 
 
-13. Run deploy.sh on your self-managed cluster `management` like so:
+13. Run deploy.sh on your self-managed cluster `*-management-cluster` like so:
 
 ```bash
-cd scripts; ./deploy.sh <cluster-name> <your-environment> 
+cd scripts; ./deploy.sh management <your-environment>  
+```
+
+when deploying argo onto child clusters - replace `management` with the cluster's folder name 
+
+e.g. to deploy worker cluster apps - run 
+```bash
+cd scripts; ./deploy.sh worker <your-environment>  
 ```
 
 14.  Wait for argocd to deploy and it should spring to life and spin up any other clusters you've defined
