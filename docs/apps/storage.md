@@ -112,8 +112,8 @@ helm install longhorn . -n galaxy --create-namespace
 or you can use argocd to install it - see [Deploying Apps](../deploying-apps.md)
 
 >[!WARNING] 
-> you need to tell argocd to ignore some clusterroles because they get updated after deployment and causes out-of-sync issues
-> add the following config to the `<cluster-name>-apps` ApplicationSet in `apps.yaml` for your cluster
+> You need to tell argocd to ignore some clusterroles because they get updated after deployment. This causes out-of-sync issues.
+> Add the following config to the `<cluster-name>-apps` ApplicationSet in `apps.yaml` for your cluster to mitigate.
 > ```yaml
 > spec:
 >  templatePatch: |
@@ -147,7 +147,7 @@ Once you deploy manila-csi onto your cluster - it wont work until you give it ap
 using your application credential - create the secret 
 
 > [!NOTE]
-> TODO: We should do this automatically
+> We should do this automatically - [137](https://github.com/stfc/cloud-deployed-apps/issues/137)
 
 ```bash
 kubectl create secret generic csi-manila-secret --from-literal=os-projectID=<project-id>  --from-literal=os-userName=<username>  --from-literal=os-password=<password>  --from-literal=os-domainName=<domain> -n manila-csi

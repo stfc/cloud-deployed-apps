@@ -71,7 +71,7 @@ Galaxy is configured to use K8s out-of-the-box to run jobs. They will run on the
 
 
 You can configure galaxy to use other runners - such as slurm. 
-See - [Connecting Galaxy to a Compute CLuster](https://training.galaxyproject.org/training-material/topics/admin/tutorials/connect-to-compute-cluster/tutorial.html)
+See - [Connecting Galaxy to a Compute Cluster](https://training.galaxyproject.org/training-material/topics/admin/tutorials/connect-to-compute-cluster/tutorial.html)
 
 > [!WARNING]
 > We are looking at how to run Slurm into K8s and integrate into Galaxy
@@ -101,7 +101,8 @@ Other oauth2 proxy config settings can be found here - https://oauth2-proxy.gith
 ### Configuring DNS + certs
 
 To configure what DNS name to use for galaxy - you will need to edit it in 3 places
-TODO: make this easier to change!
+> [!WARNING] 
+> We need to make this easier to change - issue [136](https://github.com/stfc/cloud-deployed-apps/issues/136)
 
 We utilise cert-manager by default for managing certs - and you can see [cert-manager config](./misc.md) on how to configure it to use self-signed or letsencrypt verified certs
 

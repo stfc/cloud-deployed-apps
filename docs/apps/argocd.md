@@ -6,7 +6,7 @@ We manage ArgoCD using ArgoCD - its just another app.
 
 ## Pre-requisites
 
-A Kubernetes cluster - preferrably deployed using CAPI and running on the STFC CLoud
+A Kubernetes cluster - preferrably deployed using CAPI and running on the STFC Cloud
 
 ## Pre-deployment steps
 
@@ -18,7 +18,7 @@ The only thing you'll definately want to change is the domain name to access the
 ```yaml
 argo-cd:
   global:
-    domain: "myargocd.example.com
+    domain: "myargocd.example.com"
 ```
 
 ## Configuration
