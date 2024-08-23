@@ -1,4 +1,7 @@
 openstack-cluster:
+  kubernetesVersion: "1.28.7"
+  machineImage: "capi-ubuntu-2004-kube-v1.28.7-2024-03-01"
+
   controlPlane:
     machineCount: 3
 
