@@ -29,16 +29,6 @@ openstack-cluster:
             defaultRules:
               additionalRuleLabels:
                 cluster: dev-worker
-                env: dev
-            alertmanager:
-              enabled: false
-              ingress:
-                hosts:
-                  - alertmanager-worker.dev.nubes.stfc.ac.uk
-                tls:
-                  - hosts: 
-                    - alertmanager-worker.dev.nubes.stfc.ac.uk
-                    secretName: tls-keypair
             prometheus:
               ingress:
                 hosts:
