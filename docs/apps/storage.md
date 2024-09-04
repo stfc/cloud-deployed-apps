@@ -13,7 +13,7 @@ No steps are required to enable cinder storage, this is available out-of-the-box
 
 # Pre-requisites
 
-Make sure that the project your cluster is built on has spare volume instances and volume storage capacity - if not, raise a ticket to cloud-support.stfc.ac.uk 
+Make sure that the project your cluster is built on has spare volume instances and volume storage capacity - if not, raise a ticket to cloud-support@stfc.ac.uk 
 
 # Longhorn
 
@@ -92,9 +92,9 @@ Manila is a service that provides shared filesystem for services on STFC Cloud. 
 
 See our Docs on [using Manila on Kubernetes](https://stfc.atlassian.net/wiki/spaces/SC/pages/117375031/Manila+on+Kubernetes) 
 
-## Prerequisites
+## Pre-requisites
 
-Make sure that the project your cluster is built on is permitted to create shares and has spare share instances and share storage capacity - if not, raise a ticket to cloud-support.stfc.ac.uk 
+Make sure that the project your cluster is built on is permitted to create shares and has spare share instances and share storage capacity - if not, raise a ticket to cloud-support@stfc.ac.uk 
 
  ## Deployment
 
