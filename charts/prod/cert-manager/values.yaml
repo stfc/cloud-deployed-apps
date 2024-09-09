@@ -1,0 +1,13 @@
+cert-manager:
+  # Various issuers which are available
+  self-signed:
+    enabled: true
+
+  le-staging:
+    enabled: false
+
+  le-prod:
+    enabled: false
+
+  crds:
+    enabled: true
