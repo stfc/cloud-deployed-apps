@@ -4,10 +4,17 @@ This documentation outlines how to set up clusters managed by ArgoCD in the STFC
 
 ## Quick Start
 
+## Looking to Deploy and Setup an App?
+
+- [ArgoCD Setup](apps/argocd.md)
+- [Cert-manager](apps/cert-manager.md)
+- [Storage - Manila or Longhorn](apps/storage.md)
+- [Galaxy](apps/galaxy.md) (IN DEVELOPMENT)
+- Victoria Metrics (DOCS NEEDED) 
+
 ### New to the ArgoCD folder workflow used? 
 
 **Start with:** [How it works - folder-based flow & promotion flowchart](folder-based-flow.md)
-
 
 ### Deploying a New ArgoCD Environment?
 If you are starting from scratch and need to set up a new environment (e.g. deploying a new dev ArgoCD cluster), start with: [Deploying a new cluster](clusters.md)
