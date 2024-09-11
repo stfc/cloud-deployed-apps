@@ -42,3 +42,18 @@ openstack-cluster:
                   - hosts:
                       - grafana-mgmt.dev.nubes.stfc.ac.uk
                     secretName: tls-keypair
+            alertmanager:
+              enabled: true
+              ingress:
+                hosts:
+                  - alertmanager-mgmt.dev.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - alertmanager-mgmt.dev.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+              alertmanagerSpec:
+                # turn off persistent storage so cinder volume doesn't get created
+                # TODO: remove this when cinder creation issue resolved on dev
+                storage:
+                  emptyDir:
+                    medium: Memory
