@@ -1,0 +1,34 @@
+openstack-cluster:
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "130.246.81.242"
+
+    monitoring:
+      kubePrometheusStack:
+        release:
+          values:
+            defaultRules:
+              additionalRuleLabels:
+                cluster: staging-worker
+            prometheus:
+              ingress:
+                hosts:
+                  - prometheus-worker.staging.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - prometheus-worker.staging.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            grafana:
+              ingress:
+                hosts:
+                  - grafana-worker.staging.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - grafana-worker.staging.nubes.stfc.ac.uk
+                    secretName: tls-keypair
