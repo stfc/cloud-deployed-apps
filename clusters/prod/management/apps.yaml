@@ -117,6 +117,7 @@ spec:
             # Bring in secrets that are specific to this application
             - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml"
             - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml"
+            - "secrets://../../../secrets/{{path[1]}}/smtp-smarthost.yaml"
 
       syncPolicy:
         automated:
