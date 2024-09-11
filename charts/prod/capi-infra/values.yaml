@@ -153,10 +153,167 @@ openstack-cluster:
   addons:
     monitoring:
       enabled: true
-    
+      lokiStack:
+        enabled: false
+      kubePrometheusStack:
+        release:
+          values:
+            defaultRules:
+              additionalRuleLabels:
+                # these values used for alerting only - part of the email subject tag-line
+                cluster: not-set
+                env: dev
+
+            alertmanager:
+              enabled: false
+              service:
+                type: ClusterIP
+
+              ingress:
+                ingressClassName: nginx
+                enabled: true
+                annotations:
+                  cert-manager.io/cluster-issuer: "self-signed"
+                hosts:
+                  - alertmanager.example.com
+                paths:
+                  - "/"
+                tls:
+                  - hosts:
+                      - "alertmanager.example.com"
+                    secretName: tls-keypair
+                ingressPerReplica:
+                  enabled: false
+
+              config:
+                global:
+                  resolve_timeout: 1h
+                  smtp_smarthost:
+                  smtp_from:
+                  smtp_require_tls: false
+
+                route:
+                  receiver: "null"
+                  routes:
+                    - receiver: "null"
+                      matchers:
+                        - alertname = "Watchdog"
+                    - receiver: default-receiver
+                      group_wait: 30m
+                      group_interval: 30m
+                      repeat_interval: 2d
+                      group_by: ["cluster", "service"]
+                      matchers:
+                        - severity=~"critical|warning"
+
+                inhibit_rules:
+                  - source_matchers: [severity="critical"]
+                    target_matchers: [severity="warning"]
+                    equal: [alertname, cluster, service]
+
+                  - source_matchers:
+                      - "severity = warning"
+                    target_matchers:
+                      - "severity = info"
+                    equal: [alertname, cluster, service]
+
+                  - source_matchers:
+                      - "alertname = InfoInhibitor"
+                    target_matchers:
+                      - "severity = info"
+                    equal: ["namespace"]
+
+                  - target_matchers:
+                      - "alertname = InfoInhibitor"
+
+                receivers:
+                  - name: "null"
+                  - name: default-receiver
+                    email_configs:
+                      - to:
+                        send_resolved: true
+                        headers:
+                          subject: |
+                            {%- raw %}
+                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname }}"
+                            {%- endraw %}
+                        html: |-
+                          {%- raw %}
+                          <h3>You have the following alerts:</h3>
+                          {{ range .Alerts }}
+                          <p><b>{{.Labels.alertname}}</b>
+                            <ul>{{ range .Annotations.SortedPairs }}
+                            <li>{{ .Name }} = {{ .Value }}</li>
+                            {{ end }}</ul>
+                            <ul>{{ range .Labels.SortedPairs }}
+                            <li>{{ .Name }} = {{ .Value }}</li>
+                            {{ end }}</ul>
+                            {{ .GeneratorURL }}</p>
+                          {{ end }}
+                          {%- endraw %}
+                        text: |-
+                          {%- raw %}
+                          You have the following alerts:
+                          {{ range .Alerts }}
+                          * {{.Labels.alertname}}
+                            {{ range .Annotations.SortedPairs }}
+                            {{ .Name }} = {{ .Value }}
+                            {{ end }}
+                            {{ range .Labels.SortedPairs }}
+                            {{ .Name }} = {{ .Value }}
+                            {{ end }}
+                            {{ .GeneratorURL }}
+                          {{ end }}
+                          {%- endraw %}
+
+                templates:
+                  - "/etc/alertmanager/config/*.tmpl"
+
+            grafana:
+              enabled: true
+
+              service:
+                type: ClusterIP
+
+              ingress:
+                ingressClassName: nginx
+                enabled: true
+                annotations:
+                  cert-manager.io/cluster-issuer: "self-signed"
+                path: /
+                hosts:
+                  - grafana.example.com
+                tls:
+                  - hosts:
+                      - "grafana.example.com"
+                    secretName: tls-keypair
+
+            prometheus-operator:
+              enabled: true
+
+            prometheus:
+              enabled: true
+
+              service:
+                type: ClusterIP
+
+              ingress:
+                ingressClassName: nginx
+                annotations:
+                  cert-manager.io/cluster-issuer: "self-signed"
+                enabled: true
+                paths:
+                  - /
+                hosts:
+                  - prometheus.example.com
+                tls:
+                  - hosts:
+                      - "prometheus.example.com"
+                    secretName: tls-keypair
+
     ingress:
       enabled: false
-    
+
     openstack:
       csiCinder:
         defaultStorageClass:
