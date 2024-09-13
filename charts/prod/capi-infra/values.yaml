@@ -230,7 +230,7 @@ openstack-cluster:
                   - name: "null"
                   - name: default-receiver
                     email_configs:
-                      - to:
+                      - to: cloud-support@stfc.ac.uk
                         send_resolved: true
                         headers:
                           subject: |
