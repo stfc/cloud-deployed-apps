@@ -310,13 +310,6 @@ openstack-cluster:
                   - hosts: 
                     - "prometheus.example.com"
                     secretName: tls-keypair
-              
-              prometheusSpec:
-                # turn off persistent storage so cinder volume doesn't get created
-                # need to debug cinder volume creation issue on dev
-                storageSpec: 
-                  emptyDir: 
-                    medium: Memory    
     ingress:
       enabled: false
     
