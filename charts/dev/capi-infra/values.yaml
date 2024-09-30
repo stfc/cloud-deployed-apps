@@ -159,7 +159,7 @@ openstack-cluster:
         release:
           values:
             defaultRules:
-              additionalRuleLabels:
+              labels:
                 # these values used for alerting only - part of the email subject tag-line
                 cluster: not-set
                 env: dev
