@@ -23,11 +23,11 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
-            defaultRules:
-              labels:
-                cluster: management
-                env: dev
             prometheus:
+              prometheusSpec:
+                externalLabels:
+                  cluster: management
+                  env: dev
               ingress:
                 hosts:
                   - prometheus-mgmt.dev.nubes.stfc.ac.uk
