@@ -30,8 +30,9 @@ openstack-cluster:
         release:
           values:
             defaultRules:
-              additionalRuleLabels:
-                cluster: dev-worker
+              labels:
+                cluster: worker
+                env: dev
             prometheus:
               ingress:
                 hosts:

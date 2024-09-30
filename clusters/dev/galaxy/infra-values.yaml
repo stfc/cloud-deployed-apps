@@ -31,8 +31,8 @@ openstack-cluster:
         release:
           values:
             defaultRules:
-              additionalRuleLabels:
-                cluster: dev-galaxy
+              labels:
+                cluster: galaxy
                 env: dev
             alertmanager:
               enabled: false

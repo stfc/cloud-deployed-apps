@@ -24,8 +24,9 @@ openstack-cluster:
         release:
           values:
             defaultRules:
-              additionalRuleLabels:
-                cluster: dev-management
+              labels:
+                cluster: management
+                env: dev
             prometheus:
               ingress:
                 hosts:
