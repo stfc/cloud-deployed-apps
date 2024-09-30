@@ -227,9 +227,9 @@ openstack-cluster:
                   - to: cloud-support@stfc.ac.uk
                     send_resolved: true
                     headers:
-                      subject: |
+                      subject: | 
                         {%- raw %}
-                        "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname }}"
+                        "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ .CommonLabels.service | default "Multiple Services" }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname | default "Multiple Alerts" }}"
                         {%- endraw %}
                     html: |-
                       {%- raw %}
@@ -291,7 +291,7 @@ openstack-cluster:
                 externalLabels:
                   cluster: not-set
                   env: dev
-                       
+
               service:
                 type: ClusterIP
 
