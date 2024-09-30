@@ -158,12 +158,6 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
-            defaultRules:
-              labels:
-                # these values used for alerting only - part of the email subject tag-line
-                cluster: not-set
-                env: dev
-            
             alertmanager:
               enabled: false
               service:
@@ -293,7 +287,11 @@ openstack-cluster:
 
             prometheus:
               enabled: true
-
+              prometheusSpec:
+                externalLabels:
+                  cluster: not-set
+                  env: dev
+                       
               service:
                 type: ClusterIP
 

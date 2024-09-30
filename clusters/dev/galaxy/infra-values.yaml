@@ -30,10 +30,6 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
-            defaultRules:
-              labels:
-                cluster: galaxy
-                env: dev
             alertmanager:
               enabled: false
               ingress:
@@ -44,6 +40,10 @@ openstack-cluster:
                       - alertmanager-galaxy.dev.nubes.stfc.ac.uk
                     secretName: tls-keypair
             prometheus:
+              prometheusSpec:
+                externalLabels:
+                  cluster: galaxy
+                  env: dev
               ingress:
                 hosts:
                   - prometheus-galaxy.dev.nubes.stfc.ac.uk
