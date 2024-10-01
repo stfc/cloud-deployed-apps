@@ -5,6 +5,8 @@ victoria-metrics-cluster:
     ingress:
       enabled: true
       ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: "self-signed"
       hosts:
         - name: select.vm.example.com
           path: /
@@ -14,12 +16,15 @@ victoria-metrics-cluster:
           hosts:
             - select.vm.example.com
 
+
   vminsert:
     replicaCount: 5
 
     ingress:
       enabled: true
       ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: "self-signed"
       hosts:
         - name: insert.vm.example.com
           path: /
@@ -27,7 +32,7 @@ victoria-metrics-cluster:
       tls:
         - secretName: vm-ingress-tls
           hosts:
-            - insert.vm.example.com
+            - insert.vm.example.com              
 
   vmstorage:
     retentionPeriod: 1 # month
@@ -38,4 +43,4 @@ victoria-metrics-cluster:
       existingClaim: ""
 
       size: 10Gi
-      storageClass: "longhorn"
+      storageClass: "csi-manila-cephfs"
