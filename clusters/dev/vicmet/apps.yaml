@@ -1,4 +1,4 @@
-apiVersion: argoproj.io/v1alpha1
+v1alpha1apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cloud-deployed-apps
@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
     targetRevision: main
-    path: clusters/dev/galaxy
+    path: clusters/dev/vicmet
   syncPolicy:
     automated:
       prune: false
@@ -25,7 +25,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: galaxy-apps
+  name: vicmet-apps
   namespace: argocd
 spec:
   goTemplate: true
@@ -39,33 +39,28 @@ spec:
             # so create one for each chart - even if its empty
 
             # argocd and all dependencies use the same file "argocd-setup-values.yaml"
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
             namespace: argocd
 
           - name: "cert-manager"
             chartName: cert-manager
             namespace: cert-manager
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
 
           - name: cluster-api-addon-provider
             chartName: cluster-api-addon-provider
             namespace: clusters
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
-
-          - name: longhorn
-            chartName: longhorn
-            namespace: longhorn-system
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
           
           - name: manila-csi
             chartName: manila-csi
             namespace: manila-csi
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
 
-          - name: materials-galaxy
-            chartName: materials-galaxy
-            namespace: materials-galaxy
-            valuesFile: ../../../clusters/dev/galaxy/materials-galaxy-values.yaml
+          - name: victoria-metrics
+            chartName: victoria-metrics
+            namespace: victoria-metrics
+            valuesFile: ../../../clusters/dev/vicmet/vicmet-values.yaml
 
 
   syncPolicy:
