@@ -1,0 +1,109 @@
+v1alpha1apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloud-deployed-apps
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/stfc/cloud-deployed-apps.git
+    targetRevision: main
+    path: clusters/dev/vicmet
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: vicmet-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - list:
+        elements:
+          - name: "argocd"
+            chartName: argocd
+
+            # NOTE: each chart needs a valuesFile for this to work
+            # so create one for each chart - even if its empty
+
+            # argocd and all dependencies use the same file "argocd-setup-values.yaml"
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
+            namespace: argocd
+
+          - name: "cert-manager"
+            chartName: cert-manager
+            namespace: cert-manager
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
+
+          - name: cluster-api-addon-provider
+            chartName: cluster-api-addon-provider
+            namespace: clusters
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
+          
+          - name: manila-csi
+            chartName: manila-csi
+            namespace: manila-csi
+            valuesFile: ../../../clusters/dev/vicmet/argocd-setup-values.yaml
+
+          - name: victoria-metrics
+            chartName: victoria-metrics
+            namespace: victoria-metrics
+            valuesFile: ../../../clusters/dev/vicmet/vicmet-values.yaml
+
+
+  syncPolicy:
+    # Don't remove everything if we remove the appset
+    preserveResourcesOnDeletion: true
+
+  template:
+    metadata:
+      name: "{{.name}}"
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+        targetRevision: main
+        path: "charts/dev/{{.chartName}}"
+        helm:
+          valueFiles:
+            - "{{.valuesFile}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{.namespace}}"
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: true
+        syncOptions:
+          - CreateNamespace=true
+
+  templatePatch: |
+    {{- if eq .name "manila-csi" }}
+      spec:
+        ignoreDifferences:
+          - group: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: manila-csi-openstack-manila-csi-controllerplugin
+            jsonPointers:
+              - /rules
+          - group: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: manila-csi-openstack-manila-csi-nodeplugin
+            jsonPointers:
+              - /rules
+    {{- end }}
