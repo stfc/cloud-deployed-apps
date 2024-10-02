@@ -5,16 +5,16 @@ dependencies:
 # https://github.com/galaxyproject/galaxy-helm
   - repository: https://raw.githubusercontent.com/CloudVE/helm-charts/master/
     name: galaxy
-    version: 5.15.0
+    version: 5.17.0
 # https://github.com/oauth2-proxy/manifests/tree/main/helm/oauth2-proxy
   - repository: "https://oauth2-proxy.github.io/manifests"
     name: oauth2-proxy
-    version: 7.7.9
+    version: 7.7.22
 # https://github.com/zalando/postgres-operator/tree/master/charts/postgres-operator
   - repository: "https://opensource.zalando.com/postgres-operator/charts/postgres-operator"
     name: postgres-operator
-    version: 1.12.2
-# https://github.com/bitnami/charts/tree/main/bitnami/rabbitmq
+    version: 1.13.0
+# https://github.com/bitnami/charts/tree/main/bitnami/rabbitmq-cluster-operator
   - repository: "https://charts.bitnami.com/bitnami"
     name: rabbitmq-cluster-operator
-    version: 4.3.18
+    version: 4.3.24
