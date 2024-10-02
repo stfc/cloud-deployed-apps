@@ -1,5 +1,0 @@
-dependencies:
-# https://github.com/cert-manager/cert-manager/releases
-  - name: cert-manager
-    version: 1.14.5
-    repository: https://charts.jetstack.io

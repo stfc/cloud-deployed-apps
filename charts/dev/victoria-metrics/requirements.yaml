@@ -1,5 +1,0 @@
-dependencies:
-# https://github.com/VictoriaMetrics/helm-charts/releases?q=cluster&expanded=true
-- name: victoria-metrics-cluster
-  version: 0.11.18
-  repository: https://victoriametrics.github.io/helm-charts/

@@ -1,3 +1,12 @@
 apiVersion: v2
 name: manila-csi
 version: 1.0.0
+dependencies:
+# https://github.com/kubernetes/cloud-provider-openstack/tree/master/charts/cinder-csi-plugin
+- name: openstack-manila-csi
+  version: 2.30.0
+  repository: https://kubernetes.github.io/cloud-provider-openstack
+# https://github.com/ceph/ceph-csi/tree/devel/charts/ceph-csi-cephfs
+- name: ceph-csi-cephfs
+  version: 3.11.0
+  repository: https://ceph.github.io/csi-charts
