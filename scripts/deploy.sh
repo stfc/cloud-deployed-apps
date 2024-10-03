@@ -32,6 +32,10 @@ if ! kubectl get secret helm-secrets-private-keys -n argocd &> /dev/null; then
     kubectl create secret generic helm-secrets-private-keys -n argocd
 fi
 
+# Installing dependencies for cert-manager (temp fix)
+helm repo add jetstack https://charts.jetstack.io --force-update
+helm install cert-manager jetstack/cert-manager   --namespace cert-manager   --create-namespace  --set crds.enabled=true
+
 helm dependencies update "../charts/$ENVIRONMENT/argocd"
 helm upgrade --install argocd "../charts/$ENVIRONMENT/argocd" \
   -f "../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-setup-values.yaml" \
