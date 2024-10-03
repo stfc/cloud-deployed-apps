@@ -24,5 +24,5 @@ openstack-cluster:
             controller:
               service:
                 # create a floatip for ingress on your project and put it here
-                loadBalancerIP: "130.246.81.220" 
+                loadBalancerIP: "130.246.211.115" 
 
