@@ -26,3 +26,29 @@ openstack-cluster:
                 # create a floatip for ingress on your project and put it here
                 loadBalancerIP: "130.246.211.169" 
 
+    monitoring:
+      kubePrometheusStack:
+        release:
+          values:
+            prometheus:
+              prometheusSpec:
+                externalLabels:
+                  cluster: vicmet
+                  env: dev
+              ingress:
+                hosts:
+                  - prometheus-vicmet.dev.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - prometheus-vicmet.dev.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            grafana:
+              ingress:
+                hosts:
+                  - grafana-vicmet.dev.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - grafana-vicmet.dev.nubes.stfc.ac.uk
+                    secretName: tls-keypair
+            alertmanager:
+              enabled: false
