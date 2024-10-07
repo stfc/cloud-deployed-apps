@@ -32,9 +32,15 @@ if ! kubectl get secret helm-secrets-private-keys -n argocd &> /dev/null; then
     kubectl create secret generic helm-secrets-private-keys -n argocd
 fi
 
-# Installing dependencies for cert-manager (temp fix)
-helm repo add jetstack https://charts.jetstack.io --force-update
-helm install cert-manager jetstack/cert-manager   --namespace cert-manager   --create-namespace  --set crds.enabled=true
+# Installing cert-manager if it's not already installed (relevant for child clusters)
+kubectl get namespace cert-manager &> /dev/null || true
+if [[ $? -eq 0 ]]; then
+  echo "cert-manager already installed..."
+else
+  echo "installing cert-manager"
+  helm repo add jetstack https://charts.jetstack.io --force-update
+  helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set crds.enabled=true
+fi
 
 helm dependencies update "../charts/$ENVIRONMENT/argocd"
 helm upgrade --install argocd "../charts/$ENVIRONMENT/argocd" \
