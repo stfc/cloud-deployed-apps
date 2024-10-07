@@ -1,9 +1,6 @@
 name: CI Copied Files Check
 
 on:
-  push:
-    branches:
-      - check_pr_copies
   pull_request:
     branches:
       - main
@@ -29,10 +26,6 @@ jobs:
               - charts/staging/**
             prod:
               - charts/prod/**
-          #  clusters/staging/**
-          #  clusters/prod/**
-          #  secrets/staging/**
-          #  secrets/prod**
 
       - name: Run step if any file(s) in staging env change
         id: staging-check

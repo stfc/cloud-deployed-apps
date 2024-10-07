@@ -9,7 +9,6 @@ compare_files() {
     file3=$3
 
     # Check the number of arguments passed to the function for comparison
-    # To know the number of files for comparison
     # We then check whether the files exist in the previous environment, if not the PR needs review
     if [ "$#" -eq 2 ]; then
         if [ -f $file2 ]; then
