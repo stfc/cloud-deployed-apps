@@ -6,30 +6,17 @@
 compare_files() {
     file1=$1
     file2=$2
-    file3=$3
 
     # Check the number of arguments passed to the function for comparison
     # We then check whether the files exist in the previous environment, if not the PR needs review
-    if [ "$#" -eq 2 ]; then
-        if [ -f $file2 ]; then
-            if cmp -s "$file1" "$file2"; then
-                echo $((0))
-            else
-                echo $((1))
-            fi
+    if [ -f $file2 ]; then
+        if cmp -s "$file1" "$file2"; then
+            echo $((0))
         else
             echo $((1))
         fi
     else
-        if [[ -f $file2 && -f $file3 ]]; then
-            if cmp -s "$file1" "$file2" && cmp -s "$file1" "$file3"; then
-                echo $((0))
-            else
-                echo $((1))
-            fi
-        else
-            echo $((1))
-        fi
+        echo $((1))
     fi
 }
 
@@ -39,10 +26,5 @@ compare_files() {
 path=$1
 curr_env=$2
 comp_env=$3
-comp_env2=$4
 
-if [[ -z $4 ]]; then
-    compare_files "$1" "${path/$curr_env/"$comp_env"}"
-else
-    compare_files "$1" "${path/$curr_env/"$comp_env"}" "${path/$curr_env/"$comp_env2"}"
-fi
+compare_files "$1" "${path/$curr_env/"$comp_env"}"
