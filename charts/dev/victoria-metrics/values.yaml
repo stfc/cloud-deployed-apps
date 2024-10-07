@@ -6,6 +6,7 @@ victoria-metrics-cluster:
       enabled: true
       ingressClassName: nginx
       annotations:
+        kubernetes.io/ingress.class: "nginx"
         cert-manager.io/cluster-issuer: "self-signed"
       hosts:
         - name: select.vm.example.com
@@ -24,6 +25,7 @@ victoria-metrics-cluster:
       enabled: true
       ingressClassName: nginx
       annotations:
+        kubernetes.io/ingress.class: "nginx"
         cert-manager.io/cluster-issuer: "self-signed"
       hosts:
         - name: insert.vm.example.com
