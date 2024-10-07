@@ -13,10 +13,11 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
-            defaultRules:
-              additionalRuleLabels:
-                cluster: staging-worker
             prometheus:
+              prometheusSpec:
+                externalLabels:
+                  cluster: worker
+                  env: staging
               ingress:
                 hosts:
                   - prometheus-worker.staging.nubes.stfc.ac.uk
