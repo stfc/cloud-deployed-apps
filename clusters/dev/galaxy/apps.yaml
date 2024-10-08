@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: galaxy-dev
     path: clusters/dev/galaxy
   syncPolicy:
     automated:
@@ -76,7 +76,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: galaxy-dev
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
