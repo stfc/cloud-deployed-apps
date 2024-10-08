@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: galaxy-dev
     path: clusters/dev/galaxy
   syncPolicy:
     automated:
@@ -47,11 +47,6 @@ spec:
             namespace: cert-manager
             valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
 
-          - name: cluster-api-addon-provider
-            chartName: cluster-api-addon-provider
-            namespace: clusters
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
-
           - name: longhorn
             chartName: longhorn
             namespace: longhorn-system
@@ -62,10 +57,11 @@ spec:
             namespace: manila-csi
             valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
 
-          - name: materials-galaxy
-            chartName: materials-galaxy
-            namespace: materials-galaxy
-            valuesFile: ../../../clusters/dev/galaxy/materials-galaxy-values.yaml
+          # disable galaxy - deploying manually to diagnose duplicate job bug
+          # - name: materials-galaxy
+          #  chartName: materials-galaxy
+          #  namespace: materials-galaxy
+          #  valuesFile: ../../../clusters/dev/galaxy/materials-galaxy-values.yaml
 
 
   syncPolicy:
@@ -80,7 +76,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: galaxy-dev
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
