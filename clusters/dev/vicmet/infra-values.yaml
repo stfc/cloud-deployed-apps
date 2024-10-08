@@ -24,7 +24,8 @@ openstack-cluster:
             controller:
               service:
                 # create a floatip for ingress on your project and put it here
-                loadBalancerIP: "130.246.211.169" 
+
+                loadBalancerIP: "130.246.211.215" 
 
     monitoring:
       kubePrometheusStack:
