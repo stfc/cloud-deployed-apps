@@ -1,0 +1,13 @@
+apiVersion: v2
+name: logging
+version: 1.0.0
+dependencies:
+  - name: fluent-bit
+    repository: https://fluent.github.io/helm-charts
+    version: 0.47.10
+  - name: trivy
+    repository: https://aquasecurity.github.io/helm-charts/
+    version: 0.8.0
+  - name: postee
+    repository: https://aquasecurity.github.io/helm-charts/
+    version: 2.14.0

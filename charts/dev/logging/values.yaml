@@ -1,0 +1,67 @@
+
+fluent-operator:
+  fluentbit:
+    enable: true
+    annotations:
+      fluentbit.io/exclude: "true"
+
+    additionalVolumes:
+      - name: host-proc
+        hostPath:
+          path: /proc/
+      - name: host-sys
+        hostPath:
+          path: /sys/
+      - name: host-buffer
+        hostPath:
+          path: /tmp/fluent-bit-buffer
+    additionalVolumesMounts:
+      - mountPath: /host/sys
+        mountPropagation: HostToContainer
+        name: host-sys
+        readOnly: true
+      - mountPath: /host/proc
+        mountPropagation: HostToContainer
+        name: host-proc
+        readOnly: true
+      - mountPath: /host/fluent-bit-buffer
+        mountPropagation: HostToContainer
+        name: host-buffer
+
+    input:
+      tail:
+        enable: true
+      systemd:
+        enable: true
+
+    filter:
+      kubernetes:
+        enable: true
+        label: false
+      containerd:
+        enable: true
+      systemd:
+        enable: true
+
+    output:
+      opensearch:
+        index: k8s_logs
+        logstashFormat: On
+        logstashPrefix: node
+        replaceDots: true
+        type: flb_type
+        traceError: true
+        suppressTypeName: On
+        timeKey: "@timestamp"
+        tls:
+          # for dev we use self-signed keys
+          verify: false
+      
+    service:
+      storage:
+        path: "/host/fluent-bit-buffer/"
+        backlogMemLimit: "50MB"
+        checksum: "off"
+        deleteIrrecoverableChunks: "on"
+        maxChunksUp: 128
+        sync: normal
