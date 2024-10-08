@@ -158,12 +158,6 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
-            defaultRules:
-              additionalRuleLabels:
-                # these values used for alerting only - part of the email subject tag-line
-                cluster: not-set
-                env: dev
-            
             alertmanager:
               enabled: false
               service:
@@ -233,9 +227,9 @@ openstack-cluster:
                   - to: cloud-support@stfc.ac.uk
                     send_resolved: true
                     headers:
-                      subject: |
+                      subject: | 
                         {%- raw %}
-                        "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname }}"
+                        "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ .CommonLabels.service | default "Multiple Services" }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname | default "Multiple Alerts" }}"
                         {%- endraw %}
                     html: |-
                       {%- raw %}
@@ -293,6 +287,10 @@ openstack-cluster:
 
             prometheus:
               enabled: true
+              prometheusSpec:
+                externalLabels:
+                  cluster: not-set
+                  env: dev
 
               service:
                 type: ClusterIP
