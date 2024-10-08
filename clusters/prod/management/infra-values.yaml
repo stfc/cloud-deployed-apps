@@ -15,7 +15,8 @@ openstack-cluster:
           values:
             defaultRules:
               additionalRuleLabels:
-                cluster: prod-management
+                cluster: management
+                env: prod
             prometheus:
               ingress:
                 hosts:
