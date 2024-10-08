@@ -31,7 +31,7 @@ openstack-cluster:
         release:
           values:
             alertmanager:
-              enabled: false
+              enabled: true
               ingress:
                 hosts:
                   - alertmanager-galaxy.dev.nubes.stfc.ac.uk
