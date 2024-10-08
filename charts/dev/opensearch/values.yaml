@@ -1,0 +1,72 @@
+opensearch-operator:
+  installCRDs: true
+
+clusterName: dev-opensearch 
+namespace: opensearch-system
+version: 2.13.0
+
+httpPort: 9200
+monitoring: 
+  enable: false
+
+pluginsList: []
+
+useSmartScaler: false
+
+adminCredentialsSecret: "opensearch-admin-credentials"
+securityConfigSecret: "opensearch-securityconfig-secret"
+
+dashboards:
+  enabled: true
+  replicas: 1
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations: 
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    hosts:
+      - host: dashboards.demo.io
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: opensearch-tls
+        hosts:
+          - dashboards.demo.io
+    
+
+nodePools:
+  - component: nodes
+    replicas: 3
+    diskSize: "100Gi"
+    persistence:
+      pvc:
+        accessModes:
+          - ReadWriteOnce
+        storageClass: longhorn
+    nodeSelector: {}
+    roles:
+      - "cluster_manager"
+      - "data"
+    pdb:
+      enable: true
+      maxUnavailable: 1
+  
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations: 
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  hosts:
+    - host: nodes.demo.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: opensearch-tls
+      hosts:
+        - nodes.demo.io
