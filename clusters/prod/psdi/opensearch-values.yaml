@@ -1,0 +1,38 @@
+
+dashboards:
+  ingress:
+    hosts:
+      - host: opensearch.pf5.nubes.stfc.ac.uk
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - secretName: opensearch-tls
+        hosts:
+          - opensearch.pf5.nubes.stfc.ac.uk
+
+ingress:
+  hosts:
+    - host: nodes.pf5.nubes.stfc.ac.uk
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: opensearch-tls
+      hosts:
+        - nodes.pf5.nubes.stfc.ac.uk
+
+# This is a Opensearch cluster for PSDI 
+# TODO: create unique users for PSDI 
+users:
+
+# TODO: create unique tenants for PSDI
+# - if they have requirement for multiple tenants 
+tenants:
+
+# TODO: create unique roles for PSDI
+roles:
+
+# TODO: once roles/users are create - setup mappings
+# - including any iris-iam mappings needed
+rolesMapping:

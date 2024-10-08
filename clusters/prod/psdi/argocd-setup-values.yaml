@@ -1,0 +1,8 @@
+argo-cd:
+  global:
+    domain: argocd.pf5.nubes.stfc.ac.uk
+
+longhorn:
+  ingress:
+    host: longhorn.pf5.nubes.stfc.ac.uk
+    

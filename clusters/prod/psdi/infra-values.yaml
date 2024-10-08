@@ -1,0 +1,58 @@
+openstack-cluster:
+  controlPlane:
+    machineCount: 5
+
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 3
+
+  nodeGroupDefaults:
+    machineFlavor: l3.xsmall
+    nodeLabels:	
+      # we're running longhorn on this cluster
+      # set label so worker nodes can host longhorn volumes
+      longhorn.store.nodeselect/longhorn-storage-node: true
+
+  addons:
+    ingress:
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "130.246.80.49"
+
+    monitoring:
+      kubePrometheusStack:
+        release:
+          values:
+            defaultRules:
+              additionalRuleLabels:
+                cluster: psdi
+                env: prod
+            prometheus:
+              ingress:
+                hosts:
+                  - prometheus.pf5.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - prometheus.pf5.nubes.stfc.ac.uk
+                    secretName: stfc-tls-keypair
+            grafana:
+              ingress:
+                hosts:
+                  - grafana.pf5.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - grafana.pf5.nubes.stfc.ac.uk
+                    secretName: stfc-tls-keypair
+            alertmanager:
+              enabled: true
+              ingress:
+                hosts:
+                  - alertmanager.pf5.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - alertmanager.pf5.nubes.stfc.ac.uk
+                    secretName: tls-keypair

@@ -1,0 +1,88 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloud-deployed-apps
+  namespace: argocd
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/stfc/cloud-deployed-apps.git
+    targetRevision: main
+    path: clusters/prod/psdi
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - CreateNamespace=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: psdi-apps
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: "argocd"
+            chartName: argocd
+
+            # NOTE: each chart needs a valuesFile for this to work
+            # so create one for each chart - even if its empty
+
+            # argocd and all dependencies use the same file "argocd-setup-values.yaml"
+            valuesFile: ../../../clusters/prod/psdi/argocd-setup-values.yaml
+            namespace: argocd
+
+          - name: "cert-manager"
+            chartName: cert-manager
+            namespace: cert-manager
+            valuesFile: ../../../clusters/prod/psdi/argocd-setup-values.yaml
+
+          - name: "longhorn"
+            chartName: longhorn
+            namespace: longhorn-system
+            valuesFile: ../../../clusters/prod/psdi/argocd-setup-values.yaml
+
+          - name: "opensearch"
+            chartName: opensearch
+            namespace: opensearch-system
+            valuesFile: ../../../clusters/prod/psdi/opensearch-values.yaml
+            secretsFile: ../../../secrets/dev/worker/opensearch.yaml
+
+
+  syncPolicy:
+    # Don't remove everything if we remove the appset
+    preserveResourcesOnDeletion: true
+
+  template:
+    metadata:
+      name: "{{name}}"
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+        targetRevision: main
+        path: "charts/prod/{{chartName}}"
+        helm:
+          valueFiles:
+            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
+            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{namespace}}"
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: true
+        syncOptions:
+          - CreateNamespace=true
