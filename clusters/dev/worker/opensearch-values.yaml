@@ -1,0 +1,52 @@
+
+dashboards:
+  ingress:
+    hosts:
+      - host: dashboards.dev.nubes.stfc.ac.uk
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - secretName: opensearch-tls
+        hosts:
+          - dashboards.dev.nubes.stfc.ac.uk
+
+ingress:
+  hosts:
+    - host: nodes.dev.nubes.stfc.ac.uk
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: opensearch-tls
+      hosts:
+        - nodes.dev.nubes.stfc.ac.uk
+
+users:
+# for ingesting k8s container logs
+- name: fluentbit
+  passwordFrom:
+    name: fluentbit-credentials-secret
+    key: password
+  backendRoles:
+    - kibana_user
+
+roles:
+# for ingesting k8s container logs
+- name: fluentbit
+  clusterPermissions:
+    - cluster_composite_ops
+    - cluster_monitor
+  indexPermissions:
+    - indexPatterns:
+        - audit-*
+        - container-*
+        - access-*
+      allowedActions:
+        - create_index
+        - index
+        - write
+
+roleMappings:
+  - roleName: fluentbit
+    user: fluentbit
