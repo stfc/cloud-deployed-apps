@@ -101,9 +101,9 @@ Make sure that the project your cluster is built on is permitted to create share
 You can deploy the chart as standalone
 
 ```bash
-cd cloud-deployed-apps/charts/prod/longhorn # or equivalent folder for dev/staging
-helm dependency upgrade .
-helm install longhorn . -n galaxy --create-namespace
+cd cloud-deployed-apps/charts/prod/manila # or equivalent folder for dev/staging
+helm dependency update .
+helm install manila-csi . -n manila-csi --create-namespace
 ```
 
 
@@ -150,5 +150,5 @@ using your application credential - create the secret
 > We should do this automatically - [137](https://github.com/stfc/cloud-deployed-apps/issues/137)
 
 ```bash
-kubectl create secret generic csi-manila-secret --from-literal=os-projectID=<project-id>  --from-literal=os-userName=<username>  --from-literal=os-password=<password>  --from-literal=os-domainName=<domain> -n manila-csi
+kubectl create secret generic csi-manila-secret  --from-literal=os-authURL=<auth-url>  --from-literal=os-region=<os-region>  --from-literal=os-applicationCredentialID=<app-cred-id>  --from-literal=os-applicationCredentialSecret=<app-cred-secret>
 ```
