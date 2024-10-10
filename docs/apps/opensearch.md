@@ -11,123 +11,9 @@ We've tested OpenSearch using `longhorn` as default storage - for quick install,
 ### Ingress
 For Opensearch and Opensearch Dashboards to be accessible outside the cluster - we recommend using nginx ingress. Make sure its enabled on your cluster
 
-## Security Configuration
+## Defining action_groups, tenants, users, roles and role-mappings
 
-OpenSearch config needs to be set in a yaml file secret. Create a `security-config.yaml` file like so:
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: opensearch-securityconfig-secret
-type: Opaque
-stringData:
-      # creating internal users https://opensearch.org/docs/latest/security/access-control/users-roles/#defining-users
-      internal_users.yml: |-
-        _meta:
-          type: "internalusers"
-          config_version: 2
-        admin:
-          hash: "<put bycrpt hash of password here>"
-          reserved: true
-          backend_roles:
-          - "admin"
-          description: "Demo admin user"
-      
-      # mapping roles to users https://opensearch.org/docs/latest/security/access-control/users-roles/#mapping-users-to-roles
-      # IAM groups can also be mapped to roles
-      roles_mapping.yml: |-
-        _meta:
-          type: "rolesmapping"
-          config_version: 2
-        all_access:
-          reserved: false
-          backend_roles:
-          - "admin"
-          - "stfc-cloud/admins"
-          description: "Maps admin to all_access"
-        own_index:
-          reserved: false
-          users:
-          - "*"
-          description: "Allow full access to an index named like the username"
-      
-      # https://opensearch.org/docs/latest/security/access-control/users-roles/#defining-roles
-      roles.yml: |-
-
-      # opensearch security plugin confg https://opensearch.org/docs/latest/security/configuration/index/
-      # If you're using IRIS IAM copy this exactly
-      config.yml: |-
-        _meta:
-          type: "config"
-          config_version: "2"
-        config:
-          dynamic:
-            http:
-              anonymous_auth_enabled: false
-            authc:
-              basic_internal_auth_domain:
-                description: "Authenticate via HTTP Basic against Internal Users Database"
-                http_enabled: true
-                transport_enabled: true
-                order: "1"
-                http_authenticator:
-                  type: basic
-                  challenge: false
-                authentication_backend:
-                  type: intern
-              openid_auth_domain:
-                http_enabled: true
-                transport_enabled: true
-                order: 2
-                http_authenticator:
-                  type: openid
-                  challenge: false
-                  config:
-                    subject_key: preferred_username
-                    roles_key: groups
-                    openid_connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
-                    enable_ssl: true
-                    verify_hostnames: true
-                authentication_backend:
-                  type: noop
-```
-
-in `config.yml` - we're setting up IRIS-IAM and basic username/password as 2 possible methods for authentication - alter this to suit your requirements
-
-You'll need to setup users, roles and rolebindings here in the appropriate files. We cannot use CRDs for defining these whilst also setting up oidc 
-
-You will also need to create a Kubernetes Secret containing admin credentials (encoded in base64) PLEASE CHANGE THE PASSWORD FROM ADMIN:
-
-```bash
-kubectl create secret generic opensearch-admin-credentials
---from-literal=username='admin' 
---from-literal=password='admin'
--n opensearch-system 
-```
-
-NOTE: This password must produce the correct bcrpyt hash that is saved in `security-config.yaml`
-
-## Defining users, roles and role-mappings
-
-NOTE: opensearch k8s operator CRDs currently are incompatible with using security-config.yaml. So use security-config.yaml for defining users
-
-NOTE: once CRDs are compatible with security-config.yaml or if an alternative way to define IAM config is made available - we cannot manage users/roles/rolemappings using GitOps 
-
-
-## Configuring IRIS IAM Setup
-
-We're using OpenSearch's inbuilt oidc capabilities to configure authentication via IRIS IAM. 
-
-Any IRIS IAM `groups` that a user belongs to gets mapped to a `backend_role` with the same name - we can then define any `role_mappings` to map that IAM group to a `role` in OpenSearch    
-
-Example - mapping `stfc-cloud/admins` group to the admin role:
-```yaml
-roleMappings:
-- roleName: all_access
-  backend_roles: 
-    - stfc-cloud/admins
-```
+You can setup action_groups, tenants, users, roles and role-mappings using this helm chart. This chart automatically builds the YAML configuration files that OpenSearch security plugin uses. See chart values.yaml for examples
 
 ## Configuring DNS + cert
 
@@ -136,10 +22,11 @@ To configure DNS name for OpenSearch + OpenSearch Dashboards you can add cluster
 We utilise cert-manager by default for managing certs - and you can see [cert-manager config](./misc.md) on how to configure it to use self-signed or letsencrypt verified certs
 
 ```yaml
-
 # for access to opensearch dashboards
 dashboards:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: self-signed # le-staging, le-prod for let's encrypt
     hosts:
       - host: dashboards.dev.nubes.stfc.ac.uk
         paths:
@@ -153,6 +40,8 @@ dashboards:
 
 # for access to opensearch nodes
 ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: self-signed # le-staging, le-prod for let's encrypt
   hosts:
     - host: nodes.dev.nubes.stfc.ac.uk
       paths:
@@ -162,36 +51,26 @@ ingress:
     - secretName: opensearch-tls
       hosts:
         - nodes.dev.nubes.stfc.ac.uk
-
 ```
 
 ## Pre-deployment steps
 
-### 1. Create Secret for IAM Credentials
+### 1a. Create Sops Secret (If using ArgoCD)
 
-Create a secret for IAM credentials you can do so by creating a file in `/tmp/iam-secret.yaml` and adding this config:
+OpenSearch requires an initial `admin` user to be setup - which a username and password needs to be setup. 
+  - You will need to provide the correct bcrypt hash for your password - use [this](https://bcrypt.online/?plain_text=admin&cost_factor=12) to get a hash of your password (default cost-factor is 12)
 
-```yaml
-apiVersion: v1
-data:
-  client-id: "" # put client id here - remember to encode it in base64
-  client-secret: "" # put client secret here - remember to encode it in base64
-kind: Secret
-metadata:
-  name: iris-iam-credentials
-  namespace: galaxy # make sure this matches namespace galaxy will be installed in 
-type: Opaque
-```	
+Additionally, if you choose to use Single Sign On (SSO) via IRIS-IAM authentication - you'll need to provide the client-id and secret. Make sure you enable iris-iam authentication by setting `openid.enabled` to `true`
 
-### 2. Create Secrets for "admin" user and any other defined users
+You can set these secrets using `sops` - template yaml files for setting these secrets can be found in `secret-templates`. See [secrets](../secrets.md) on how to set and encrypt these secrets using sops
 
-see above - Defining users, roles and role-mappings
+### 1b. Set Secrets in sops (If not using ArgoCD)
 
-NOTE: you will need to create one for admin even if you haven't defined any other users
+You'll need to configure admin/IRIS-IAM credentials manually using the template yaml files. Copy these files to tmp directory to avoid committing secrets
 
-### 3. Create Secret for security-config.yaml
-
-see above - Security Configuration
+```bash
+cp charts/$env/$chartName/secret-templates/* /tmp/secret-templates
+```
 
 ## Deployment 
 
@@ -200,7 +79,7 @@ You can deploy the chart as standalone
 ```bash
 cd cloud-deployed-apps/charts/dev/opensearch
 helm dependency upgrade .
-helm install my-opensearch-service . -n opensearch-system  --create-namespace
+helm install my-opensearch-service . -n opensearch-system  --create-namespace -f /tmp/secret-templates/opensearch.yaml
 ```
 
 or you can use argocd to install it - see [Deploying Apps](../deploying-apps.md)

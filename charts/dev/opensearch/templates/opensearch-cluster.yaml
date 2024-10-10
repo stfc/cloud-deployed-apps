@@ -9,9 +9,9 @@ spec:
   security:
     config:
       adminCredentialsSecret:
-        name: {{ .Values.adminCredentialsSecret }}
+        name: admin-credentials-secret
       securityConfigSecret:
-        name: {{ .Values.securityConfigSecret }}
+        name: opensearch-securityconfig-secret
     tls:
       transport:
         generate: true
@@ -35,29 +35,20 @@ spec:
     version: {{ .Values.version }}
     replicas: {{ .Values.dashboards.replicas | default 1 }}
     opensearchCredentialsSecret:
-      name: {{ .Values.adminCredentialsSecret }}
-    env:
-      - name: IAM_CLIENT_ID
-        valueFrom:
-          secretKeyRef:
-            name: iris-iam-credentials-secret
-            key: client-id
-      - name: IAM_CLIENT_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: iris-iam-credentials-secret
-            key: client-secret
+      name: admin-credentials-secret
     additionalConfig:
       opensearch_security.multitenancy.enabled: "true"
       opensearch_security.cookie.secure: "true"
+      {{ if .Values.openid.enabled }}
       opensearch_security.auth.type: | 
         ["basicauth", "openid"]
       opensearch_security.auth.multiple_auth_enabled: "true"
       opensearch_security.openid.connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
-      opensearch_security.openid.client_id: "${IAM_CLIENT_ID}"
-      opensearch_security.openid.client_secret: "${IAM_CLIENT_SECRET}"
+      opensearch_security.openid.client_id: {{.Values.openid.clientID}}
+      opensearch_security.openid.client_secret: {{.Values.openid.clientSecret}}
       opensearch_security.openid.scope: "openid profile email preferred_username groups"
       opensearch_security.openid.base_redirect_url: https://{{ index .Values.dashboards.ingress.hosts 0 "host"}}
+      {{ end }}
 
   nodePools:
     {{- range .Values.nodePools }}
