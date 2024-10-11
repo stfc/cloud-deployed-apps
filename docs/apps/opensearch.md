@@ -57,8 +57,10 @@ ingress:
 
 ### 1a. Create Sops Secret (If using ArgoCD)
 
-OpenSearch requires an initial `admin` user to be setup - which a username and password needs to be setup. 
-  - You will need to provide the correct bcrypt hash for your password - use [this](https://bcrypt.online/?plain_text=admin&cost_factor=12) to get a hash of your password (default cost-factor is 12)
+OpenSearch requires an initial `admin` user to be setup. This is so Opensearch Dashboards and talk to nodes in the cluster. 
+You need to provide a username and password. 
+  - You will need to also provide the correct bcrypt hash for the `admin` user password - so you can login to the cluster as admin 
+  - You can use [this website](https://bcrypt.online/?plain_text=admin&cost_factor=12) to get a hash of your password (default cost-factor is 12)
 
 Additionally, if you choose to use Single Sign On (SSO) via IRIS-IAM authentication - you'll need to provide the client-id and secret. Make sure you enable iris-iam authentication by setting `openid.enabled` to `true`
 

@@ -4,6 +4,8 @@
 # application: opensearch
 
 admin:
+  # Provide username and password for the initial admin user - used to configure and manage the cluster
+  # You must provide the password in plaintext and as a bycrpt hash 
   username: admin
   password: admin
   # bcrypt hash of password - default is 12 rounds unless changed in settings
