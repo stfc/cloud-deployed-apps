@@ -2,7 +2,7 @@ apiVersion: opensearch.opster.io/v1
 kind: OpenSearchCluster
 metadata:
   name: {{ .Values.clusterName }}
-  namespace: {{ .Release.Namespace | default .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
 spec:

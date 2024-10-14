@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.clusterName }}-dashboards-ingress
-  namespace: {{ .Release.Namespace | default "opensearch-system" }}
+  namespace: {{ .Release.Namespace }}
   {{- with .Values.dashboards.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
