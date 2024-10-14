@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.clusterName }}-nodes-ingress
+  name: {{ .Values.clusterName }}-opensearch-ingress
   namespace: {{ .Release.Namespace }}
   {{- with .Values.ingress.annotations }}
   annotations:

@@ -31,14 +31,14 @@ dashboards:
       ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
     hosts:
-      - host: dashboards.example.com
+      - host: opensearch-dashboards.example.com
         paths:
           - path: /
             pathType: Prefix
     tls:
       - secretName: opensearch-tls
         hosts:
-          - dashboards.example.com
+          - opensearch-dashboards.example.com
     
 # opensearch clusters are composed of one or more nodepools
 # nodepools represent logical grouping of nodes with the same role
@@ -68,14 +68,14 @@ ingress:
     ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   hosts:
-    - host: nodes.example.com
+    - host: opensearch.example.com
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: opensearch-tls
       hosts:
-        - nodes.example.com
+        - opensearch.example.com
 
 # openid is currently only configured to use IRIS IAM
 # NOTE: when setting up IRIS IAM client - the callback should be https://<opensearch-domain>/auth/openid/login 
