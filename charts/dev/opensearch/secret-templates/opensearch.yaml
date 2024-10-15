@@ -1,0 +1,18 @@
+# THIS IS A TEMPLATE FOR SOPS SECRETS 
+# copy this file into relevant cluster folder in secrets directory
+# then run sops ecrypt <filename>.yaml - DON'T CHANGE THE FILENAME  
+# application: opensearch
+
+admin:
+  # Provide username and password for the initial admin user - used to configure and manage the cluster
+  # You must provide the password in plaintext and as a bycrpt hash 
+  username: admin
+  password: admin
+  # bcrypt hash of password - default is 12 rounds unless changed in settings
+  # plugins.security.password.hashing.bcrypt.rounds
+  hash: $2y$12$nfO6TYibMCV6E2wPuYoiq.psAV2dl2wmAL5ZEU.VOkaB4z4GCLVVK
+
+# IRIS IAM Client credentials
+openid:
+  clientID: iris-iam-id
+  clientSecret: iris-iam-secret

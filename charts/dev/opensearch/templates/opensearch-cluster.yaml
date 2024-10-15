@@ -1,0 +1,72 @@
+apiVersion: opensearch.opster.io/v1
+kind: OpenSearchCluster
+metadata:
+  name: {{ .Values.clusterName }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  security:
+    config:
+      adminCredentialsSecret:
+        name: admin-credentials-secret
+      securityConfigSecret:
+        name: opensearch-securityconfig-secret
+    tls:
+      transport:
+        generate: true
+        perNode: true
+      http:
+        generate: true
+  general:
+    serviceName: {{ .Values.clusterName }}
+    setVMMaxMapCount: true
+    version: {{ .Values.version }}
+    httpPort: {{ .Values.httpPort | default 9200 }}
+    monitoring: {{ toYaml .Values.monitoring | nindent 6 }}
+    pluginsList: {{ toYaml .Values.pluginsList | nindent 6 }}
+  confMgmt:
+    smartScaler: {{ .Values.useSmartScaler | default false }}    
+  dashboards:
+    tls:
+      enable: true
+      generate: true
+    enable: {{ .Values.dashboards.enabled | default true }}
+    version: {{ .Values.version }}
+    replicas: {{ .Values.dashboards.replicas | default 1 }}
+    opensearchCredentialsSecret:
+      name: admin-credentials-secret
+    additionalConfig:
+      opensearch_security.multitenancy.enabled: "true"
+      opensearch_security.cookie.secure: "true"
+      {{ if .Values.openid.enabled }}
+      opensearch_security.auth.type: | 
+        ["basicauth", "openid"]
+      opensearch_security.auth.multiple_auth_enabled: "true"
+      opensearch_security.openid.connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
+      opensearch_security.openid.client_id: {{.Values.openid.clientID}}
+      opensearch_security.openid.client_secret: {{.Values.openid.clientSecret}}
+      opensearch_security.openid.scope: "openid profile email preferred_username groups"
+      opensearch_security.openid.base_redirect_url: https://{{ index .Values.dashboards.ingress.hosts 0 "host"}}
+      {{ end }}
+
+  nodePools:
+    {{- range .Values.nodePools }}
+    - component: {{ .component }}
+      replicas: {{ .replicas }}
+      diskSize: {{ .diskSize }}
+      persistence:
+        pvc:
+          accessModes:
+            - {{ .accessModes | default "ReadWriteOnce" }}
+          storageClass: {{ .storageClass | default "longhorn" }}
+      nodeSelector: 
+        {{- toYaml .nodeSelector | nindent 10 }}
+      roles:
+      {{- range .roles }}
+        - {{ . }}
+      {{- end }}
+      pdb:
+        enable: {{ .pdb.enable | default false }}
+        maxUnavailable: {{ .pdb.maxUnavailable | default 1 }}
+    {{- end }}
