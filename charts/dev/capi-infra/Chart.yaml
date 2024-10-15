@@ -2,6 +2,6 @@ apiVersion: v2
 name: capi-openstack-cluster
 version: 1.0.0
 dependencies:
-  - repository: https://azimuth-cloud.github.io/capi-helm-charts
+  - repository:  https://harbor.stfc.ac.uk/chartrepo/stfc-cloud
     name: openstack-cluster
-    version: 0.10.1
+    version: 0.10.2
