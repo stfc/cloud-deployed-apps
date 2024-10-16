@@ -22,31 +22,172 @@ ingress:
       hosts:
         - nodes.dev.nubes.stfc.ac.uk
 
+# This is a Opensearch cluster that collects logs from all clusters 
+# and stores in different tenants
 users:
-# for ingesting k8s container logs
-- name: fluentbit
-  passwordFrom:
-    name: fluentbit-credentials-secret
-    key: password
-  backendRoles:
-    - kibana_user
+  log_writer_dev:
+    reserved: false
+    backend_roles: 
+      - k8s_log_writer_dev
+    description: "user for writing dev k8s logs"
 
-roles:
-# for ingesting k8s container logs
-- name: fluentbit
-  clusterPermissions:
-    - cluster_composite_ops
-    - cluster_monitor
-  indexPermissions:
-    - indexPatterns:
-        - audit-*
-        - container-*
-        - access-*
-      allowedActions:
-        - create_index
-        - index
-        - write
+  log_writer_staging:
+    reserved: false
+    backend_roles: 
+      - k8s_log_writer_staging
+    description: "user for writing staging k8s logs"
 
-roleMappings:
-  - roleName: fluentbit
-    user: fluentbit
+  log_writer_prod:
+    reserved: false
+    backend_roles: 
+      - k8s_log_writer_prod
+    description: "user for writing prod k8s logs"
+
+tenants:
+  cloud_dev: 
+    reserved: true
+    description: "logs from dev k8s clusters"
+  cloud:
+    reserved: true
+    description: "logs for prod/staging k8s clusters"
+
+roles:  
+  write_only_dev:
+    reserved: false
+    cluster_permissions: []
+    index_permissions:
+    - index_patterns:
+        - "k8s_logs_dev_*_cluster*"
+        - "trivy_logs_dev_*_cluster*"
+      allowed_actions:
+        - "indices:data/write/bulk"
+        - "indices:data/write/index"
+        - "indices:data/write/update"
+        - "indices:admin/create"
+    tenant_permissions: 
+      tenant_patterns:
+        - cloud_dev
+  
+  read_only_dev:
+    reserved: false
+    cluster_permissions: []
+    index_permissions:
+    - index_patterns:
+        - "k8s_logs_dev_*_cluster*"
+        - "trivy_logs_dev_*_cluster*"
+      allowed_actions:
+        - "indices:data/write/*",
+        - "indices:data/read/*",
+        - "indices:admin/*"
+    tenant_permissions: 
+      tenant_patterns:
+        - cloud_dev
+      allowed_actions:
+        # so to allow creating dashboards
+        - kibana_all_write
+
+  write_only_staging:
+    reserved: false
+    cluster_permissions: []
+    index_permissions:
+    - index_patterns:
+        - "k8s_logs_staging_*_cluster*"
+        - "trivy_logs_staging_*_cluster*"
+      allowed_actions:
+        - "indices:data/write/bulk"
+        - "indices:data/write/index"
+        - "indices:data/write/update"
+        - "indices:admin/create"
+    tenant_permissions: 
+      tenant_patterns:
+        - cloud
+  
+  read_only_staging:
+    reserved: false
+    cluster_permissions: []
+    index_permissions:
+    - index_patterns:
+        - "k8s_logs_staging_*_cluster*"
+        - "trivy_logs_staging_*_cluster*"
+      allowed_actions:
+        - "indices:data/write/*"
+        - "indices:data/read/*"
+        - "indices:admin/*"
+    tenant_permissions: 
+      tenant_patterns:
+        - cloud
+      allowed_actions:
+        # so to allow creating dashboards
+        - kibana_all_write
+  
+  write_only_prod:
+    reserved: false
+    cluster_permissions: []
+    index_permissions:
+    - index_patterns:
+        - "k8s_logs_prod_*_cluster*"
+        - "trivy_logs_prod_*_cluster*" 
+      allowed_actions:
+        - "indices:data/write/bulk"
+        - "indices:data/write/index"
+        - "indices:data/write/update"
+        - "indices:admin/create"
+    tenant_permissions: 
+      tenant_patterns:
+        - cloud
+  
+  read_only_prod:
+    reserved: false
+    cluster_permissions: []
+    index_permissions:
+    - index_patterns:
+        - "k8s_logs_prod_*_cluster*"
+        - "trivy_logs_prod_*_cluster*" 
+      allowed_actions:
+        - "indices:data/write/*"
+        - "indices:data/read/*"
+        - "indices:admin/*"
+    tenant_permissions: 
+      tenant_patterns:
+        - cloud
+      allowed_actions:
+        # so to allow creating dashboards
+        - kibana_all_write
+
+rolesMapping:
+  k8s_log_writer_dev:
+    backend_roles:
+      - write_only_dev
+    user: 
+      - log_writer_dev
+    description: "map dev log writer role"
+  k8s_log_writer_staging:
+    backend_roles:
+      - write_only_staging
+    user: 
+      - log_writer_staging
+    description: "map staging log writer role"    
+  k8s_log_writer_prod:
+    backend_roles:
+      - write_only_prod
+    user: 
+      - log_writer_prod
+    description: "map prod log writer role"
+  
+  k8s_dev:
+    backend_roles:
+      - read_only_dev
+      - stfc-cloud-dev
+    user: 
+      - log_writer_dev
+    description: "map dev users to dev read role"
+  k8s_prod:
+    backend_roles:
+      - read_only_staging
+      - read_only_prod
+      - read_only_dev
+      - stfc-cloud/team
+    user: 
+      - log_writer_dev
+    description: "map cloud team users to all read roles"
+    
