@@ -7,6 +7,7 @@ openstack-cluster:
           values:
             controller:
               service:
+                # *.prod-worker.nubes.stfc.ac.uk
                 loadBalancerIP: "130.246.80.243"
 
     monitoring:
@@ -20,25 +21,25 @@ openstack-cluster:
             prometheus:
               ingress:
                 hosts:
-                  - prometheus-worker.prod.nubes.stfc.ac.uk
+                  - prometheus.prod-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - prometheus-worker.prod.nubes.stfc.ac.uk
+                      - prometheus.prod-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
             grafana:
               ingress:
                 hosts:
-                  - grafana-worker.prod.nubes.stfc.ac.uk
+                  - grafana.prod-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - grafana-worker.prod.nubes.stfc.ac.uk
+                      - grafana.prod-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
             alertmanager:
               enabled: true
               ingress:
                 hosts:
-                  - alertmanager-worker.prod.nubes.stfc.ac.uk
+                  - alertmanager.prod-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - alertmanager-worker.prod.nubes.stfc.ac.uk
+                      - alertmanager.prod-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair

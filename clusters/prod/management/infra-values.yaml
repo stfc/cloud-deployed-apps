@@ -7,7 +7,8 @@ openstack-cluster:
           values:
             controller:
               service:
-                loadBalancerIP: "130.246.81.161"
+                # *.prod-mgmt.nubes.stfc.ac.uk
+                loadBalancerIP: "130.246.80.233"
 
     monitoring:
       kubePrometheusStack:
@@ -20,25 +21,25 @@ openstack-cluster:
             prometheus:
               ingress:
                 hosts:
-                  - prometheus-mgmt.prod.nubes.stfc.ac.uk
+                  - prometheus.prod-mgmt.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - prometheus-mgmt.prod.nubes.stfc.ac.uk
+                      - prometheus.prod-mgmt.nubes.stfc.ac.uk
                     secretName: tls-keypair
             grafana:
               ingress:
                 hosts:
-                  - grafana-mgmt.prod.nubes.stfc.ac.uk
+                  - grafana.prod-mgmt.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - grafana-mgmt.prod.nubes.stfc.ac.uk
+                      - grafana.prod-mgmt.nubes.stfc.ac.uk
                     secretName: tls-keypair
             alertmanager:
               enabled: true
               ingress:
                 hosts:
-                  - alertmanager-mgmt.prod.nubes.stfc.ac.uk
+                  - alertmanager.prod-mgmt.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - alertmanager-mgmt.prod.nubes.stfc.ac.uk
+                      - alertmanager.prod-mgmt.nubes.stfc.ac.uk
                     secretName: tls-keypair
