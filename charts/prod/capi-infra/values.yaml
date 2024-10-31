@@ -291,7 +291,7 @@ openstack-cluster:
               prometheusSpec:
                 externalLabels:
                   cluster: not-set
-                  env: dev
+                  env: not-set
 
               service:
                 type: ClusterIP

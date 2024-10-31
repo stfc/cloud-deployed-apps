@@ -19,6 +19,10 @@ openstack-cluster:
                 cluster: management
                 env: prod
             prometheus:
+              prometheusSpec:
+                externalLabels:
+                  cluster: management
+                  env: prod
               ingress:
                 hosts:
                   - prometheus.prod-mgmt.nubes.stfc.ac.uk
