@@ -162,19 +162,19 @@ openstack-cluster:
               enabled: false
               service:
                 type: ClusterIP
-              
+
               ingress:
                 ingressClassName: nginx
                 enabled: true
                 annotations:
                   cert-manager.io/cluster-issuer: "self-signed"
-                hosts: 
-                  -  alertmanager.example.com
+                hosts:
+                  - alertmanager.example.com
                 paths:
                   - "/"
-                tls: 
-                  - hosts: 
-                    - "alertmanager.example.com"
+                tls:
+                  - hosts:
+                      - "alertmanager.example.com"
                     secretName: tls-keypair
                 ingressPerReplica:
                   enabled: false
@@ -182,107 +182,107 @@ openstack-cluster:
               config:
                 global:
                   resolve_timeout: 1h
-                  smtp_smarthost: 
+                  smtp_smarthost:
                   smtp_from: cloud-support@stfc.ac.uk
                   smtp_require_tls: false
 
                 route:
-                  receiver: 'default-receiver'
-                  group_by: ['cluster', 'service']
+                  receiver: "default-receiver"
+                  group_by: ["cluster", "service"]
                   group_wait: 30m
                   group_interval: 30m
                   repeat_interval: 2d
 
-                inhibit_rules:                    
-                  # mute warning/info alerts on same service if a critical alert is firing - less noise 
-                  - source_matchers: 
-                    - severity: critical
-                    target_matchers: 
+                inhibit_rules:
+                  # mute warning/info alerts on same service if a critical alert is firing - less noise
+                  - source_matchers:
+                      - severity: critical
+                    target_matchers:
                       - severity: "warning"
                     equal: [cluster, service]
 
-                  # mute watchdog alert 
-                  #   - this should always be firing 
+                  # mute watchdog alert
+                  #   - this should always be firing
                   # mute infoinhibitor alert
                   #   - not useful by itself
                   #   - if this is firing, we're suppressing severity=info alerts
-                  #   - infoinhibitor rules should be automatically configured 
+                  #   - infoinhibitor rules should be automatically configured
                   - target_matchers:
-                    - alertname: Watchdog
-                    - alertname: InfoInhibitor
+                      - alertname: Watchdog
+                      - alertname: InfoInhibitor
 
                 time_intervals:
                   - name: officehours
                     time_intervals:
                       - times:
-                        - start_time: 07:00
-                          end_time: 18:00
-                        weekdays: ['monday:friday']
+                          - start_time: 07:00
+                            end_time: 18:00
+                        weekdays: ["monday:friday"]
                         location: "Europe/London"
 
                 receivers:
-                - name: default-receiver
-                  active_time_intervals:
-                    - officehours
-                  email_configs:
-                  - to: cloud-support@stfc.ac.uk
-                    send_resolved: true
-                    headers:
-                      subject: | 
-                        {%- raw %}
-                        "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ .CommonLabels.service | default "Multiple Services" }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname | default "Multiple Alerts" }}"
-                        {%- endraw %}
-                    html: |-
-                      {%- raw %}
-                      <h3>You have the following alerts:</h3>
-                      {{ range .Alerts }}
-                      <p><b>{{.Labels.alertname}}</b>
-                        <ul>{{ range .Annotations.SortedPairs }}
-                        <li>{{ .Name }} = {{ .Value }}</li>
-                        {{ end }}</ul>
-                        <ul>{{ range .Labels.SortedPairs }}
-                        <li>{{ .Name }} = {{ .Value }}</li>
-                        {{ end }}</ul>
-                        {{ .GeneratorURL }}</p>
-                      {{ end }}
-                      {%- endraw %}
-                    text: |-
-                      {%- raw %}
-                      You have the following alerts:
-                      {{ range .Alerts }}
-                      * {{.Labels.alertname}}
-                        {{ range .Annotations.SortedPairs }}
-                        {{ .Name }} = {{ .Value }}
-                        {{ end }}
-                        {{ range .Labels.SortedPairs }}
-                        {{ .Name }} = {{ .Value }}
-                        {{ end }}
-                        {{ .GeneratorURL }}
-                      {{ end }}
-                      {%- endraw %}
+                  - name: default-receiver
+                    active_time_intervals:
+                      - officehours
+                    email_configs:
+                      - to: cloud-support@stfc.ac.uk
+                        send_resolved: true
+                        headers:
+                          subject: |
+                            {%- raw %}
+                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ .CommonLabels.service | default "Multiple Services" }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname | default "Multiple Alerts" }}"
+                            {%- endraw %}
+                        html: |-
+                          {%- raw %}
+                          <h3>You have the following alerts:</h3>
+                          {{ range .Alerts }}
+                          <p><b>{{.Labels.alertname}}</b>
+                            <ul>{{ range .Annotations.SortedPairs }}
+                            <li>{{ .Name }} = {{ .Value }}</li>
+                            {{ end }}</ul>
+                            <ul>{{ range .Labels.SortedPairs }}
+                            <li>{{ .Name }} = {{ .Value }}</li>
+                            {{ end }}</ul>
+                            {{ .GeneratorURL }}</p>
+                          {{ end }}
+                          {%- endraw %}
+                        text: |-
+                          {%- raw %}
+                          You have the following alerts:
+                          {{ range .Alerts }}
+                          * {{.Labels.alertname}}
+                            {{ range .Annotations.SortedPairs }}
+                            {{ .Name }} = {{ .Value }}
+                            {{ end }}
+                            {{ range .Labels.SortedPairs }}
+                            {{ .Name }} = {{ .Value }}
+                            {{ end }}
+                            {{ .GeneratorURL }}
+                          {{ end }}
+                          {%- endraw %}
 
                 templates:
-                  - '/etc/alertmanager/config/*.tmpl'
+                  - "/etc/alertmanager/config/*.tmpl"
 
             grafana:
               enabled: true
-              
+
               service:
                 type: ClusterIP
-              
+
               ingress:
                 ingressClassName: nginx
                 enabled: true
                 annotations:
                   cert-manager.io/cluster-issuer: "self-signed"
                 path: /
-                hosts: 
-                  -  grafana.example.com
+                hosts:
+                  - grafana.example.com
                 tls:
-                  - hosts: 
-                    - "grafana.example.com"
+                  - hosts:
+                      - "grafana.example.com"
                     secretName: tls-keypair
-                    
+
             prometheus-operator:
               enabled: true
 
@@ -291,7 +291,7 @@ openstack-cluster:
               prometheusSpec:
                 externalLabels:
                   cluster: not-set
-                  env: dev
+                  env: not-set
 
               service:
                 type: ClusterIP
@@ -303,15 +303,15 @@ openstack-cluster:
                 enabled: true
                 paths:
                   - /
-                hosts: 
-                  -  prometheus.example.com
-                tls: 
-                  - hosts: 
-                    - "prometheus.example.com"
+                hosts:
+                  - prometheus.example.com
+                tls:
+                  - hosts:
+                      - "prometheus.example.com"
                     secretName: tls-keypair
     ingress:
       enabled: false
-    
+
     openstack:
       csiCinder:
         defaultStorageClass:
