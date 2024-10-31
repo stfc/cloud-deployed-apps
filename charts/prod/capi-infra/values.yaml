@@ -158,12 +158,6 @@ openstack-cluster:
       kubePrometheusStack:
         release:
           values:
-            defaultRules:
-              additionalRuleLabels:
-                # these values used for alerting only - part of the email subject tag-line
-                cluster: not-set
-                env: dev
-            
             alertmanager:
               enabled: false
               service:
@@ -193,49 +187,50 @@ openstack-cluster:
                   smtp_require_tls: false
 
                 route:
-                  receiver: 'null'
-                  routes:
-                    - receiver: 'null'
-                      matchers:
-                      - alertname = "Watchdog"
-                    - receiver: default-receiver
-                      group_wait: 30m
-                      group_interval: 30m
-                      repeat_interval: 2d
-                      group_by: ['cluster', 'service']
-                      matchers:
-                      - severity=~"critical|warning"
+                  receiver: 'default-receiver'
+                  group_by: ['cluster', 'service']
+                  group_wait: 30m
+                  group_interval: 30m
+                  repeat_interval: 2d
 
-                inhibit_rules:
-                  - source_matchers: [severity="critical"]
-                    target_matchers: [severity="warning"]
-                    equal: [alertname, cluster, service]
+                inhibit_rules:                    
+                  # mute warning/info alerts on same service if a critical alert is firing - less noise 
+                  - source_matchers: 
+                    - severity: critical
+                    target_matchers: 
+                      - severity: "warning"
+                    equal: [cluster, service]
 
-                  - source_matchers:
-                      - 'severity = warning'
-                    target_matchers:
-                      - 'severity = info'
-                    equal: [alertname, cluster, service]
-
-                  - source_matchers:
-                      - 'alertname = InfoInhibitor'
-                    target_matchers:
-                      - 'severity = info'
-                    equal: ['namespace']
-
+                  # mute watchdog alert 
+                  #   - this should always be firing 
+                  # mute infoinhibitor alert
+                  #   - not useful by itself
+                  #   - if this is firing, we're suppressing severity=info alerts
+                  #   - infoinhibitor rules should be automatically configured 
                   - target_matchers:
-                      - 'alertname = InfoInhibitor'
+                    - alertname: Watchdog
+                    - alertname: InfoInhibitor
+
+                time_intervals:
+                  - name: officehours
+                    time_intervals:
+                      - times:
+                        - start_time: 07:00
+                          end_time: 18:00
+                        weekdays: ['monday:friday']
+                        location: "Europe/London"
 
                 receivers:
-                - name: 'null'
                 - name: default-receiver
+                  active_time_intervals:
+                    - officehours
                   email_configs:
                   - to: cloud-support@stfc.ac.uk
                     send_resolved: true
                     headers:
-                      subject: |
+                      subject: | 
                         {%- raw %}
-                        "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname }}"
+                        "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ .CommonLabels.service | default "Multiple Services" }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname | default "Multiple Alerts" }}"
                         {%- endraw %}
                     html: |-
                       {%- raw %}
@@ -293,6 +288,10 @@ openstack-cluster:
 
             prometheus:
               enabled: true
+              prometheusSpec:
+                externalLabels:
+                  cluster: not-set
+                  env: dev
 
               service:
                 type: ClusterIP
