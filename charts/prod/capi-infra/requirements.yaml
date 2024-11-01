@@ -1,4 +1,0 @@
-dependencies:
-  - repository: https://azimuth-cloud.github.io/capi-helm-charts
-    name: openstack-cluster
-    version: 0.10.1
