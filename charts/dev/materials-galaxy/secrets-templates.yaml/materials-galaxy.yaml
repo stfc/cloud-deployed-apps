@@ -1,0 +1,35 @@
+oauth2-proxy:
+
+  # IRIS IAM CLIENT CREDENTIALS
+  config:
+    clientID: iris-iam-client-id
+    clientSecret: iris-iam-secret
+    # Create a new secret with the following command
+    # openssl rand -base64 32 | head -c 32 | base64
+    cookieSecret: "XXXXXXXXXXXXXXXX"
+  
+  # if you want to setup galaxy where only specific emails have access
+  # USE EITHER THIS OR RESTRICT BY OIDC GROUP 
+  authenticatedEmailsFile:
+    enabled: true
+    restricted_access: |-
+      user1@example.com
+      user2@example.com
+  
+  # if you want to setup galaxy where only a specific IAM group has access
+  # USE EITHER THIS OR RESTRICT BY EMAILS ABOVE
+#  extraArgs:
+#    allowed-group: "stfc-cloud/admins"
+
+galaxy:
+  postgresql:
+      # a random consistent password for postgres galaxydbuser
+      # can't auto-generate a password because of argo-helm issues when it tries to reconcile
+      galaxyDatabasePassword: <random-password>
+  configs:
+    galaxy.yml:
+      galaxy:
+        # comma spaced list of admin emails
+        admin_users: "user1@example.com,user2@example.com"
+
+
