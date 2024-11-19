@@ -2,25 +2,25 @@
 dashboards:
   ingress:
     hosts:
-      - host: dashboards.dev.nubes.stfc.ac.uk
+      - host: opensearch-dashboards.dev-worker.nubes.stfc.ac.uk
         paths:
           - path: /
             pathType: ImplementationSpecific
     tls:
       - secretName: opensearch-tls
         hosts:
-          - dashboards.dev.nubes.stfc.ac.uk
+          - opensearch-dashboards.dev-worker.nubes.stfc.ac.uk
 
 ingress:
   hosts:
-    - host: nodes.dev.nubes.stfc.ac.uk
+    - host: opensearch.dev-worker.nubes.stfc.ac.uk
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls:
     - secretName: opensearch-tls
       hosts:
-        - nodes.dev.nubes.stfc.ac.uk
+        - opensearch.dev-worker.nubes.stfc.ac.uk
 
 # This is a Opensearch cluster that collects logs from all clusters 
 # and stores in different tenants
