@@ -15,8 +15,6 @@ jobs:
       any_changed: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: check_pr_copies
       - name: Get changed files in specific repo folders
         id: changed-files
         uses: tj-actions/changed-files@v45
