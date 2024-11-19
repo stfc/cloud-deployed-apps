@@ -14,7 +14,6 @@ if [ -z "$2" ]; then
   exit 1
 fi
 
-
 CLUSTER_NAME=$1
 ENVIRONMENT=$2
 
@@ -33,8 +32,7 @@ if ! kubectl get secret helm-secrets-private-keys -n argocd &> /dev/null; then
 fi
 
 # Installing cert-manager if it's not already installed (relevant for child clusters)
-kubectl get namespace cert-manager &> /dev/null || true
-if [[ $? -eq 0 ]]; then
+if kubectl get namespace cert-manager &> /dev/null; then
   echo "cert-manager already installed..."
 else
   echo "installing cert-manager"
