@@ -11,6 +11,7 @@ oauth2-proxy:
   # if you want to setup galaxy where only specific emails have access
   # USE EITHER THIS OR RESTRICT BY OIDC GROUP 
   authenticatedEmailsFile:
+    # if you're using oidc - set this to false
     enabled: true
     restricted_access: |-
       user1@example.com

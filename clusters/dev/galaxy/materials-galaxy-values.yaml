@@ -2,7 +2,6 @@ oauth2-proxy:
 
 
   extraArgs:
-    # limit access to stfc-cloud-dev group
     redirect-url: "https://galaxy.dev.nubes.stfc.ac.uk/oauth2/callback"
 
 galaxy:
