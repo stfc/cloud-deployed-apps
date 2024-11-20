@@ -1,4 +1,8 @@
 openstack-cluster:
+
+  nodeGroups:
+      machineCount: 5
+
   addons:
     ingress:
       enabled: true
