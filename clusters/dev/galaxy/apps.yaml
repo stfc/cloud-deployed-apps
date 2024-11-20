@@ -29,6 +29,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
+  goTemplateOptions: ["missingkey=invalid"]
   generators:
     - list:
         elements:
@@ -50,11 +51,6 @@ spec:
           - name: longhorn
             chartName: longhorn
             namespace: longhorn-system
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
-          
-          - name: manila-csi
-            chartName: manila-csi
-            namespace: manila-csi
             valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
 
           # disable galaxy - deploying manually to diagnose duplicate job bug
@@ -81,6 +77,8 @@ spec:
         helm:
           valueFiles:
             - "{{.valuesFile}}"
+            # a hack to get optional secrets working
+            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{.namespace}}"
@@ -92,19 +90,3 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
-
-  templatePatch: |
-    {{- if eq .name "manila-csi" }}
-      spec:
-        ignoreDifferences:
-          - group: rbac.authorization.k8s.io
-            kind: ClusterRole
-            name: manila-csi-openstack-manila-csi-controllerplugin
-            jsonPointers:
-              - /rules
-          - group: rbac.authorization.k8s.io
-            kind: ClusterRole
-            name: manila-csi-openstack-manila-csi-nodeplugin
-            jsonPointers:
-              - /rules
-    {{- end }}

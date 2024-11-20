@@ -1,5 +1,4 @@
 galaxy:
-
   # RBAC is defined by admins once service is up
   rbac:
     enabled: true
@@ -98,8 +97,6 @@ galaxy:
         remote_user_secret: null
 
         # admin user config
-        # comma spaced list of admin emails - need to change this to have admins
-        admin_users: "example@example.com"
         allow_user_deletion: true
         allow_user_impersonation: true
 
@@ -350,11 +347,6 @@ galaxy:
 
 oauth2-proxy:
   # Oauth client configuration specifics
-  config:
-
-    #TODO: make this a secret
-    existingSecret: iris-iam-credentials
-
   extraArgs:
     upstream: "http://{{.Release.Name}}-nginx"
     redirect-url: "https://galaxy.example.com/oauth2/callback"
