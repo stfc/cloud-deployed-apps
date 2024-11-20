@@ -1,6 +1,7 @@
 openstack-cluster:
 
   nodeGroups:
+    - name: default-md-0
       machineCount: 5
 
   addons:
