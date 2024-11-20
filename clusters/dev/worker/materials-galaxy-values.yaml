@@ -7,10 +7,10 @@ oauth2-proxy:
 galaxy:
   ingress:
     hosts:
-    - host: "galaxy.dev.nubes.stfc.ac.uk"
+    - host: "galaxy.dev-worker.nubes.stfc.ac.uk"
       paths:
         - path: "/"
     tls:
     - hosts:
-        - "galaxy.dev.nubes.stfc.ac.uk" 
+        - "galaxy.dev-worker.nubes.stfc.ac.uk" 
       secretName: galaxy-tls

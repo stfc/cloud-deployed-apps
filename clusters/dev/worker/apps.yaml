@@ -10,8 +10,8 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: galaxy-dev
-    path: clusters/dev/galaxy
+    targetRevision: main
+    path: clusters/dev/worker
   syncPolicy:
     automated:
       prune: false
@@ -25,7 +25,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: galaxy-apps
+  name: worker-apps
   namespace: argocd
 spec:
   goTemplate: true
@@ -40,24 +40,23 @@ spec:
             # so create one for each chart - even if its empty
 
             # argocd and all dependencies use the same file "argocd-setup-values.yaml"
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
             namespace: argocd
 
           - name: "cert-manager"
             chartName: cert-manager
             namespace: cert-manager
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
 
           - name: longhorn
             chartName: longhorn
             namespace: longhorn-system
-            valuesFile: ../../../clusters/dev/galaxy/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
 
-          # disable galaxy - deploying manually to diagnose duplicate job bug
-          # - name: materials-galaxy
-          #  chartName: materials-galaxy
-          #  namespace: materials-galaxy
-          #  valuesFile: ../../../clusters/dev/galaxy/materials-galaxy-values.yaml
+          - name: materials-galaxy
+            chartName: materials-galaxy
+            namespace: materials-galaxy
+            valuesFile: ../../../clusters/dev/worker/materials-galaxy-values.yaml
 
 
   syncPolicy:
@@ -72,7 +71,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: galaxy-dev
+        targetRevision: main
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
