@@ -112,12 +112,12 @@ spec:
         path: charts/staging/capi-infra
         helm:
           valueFiles:
-            # Bring in values that are specific to this application
+            # Bring in infra values specific to this cluster 
             - "../../../{{path}}/{{path.filename}}"
-            # Bring in secrets that are specific to this application
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/smtp-smarthost.yaml"
+            # Bring in infra secrets specific to this cluster
+            - "secrets://../../../secrets/infra/{{path[1]}}/{{path[2]}}/api-server-fip.yaml"
+            - "secrets://../../../secrets/infra/{{path[1]}}/{{path[2]}}/app-creds.yaml"
+            - "secrets://../../../secrets/infra/{{path[1]}}/_shared/smtp-smarthost.yaml"
 
       syncPolicy:
         automated:
