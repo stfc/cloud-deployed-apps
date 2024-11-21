@@ -16,7 +16,7 @@ To deploy a new app onto the cluster - make sure a chart exists for it.
 
 1. Make a branch for your changes
 
-2. Edit the `apps.yaml` file to add a new app. 
+2. Create/Edit the `apps.yaml` file on the cluster you want to add a new app to. (Copy and modify an existing apps.yaml from another cluster - remember to change all relevant filepaths to point to your cluster's sub-directory) 
    - make a change to `ApplicationSet` with the `metadata.name` entry matching `<cluster-name>-apps` 
    - where `<cluster-name>` is the name of the cluster
 
@@ -34,10 +34,16 @@ spec:
         # NAME OF CHART - should be in charts/<environment>/chart-name
           chartName: "chart-name" 
 
-        # THIS NEEDS TO BE INCLUDED - NON-OPTIONAL (but can be blank)
-        # PATH TO CLUSTER-SPECIFIC CHART VALUES HERE 
+        # OPTIONAL
+        # PATH TO CLUSTER-SPECIFIC CHART VALUES HERE
         # (relative to chart location in repo)
           valuesFile: ../../../clusters/<environment>/<cluster-name>/<cluster-values-file>.yaml
+        
+        # OPTIONAL
+        # PATH TO ANY SECRETS - see app-specific docs to see if any secrets are needed
+        # (relative to chart location in repo)
+          secretsFile: ../../../secrets/apps/<environment>/<cluster-name>/<secrets-file>.yaml
+
 ```
 
 `name`: name of ArgoCD-Application
@@ -46,10 +52,12 @@ spec:
 
 `valuesFile`: path to cluster-specific values file for chart (relative to chart location in repo)
 
-    - NOTE: this `valuesFile` parameter is NON-OPTIONAL - you must provide a file, even if its blank
+`secretsFile`: path to cluster-specific secrets for a chart (relative to chart location in repo)
+    
+    - NOTE: tempalate for Chart secrets can be found in `charts/<environment>/<chartname>/secrets-templates`
 
 > [!NOTE]
-> Remember to encase any cluster-specific values for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
+> Remember to encase any cluster-specific values and secrets for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
 
 ```yaml
 argo-cd:
@@ -59,6 +67,6 @@ argo-cd:
 
 This is because `argo-cd` is the name of the subchart that installs argocd
 
-3. Commit and make a PR
+4. Populate and encrypt any secrets needed for the chart - see [Secrets](./secrets.md) 
 
-4. Once its merged, the new application to spring to life
+5. Commit and make a PR
