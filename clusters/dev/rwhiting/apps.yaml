@@ -69,7 +69,7 @@ spec:
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
-            - "{{.valuesFile}}"
+            - "{{.valuesFile | default '../../../secrets/dummy-secret.yaml'}}"
             - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
       
       destination:
