@@ -29,6 +29,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
+  goTemplateOptions: ["missingkey=invalid"]
   generators:
     - list:
         elements:
@@ -69,6 +70,8 @@ spec:
         helm:
           valueFiles:
             - "{{.valuesFile}}"
+            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
+      
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{.namespace}}"

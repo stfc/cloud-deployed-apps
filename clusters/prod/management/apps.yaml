@@ -27,6 +27,8 @@ metadata:
   name: management-apps
   namespace: argocd
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=invalid"]
   generators:
     - list:
         elements:
@@ -56,20 +58,22 @@ spec:
 
   template:
     metadata:
-      name: "{{name}}"
+      name: "{{.name}}"
       namespace: argocd
     spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
         targetRevision: main
-        path: "charts/prod/{{chartName}}"
+        path: "charts/prod/{{.chartName}}"
         helm:
           valueFiles:
             - "{{valuesFile}}"
+            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
+
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{namespace}}"
+        namespace: "{{.namespace}}"
 
       syncPolicy:
         automated:
