@@ -2,7 +2,7 @@ oauth2-proxy:
 
 
   extraArgs:
-    redirect-url: "https://galaxy.dev.nubes.stfc.ac.uk/oauth2/callback"
+    redirect-url: "https://galaxy.dev-worker.nubes.stfc.ac.uk/oauth2/callback"
 
 galaxy:
   ingress:
