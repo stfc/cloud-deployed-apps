@@ -62,6 +62,17 @@ spec:
             namespace: victoria-metrics
             valuesFile: ../../../clusters/staging/worker/vicmet-values.yaml
 
+          - name: longhorn
+            chartName: longhorn
+            namespace: longhorn-system
+            valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
+
+          - name: materials-galaxy
+            chartName: materials-galaxy
+            namespace: materials-galaxy
+            valuesFile: ../../../clusters/staging/worker/materials-galaxy-values.yaml
+            secretsFile: ../../../secrets/staging/worker/apps/materials-galaxy.yaml
+
 
   syncPolicy:
     # Don't remove everything if we remove the appset
