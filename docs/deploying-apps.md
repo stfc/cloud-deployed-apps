@@ -42,7 +42,7 @@ spec:
         # OPTIONAL
         # PATH TO ANY SECRETS - see app-specific docs to see if any secrets are needed
         # (relative to chart location in repo)
-          secretsFile: ../../../secrets/apps/<environment>/<cluster-name>/<secrets-file>.yaml
+          secretsFile: ../../../secrets/<environment>/<cluster-name>/apps/<secrets-file>.yaml
 
 ```
 

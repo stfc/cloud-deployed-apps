@@ -35,15 +35,19 @@ An "infra" secret refers to any secrets that is used by the management cluster t
 The .sops.yaml file is used to specify which public keys get automatically associated with the encrypted file. 
 Note: You do not need access to a private key to encrypt a file, only to decrypt it. This means secrets can be added for prod write-only.
 
-For example: to add an infra-related secret:
+For example: to add an infra-related secret for dev management cluster:
 
-- Add yours to the relevant sections in `secrets/infra/dev/.sops.yaml`
+- Add yours to the relevant sections in `secrets/dev/management/infra/.sops.yaml`
 - Add or edit your secret as follows:
 
 ```bash
-cd secrets/infra/dev  # Currently we have to be in the same dir
+cd secrets/dev/management/infra/  # Currently we have to be in the same dir
 sops example-secret.yaml
 ```
+
+> [!NOTE]
+> shared secrets (used by all clusters) in the environment go in `_shared` folder
+> These must be accessible by all clusters - so remember to add all cluster temp keys to `.sops.yaml`  
 
 ## Using App Secrets
 

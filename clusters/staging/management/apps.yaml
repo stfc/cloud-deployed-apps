@@ -118,9 +118,9 @@ spec:
             # Bring in infra values specific to this cluster 
             - "../../../{{path}}/{{path.filename}}"
             # Bring in infra secrets specific to this cluster
-            - "secrets://../../../secrets/infra/{{path[1]}}/{{path[2]}}/api-server-fip.yaml"
-            - "secrets://../../../secrets/infra/{{path[1]}}/{{path[2]}}/app-creds.yaml"
-            - "secrets://../../../secrets/infra/{{path[1]}}/_shared/smtp-smarthost.yaml"
+            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/api-server-fip.yaml"
+            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/app-creds.yaml"
+            - "secrets://../../../secrets/{{path[1]}}/_shared/infra/smtp-smarthost.yaml"
 
       syncPolicy:
         automated:

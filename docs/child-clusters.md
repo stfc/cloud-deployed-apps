@@ -52,7 +52,7 @@ openstack-cluster:
 
 ```
 
-5. Create a new folder under `secrets/infra/<environment>/<cluster-name>`
+5. Create a new folder under `secrets/<environment>/<cluster-name>/infra`
 
 6. Create a new `.sops.yaml` file or copy one from another cluster from the same environment 
 See [Secrets](secrets.md) for more information
@@ -119,7 +119,7 @@ This file contains the credentials for creating and managing that cluster on ope
 12. (Optional) Run the script `./deploy-helm-secret.sh` to deploy your newly generated age key onto the cluster 
   - only need to run this if the charts you want to deploy require secrets
 
-13. (On completing 12) Create the directory `./secrets/apps/<environment>/<clustername>` and create a `.sops.yaml` file and add the **public** key of your generated age file
+13. (On completing 12) Create the directory `./secrets/<environment>/<clustername>/apps` and create a `.sops.yaml` file and add the **public** key of your generated age file
 
 14. (On completing 13) Add any other age keys that you want to grant access to these secrets 
   - (PROD/STAGING ONLY) - only add the relevant singular rotate keys

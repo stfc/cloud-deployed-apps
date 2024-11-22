@@ -57,7 +57,7 @@ spec:
             chartName: materials-galaxy
             namespace: materials-galaxy
             valuesFile: ../../../clusters/dev/worker/materials-galaxy-values.yaml
-            secretsFile: ../../../secrets/apps/dev/worker/materials-galaxy.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/materials-galaxy.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset

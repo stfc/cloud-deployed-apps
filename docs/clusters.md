@@ -53,7 +53,7 @@ You can optionally copy or create any other cluster subfolders you want to be in
 8. Modify/add any cluster-specific values for any apps you want to manage.
 - see [app-setup](app-setup.md) - "Pre-deployment" Steps
 
-9. Create a new folder `secrets/<your-environment>` and subfolder `secrets/<your-environment>/management` 
+9. Create a new folder `mkdir -p ./secrets/<your-environment>/management/infra`
 You will also need to create another subfolder for each extra cluster subfolder you've copied/added
 
 10. Add secret files `.sops.yaml`, `api-sever-fip.yaml`, and `app-creds.yaml` as above 
