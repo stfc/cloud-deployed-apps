@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: update-secrets
     path: clusters/dev/management
   syncPolicy:
     automated:
@@ -64,7 +64,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: update-secrets
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
@@ -93,7 +93,7 @@ spec:
   generators:
     - git:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        revision: main
+        revision: update-secrets
         files:
           # grab all infra values for all clusters in environment
           - path: "clusters/dev/*/infra-values.yaml"
@@ -112,7 +112,7 @@ spec:
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
-        targetRevision: main
+        targetRevision: update-secrets
         path: charts/dev/capi-infra
         helm:
           valueFiles:
