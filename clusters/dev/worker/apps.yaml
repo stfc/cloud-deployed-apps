@@ -75,7 +75,7 @@ spec:
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
-            - "{{.valuesFile | default '../../../secrets/dummy-secret.yaml'}}"
+            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
             - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
       destination:
         server: https://kubernetes.default.svc
