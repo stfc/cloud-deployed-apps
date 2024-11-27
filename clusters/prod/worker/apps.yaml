@@ -91,7 +91,10 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
-
+  
+  # Clusterrole and clusterrolebinding get updated after creation by the helm chart
+  # this causes ArgoCD outofsync issues so we ignore differences 
+  # rules gets updated 
   templatePatch: |
     {{- if eq .name "manila-csi" }}
       spec:
