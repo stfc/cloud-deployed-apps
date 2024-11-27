@@ -1,0 +1,48 @@
+victoria-metrics-cluster:
+  vmselect:
+    replicaCount: 5
+
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "self-signed"
+      hosts:
+        - name: select.vm.example.com
+          path: /
+          port: http
+      tls:
+        - secretName: vm-ingress-tls
+          hosts:
+            - select.vm.example.com
+
+
+  vminsert:
+    replicaCount: 5
+
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        kubernetes.io/ingress.class: "nginx"
+        cert-manager.io/cluster-issuer: "self-signed"
+      hosts:
+        - name: insert.vm.example.com
+          path: /
+          port: http
+      tls:
+        - secretName: vm-ingress-tls
+          hosts:
+            - insert.vm.example.com              
+
+  vmstorage:
+    retentionPeriod: 1 # month
+    replicaCount: 5
+
+    persistentVolume:
+      enabled: true
+      existingClaim: ""
+
+      size: 10Gi
+      storageClass: "csi-manila-cephfs"
