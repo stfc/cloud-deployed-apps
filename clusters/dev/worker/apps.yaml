@@ -63,7 +63,7 @@ spec:
             chartName: opensearch
             namespace: opensearch
             valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
-            secretsFile: ../../../secrets/dev/worker/opensearch.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
