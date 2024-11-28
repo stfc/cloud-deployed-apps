@@ -34,16 +34,16 @@ openstack-cluster:
                   env: dev
               ingress:
                 hosts:
-                  - prometheus-worker.dev.nubes.stfc.ac.uk
+                  - prometheus.dev-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts: 
-                    - prometheus-worker.dev.nubes.stfc.ac.uk
+                    - prometheus.dev-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
             grafana:
               ingress:
                 hosts:
-                  - grafana-worker.dev.nubes.stfc.ac.uk
+                  - grafana.dev-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts: 
-                    - grafana-worker.dev.nubes.stfc.ac.uk
+                    - grafana.dev-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
