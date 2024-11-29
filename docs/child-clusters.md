@@ -17,6 +17,7 @@ To deploy a new child cluster on an existing environment follow these steps:
 2. Create a new folder under `clusters/<environment>/<cluster-name>`
 3. Create a file in `clusters/<environment>/<cluster-name>/infra-values.yaml` 
 4. Populate the `infra-values.yaml` file with cluster-specific values for the chart in `capi-infra` chart. 
+5. Create an age key for your new cluster to read any app-specific secrets
 
 It could look like this:
 
@@ -51,7 +52,7 @@ openstack-cluster:
 
 ```
 
-5. Create a new folder under `secrets/<environment>/<cluster-name>`
+5. Create a new folder under `secrets/<environment>/<cluster-name>/infra`
 
 6. Create a new `.sops.yaml` file or copy one from another cluster from the same environment 
 See [Secrets](secrets.md) for more information
@@ -110,4 +111,28 @@ This file contains the credentials for creating and managing that cluster on ope
 
 9. Make a PR and get it reviewed.
 
-10.  Once merged, your new cluster should spin into life
+10. Once merged, your new cluster should spin into life
+
+11. Grab the kubeconfig from the management cluster 
+``` clusterctl get kubeconfig <environment>-<cluster-name>-cluster -n clusters > ~/.kube/config ```
+
+12. (Optional) Run the script `./deploy-helm-secret.sh` to deploy your newly generated age key onto the cluster 
+  - only need to run this if the charts you want to deploy require secrets
+
+13. (On completing 12) Create the directory `./secrets/<environment>/<clustername>/apps` and create a `.sops.yaml` file and add the **public** key of your generated age file
+
+14. (On completing 13) Add any other age keys that you want to grant access to these secrets 
+  - (PROD/STAGING ONLY) - only add the relevant singular rotate keys
+  - (DEV ONLY) - add age keys of all cloud-team members - as it's easier to review and make changes
+
+```cd ./scripts; ./deploy-helm-secret.sh <path-to-age-key>```
+
+> [!NOTE] 
+> See deploying apps to deploy ArgoCD and apps to new cluster
+
+
+## Deploying ArgoCD to a fresh cluster
+
+If you want to deploy apps to newly created cluster, you need to follow the steps in [Deploying Apps](./deploying-apps.md) 
+
+Once you complete these steps you will need to run `./scripts/deploy.sh <cluster-name> <environment>` on your cluster to spin up argocd and any apps you've configured to run

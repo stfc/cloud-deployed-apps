@@ -21,6 +21,11 @@ Each chart contains:
 - `requirements.yaml` - this should contain the upstream chart(s) and versions. See [Helm Documentation](https://v2.helm.sh/docs/developing_charts/#managing-dependencies-with-requirements-yaml). (NOTE: `requirements.yaml` is deprecated and will be merged into `Charts.yaml`)
 - `values.yaml` files that applies to all environments, but are tailored to our platform.
 
+Optionally they contain:
+
+- `templates` - any extra kubernetes resources can be defined here and can be configured using helm templating
+- `secrets-templates` - any chart values that need to be secrets are located in this directory. These need to be filled and encrypted by sops 
+
 Note: environment or cluster specific values, e.g. domain names, do not belong here. See [Deploying Apps to a cluster](deploying-apps.md) for more info on cluster/environment-specific values
 We only include values that are generic across all environments here - this allows us to copy the chart from `dev` to `staging` and `prod` without modification.
 

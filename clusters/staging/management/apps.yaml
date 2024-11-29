@@ -27,6 +27,8 @@ metadata:
   name: management-apps
   namespace: argocd
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=invalid"]
   generators:
     - list:
         elements:
@@ -56,20 +58,21 @@ spec:
 
   template:
     metadata:
-      name: "{{name}}"
+      name: "{{.name}}"
       namespace: argocd
     spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
         targetRevision: main
-        path: "charts/staging/{{chartName}}"
+        path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
-            - "{{valuesFile}}"
+            - "{{.valuesFile | default '../../../secrets/dummy-secret.yaml'}}"
+            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{namespace}}"
+        namespace: "{{.namespace}}"
 
       syncPolicy:
         automated:
@@ -112,12 +115,12 @@ spec:
         path: charts/staging/capi-infra
         helm:
           valueFiles:
-            # Bring in values that are specific to this application
+            # Bring in infra values specific to this cluster 
             - "../../../{{path}}/{{path.filename}}"
-            # Bring in secrets that are specific to this application
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/api-server-fip.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/app-creds.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/smtp-smarthost.yaml"
+            # Bring in infra secrets specific to this cluster
+            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/api-server-fip.yaml"
+            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/app-creds.yaml"
+            - "secrets://../../../secrets/{{path[1]}}/_shared/infra/smtp-smarthost.yaml"
 
       syncPolicy:
         automated:

@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: update-secrets
     path: clusters/dev/worker
   syncPolicy:
     automated:
@@ -57,7 +57,7 @@ spec:
             chartName: materials-galaxy
             namespace: materials-galaxy
             valuesFile: ../../../clusters/dev/worker/materials-galaxy-values.yaml
-            secretsFile: ../../../secrets/dev/worker/materials-galaxy.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/materials-galaxy.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
@@ -71,12 +71,11 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: update-secrets
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
-            - "{{.valuesFile}}"
-            # a hack to get optional secrets working
+            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
             - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
       destination:
         server: https://kubernetes.default.svc
