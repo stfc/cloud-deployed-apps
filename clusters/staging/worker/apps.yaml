@@ -90,7 +90,8 @@ spec:
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
-            - "{{.valuesFile}}"
+            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
+            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{.namespace}}"
