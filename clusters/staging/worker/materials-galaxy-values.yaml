@@ -1,0 +1,16 @@
+oauth2-proxy:
+
+
+  extraArgs:
+    redirect-url: "https://galaxy.staging-worker.nubes.stfc.ac.uk/oauth2/callback"
+
+galaxy:
+  ingress:
+    hosts:
+    - host: "galaxy.staging-worker.nubes.stfc.ac.uk"
+      paths:
+        - path: "/"
+    tls:
+    - hosts:
+        - "galaxy.staging-worker.nubes.stfc.ac.uk" 
+      secretName: galaxy-tls
