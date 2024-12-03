@@ -65,7 +65,7 @@ If a chart requires a secret - a template file for how the secret file should lo
 4. Encrypt and save the file using 
 
 ```
-sops -e /tmp/<filename> <path-to-repo>/secrets/apps/<environment>/<clustername>/<filename>.yaml
+sops -e /tmp/<filename> -o <path-to-repo>/secrets/apps/<environment>/<clustername>/<filename>.yaml
 ```
 
 5. Add to your apps.yaml an extra line in the Appset list generator to point to your secrets file. 
