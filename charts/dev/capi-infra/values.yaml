@@ -191,18 +191,20 @@ openstack-cluster:
                   # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/templates/monitoring/kube-prometheus-stack.yaml#L41-L44
                   receiver: "null"
                   routes:
-                    receiver: "default-receiver"
-                    group_by: ["cluster", "service"]
-                    group_wait: 30m
-                    group_interval: 4h
-                    repeat_interval: 2d
+                    - receiver: "default-receiver"
+                      group_by: ["cluster", "service"]
+                      group_wait: 30m
+                      group_interval: 4h
+                      repeat_interval: 2d
+                      active_time_intervals:
+                        - officehours
 
                 inhibit_rules:
                   # mute warning/info alerts on same service if a critical alert is firing - less noise
                   - source_matchers:
-                      - severity: critical
+                      - severity = "critical"
                     target_matchers:
-                      - severity: "warning"
+                      - severity = "warning"
                     equal: [cluster, service]
 
                   # mute watchdog alert
@@ -212,8 +214,8 @@ openstack-cluster:
                   #   - if this is firing, we're suppressing severity=info alerts
                   #   - infoinhibitor rules should be automatically configured
                   - target_matchers:
-                      - alertname: Watchdog
-                      - alertname: InfoInhibitor
+                      - alertname = "Watchdog"
+                      - alertname = "InfoInhibitor"
 
                 time_intervals:
                   - name: officehours
@@ -227,8 +229,6 @@ openstack-cluster:
                 receivers:
                   - name: "null"
                   - name: default-receiver
-                    active_time_intervals:
-                      - officehours
                     email_configs:
                       - to: cloud-support@stfc.ac.uk
                         send_resolved: true
