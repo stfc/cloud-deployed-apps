@@ -1,5 +1,5 @@
 apiVersion: v2
-name: chatops
+name: cloud-chatops
 description: Cloud ChatOps helm chart
 type: application
 version: 0.1.0

@@ -62,7 +62,7 @@ spec:
           - name: chatops
             chartName: chatops
             namespace: chatops
-            secretsFile: ../../../secrets/dev/worker/chatops.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/chatops.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset

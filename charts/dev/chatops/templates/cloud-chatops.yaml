@@ -1,25 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}
+  name: {{ .Values.env }}-{{ .Values.app }}
   labels:
     app: {{ .Values.app }}
+  namespace: {{ .Release.namespace }}
 spec:
-  replicas: {{ .Values.image.tag }}
+  replicas: {{ .Values.replicaCount }}
 
   selector:
     matchLabels:
-      app: {{ .Values.app }}
+      app.kubernetes.io/component: {{ .Values.app }}
 
   template:
     metadata:
       labels:
-        app: {{ .Values.app }}
+        app.kubernetes.io/component: {{ .Values.app }}
 
     spec:
       containers:
       - name: {{ .Values.app }}
-        image: harbor.stfc.ac.uk/{{ .Values.image.project }}/cloud-chatops:{{ .Values.image.tag }}
+        image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag}}
         volumeMounts:
         - name: cloud-chatops-config
           mountPath: /usr/src/app/cloud_chatops/config

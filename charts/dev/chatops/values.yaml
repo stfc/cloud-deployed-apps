@@ -1,7 +1,6 @@
 env: dev
-name: cloud-chatops-deployment
 app: cloud-chatops
 replicaCount: 3
 image:
-  project: stfc-cloud-staging
+  repository: harbor.stfc.ac.uk/stfc-cloud-staging/cloud-chatops
   tag: efc973a
