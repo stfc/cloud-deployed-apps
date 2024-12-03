@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.env }}-cloud-chatops-config
+  namespace: cloud-chatops
+data:
+  config.yml: |
+  ---
+  user-map:
+    khalford: U07P058AF51
+  repos:
+    stfc:
+      - cloud-deployed-apps
+      - st2-cloud-pack
+      - cloud-grafana-dashboards
+      - cloud-pe-jupyterhub
+      - cloud-ops-tools
+      - cloud-docker-images
+      - cloud-capi-values
+      - cloud-image-builders
+      - cloud-docs
+      - cloud-openstack-horizon
+      - ansible-harbor
+      - terraform-openstack
+      - cloud-rundeck-jobs
+      - openstack-guide
+      - ansible-jupyter
+      - SCD-Openstack-Utils
+      - check-version-action

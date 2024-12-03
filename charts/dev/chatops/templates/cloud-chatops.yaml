@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.env }}-{{ .Values.app }}
+  labels:
+    app: {{ .Values.app }}
+  namespace: {{ .Release.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: {{ .Values.app }}
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: {{ .Values.app }}
+
+    spec:
+      containers:
+      - name: {{ .Values.app }}
+        image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag}}
+        volumeMounts:
+        - name: cloud-chatops-config
+          mountPath: /usr/src/app/cloud_chatops/config
+          readOnly: true
+        - name: cloud-chatops-secrets
+          mountPath: /usr/src/app/cloud_chatops/secrets
+          readOnly: true
+
+      volumes:
+      - name: cloud-chatops-config
+        configMap:
+          name: {{ .Values.env }}-cloud-chatops-config
+          items:
+          - key: "config.yml"
+            path: "config.yml"
+      - name: cloud-chatops-secrets
+        secret:
+          secretName: {{ .Values.env }}-cloud-chatops-secrets
+
+
