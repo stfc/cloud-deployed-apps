@@ -183,7 +183,7 @@ openstack-cluster:
                 global:
                   resolve_timeout: 1h
                   smtp_smarthost:
-                  smtp_from: cloud-support@stfc.ac.uk
+                  smtp_from: anish.mudaraddi@stfc.ac.uk
                   smtp_require_tls: false
 
                 route:
@@ -229,7 +229,7 @@ openstack-cluster:
                   - name: "null"
                   - name: default-receiver
                     email_configs:
-                      - to: cloud-support@stfc.ac.uk
+                      - to: anish.mudaraddi@stfc.ac.uk
                         send_resolved: true
                         headers:
                           subject: |
