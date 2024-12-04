@@ -9,6 +9,10 @@ openstack-cluster:
 
   nodeGroupDefaults:
     machineFlavor: l3.nano
+    nodeLabels:	
+      # we're running longhorn on this cluster
+      # set label so worker nodes can host longhorn volumes
+      longhorn.store.nodeselect/longhorn-storage-node: true
 
   addons:
     ingress:

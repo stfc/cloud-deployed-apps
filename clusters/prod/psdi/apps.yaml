@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
     targetRevision: main
-    path: clusters/dev/worker
+    path: clusters/prod/psdi
   syncPolicy:
     automated:
       prune: false
@@ -19,17 +19,14 @@ spec:
       allowEmpty: true
     syncOptions:
       - CreateNamespace=true
-      
----
 
+---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: worker-apps
+  name: psdi-apps
   namespace: argocd
 spec:
-  goTemplate: true
-  goTemplateOptions: ["missingkey=invalid"]
   generators:
     - list:
         elements:
@@ -40,30 +37,25 @@ spec:
             # so create one for each chart - even if its empty
 
             # argocd and all dependencies use the same file "argocd-setup-values.yaml"
-            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/prod/psdi/argocd-setup-values.yaml
             namespace: argocd
 
           - name: "cert-manager"
             chartName: cert-manager
             namespace: cert-manager
-            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/prod/psdi/argocd-setup-values.yaml
 
-          - name: longhorn
+          - name: "longhorn"
             chartName: longhorn
             namespace: longhorn-system
-            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/prod/psdi/argocd-setup-values.yaml
 
-          - name: materials-galaxy
-            chartName: materials-galaxy
-            namespace: materials-galaxy
-            valuesFile: ../../../clusters/dev/worker/materials-galaxy-values.yaml
-            secretsFile: ../../../secrets/dev/worker/apps/materials-galaxy.yaml
-
-          - name: opensearch
+          - name: "opensearch"
             chartName: opensearch
-            namespace: opensearch
-            valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
-            secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
+            namespace: opensearch-system
+            valuesFile: ../../../clusters/prod/psdi/opensearch-values.yaml
+            secretsFile: ../../../secrets/dev/worker/opensearch.yaml
+
 
   syncPolicy:
     # Don't remove everything if we remove the appset
@@ -71,21 +63,21 @@ spec:
 
   template:
     metadata:
-      name: "{{.name}}"
+      name: "{{name}}"
       namespace: argocd
     spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
         targetRevision: main
-        path: "charts/dev/{{.chartName}}"
+        path: "charts/prod/{{chartName}}"
         helm:
           valueFiles:
             - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
             - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{.namespace}}"
+        namespace: "{{namespace}}"
 
       syncPolicy:
         automated:
