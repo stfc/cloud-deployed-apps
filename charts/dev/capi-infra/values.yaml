@@ -235,7 +235,7 @@ openstack-cluster:
                         headers:
                           subject: |
                             {%- raw %}
-                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ .CommonLabels.service | default "Multiple Services" }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname | default "Multiple Alerts" }}"
+                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ or .CommonLabels.service "Multiple Services" }}) {{ .Status | toUpper }} {{ or "Multiple Alerts" .CommonLabels.alertname }}"
                             {%- endraw %}
                         html: |-
                           {%- raw %}
