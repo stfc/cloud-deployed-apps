@@ -199,6 +199,15 @@ openstack-cluster:
                       active_time_intervals:
                         - officehours
 
+                      # mute watchdog alert
+                      #   - this should always be firing
+                      # mute infoinhibitor alert
+                      #   - not useful by itself
+                      #   - if this is firing, we're suppressing severity=info alerts
+                      #   - infoinhibitor rules should be automatically configured
+                      matchers:
+                        - alertname !~ "Watchdog|InfoInhibitor" 
+
                 inhibit_rules:
                   # mute warning/info alerts on same service if a critical alert is firing - less noise
                   - source_matchers:
@@ -206,16 +215,6 @@ openstack-cluster:
                     target_matchers:
                       - severity = "warning"
                     equal: [cluster, service]
-
-                  # mute watchdog alert
-                  #   - this should always be firing
-                  # mute infoinhibitor alert
-                  #   - not useful by itself
-                  #   - if this is firing, we're suppressing severity=info alerts
-                  #   - infoinhibitor rules should be automatically configured
-                  - target_matchers:
-                      - alertname = "Watchdog"
-                      - alertname = "InfoInhibitor"
 
                 time_intervals:
                   - name: officehours
@@ -235,34 +234,58 @@ openstack-cluster:
                         headers:
                           subject: |
                             {%- raw %}
-                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ or .CommonLabels.service "Multiple Services" }}) {{ .Status | toUpper }} {{ or "Multiple Alerts" .CommonLabels.alertname }}"
+                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ .Status | toUpper }} {{ or .CommonLabels.service "Multiple Services" }} {{ or .CommonLabels.alertname "Multiple Alerts" }}"
                             {%- endraw %}
                         html: |-
                           {%- raw %}
                           <h3>You have the following alerts:</h3>
                           {{ range .Alerts }}
-                          <p><b>{{.Labels.alertname}}</b>
-                            <ul>{{ range .Annotations.SortedPairs }}
-                            <li>{{ .Name }} = {{ .Value }}</li>
-                            {{ end }}</ul>
-                            <ul>{{ range .Labels.SortedPairs }}
-                            <li>{{ .Name }} = {{ .Value }}</li>
-                            {{ end }}</ul>
-                            {{ .GeneratorURL }}</p>
+                          <div style="margin-bottom: 15px; padding: 10px; 
+                                      background-color: 
+                                      {{- if eq .Labels.severity "critical" -}}#ffdddd
+                                      {{- else if eq .Labels.severity "warning" -}}#fff4e6
+                                      {{- else -}}#f0f0f0
+                                      {{- end }}">
+                              <h4 style="color: 
+                                  {{- if eq .Labels.severity "critical" -}}#cc0000
+                                  {{- else if eq .Labels.severity "warning" -}}#cc6600
+                                  {{- else -}}#666666
+                                  {{- end }}">
+                                  {{.Labels.alertname}}
+                              </h4>
+                              
+                              <h5>Annotations:</h5>
+                              <ul>{{ range .Annotations.SortedPairs }}
+                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                              {{ end }}</ul>
+                              
+                              <h5>Labels:</h5>
+                              <ul>{{ range .Labels.SortedPairs }}
+                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                              {{ end }}</ul>
+                              
+                              <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
+                          </div>
                           {{ end }}
                           {%- endraw %}
+
                         text: |-
                           {%- raw %}
-                          You have the following alerts:
+                          Alerts Summary:
                           {{ range .Alerts }}
-                          * {{.Labels.alertname}}
+                          * [{{ .Labels.severity | upper }}] {{.Labels.alertname}}
+                            
+                            Annotations:
                             {{ range .Annotations.SortedPairs }}
-                            {{ .Name }} = {{ .Value }}
+                            - {{ .Name }}: {{ .Value }}
                             {{ end }}
+                            
+                            Labels:
                             {{ range .Labels.SortedPairs }}
-                            {{ .Name }} = {{ .Value }}
+                            - {{ .Name }}: {{ .Value }}
                             {{ end }}
-                            {{ .GeneratorURL }}
+                            
+                            View in Prometheus: {{ .GeneratorURL }}
                           {{ end }}
                           {%- endraw %}
 
