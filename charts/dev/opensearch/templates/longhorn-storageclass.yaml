@@ -1,11 +1,10 @@
-kind: StorageClass
 apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
   name: longhorn-opensearch
 provisioner: driver.longhorn.io
-allowVolumeExpansion: true
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
 parameters:
   numberOfReplicas: "1"
-  migratable: true
+  migratable: "true"
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

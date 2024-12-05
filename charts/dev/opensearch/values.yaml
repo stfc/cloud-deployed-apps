@@ -1,8 +1,8 @@
 opensearch-operator:
+  nameOverride: op
   installCRDs: true
 
-namespace: opensearch-system
-
+clusterName: log-storage
 # opensearch and opensearch dashboards version
 # - https://github.com/opensearch-project/OpenSearch/releases
 # - https://github.com/opensearch-project/OpenSearch-Dashboards/releases
@@ -46,7 +46,7 @@ dashboards:
 nodePools:
   - component: nodes
     replicas: 3
-    diskSize: "100Gi"
+    diskSize: "1Gi"
     persistence:
       pvc:
         accessModes:
@@ -149,4 +149,3 @@ rolesMapping:
     - "admin"
     - "stfc-cloud/admins"
     description: "Maps admin to all_access"
-  hosts: []
