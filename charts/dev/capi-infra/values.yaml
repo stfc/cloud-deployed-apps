@@ -234,57 +234,37 @@ openstack-cluster:
                         headers:
                           subject: |
                             {%- raw %}
-                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ .Status | toUpper }} {{ or .CommonLabels.service "Multiple Services" }} {{ or .CommonLabels.alertname "Multiple Alerts" }}"
+                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ or .CommonLabels.alertname "Multiple Alerts" }}"
                             {%- endraw %}
                         html: |-
                           {%- raw %}
-                          <h3>You have the following alerts:</h3>
+                          <b>You have the following alerts:</b>
                           {{ range .Alerts }}
-                          <div style="margin-bottom: 15px; padding: 10px; 
-                                      background-color: 
-                                      {{- if eq .Labels.severity "critical" -}}#ffdddd
-                                      {{- else if eq .Labels.severity "warning" -}}#fff4e6
-                                      {{- else -}}#f0f0f0
-                                      {{- end }}">
-                              <h4 style="color: 
-                                  {{- if eq .Labels.severity "critical" -}}#cc0000
-                                  {{- else if eq .Labels.severity "warning" -}}#cc6600
-                                  {{- else -}}#666666
-                                  {{- end }}">
-                                  {{.Labels.alertname}}
-                              </h4>
-                              
-                              <h5>Annotations:</h5>
+                              <b>{{.Labels.alertname}}</b><br/>
+                              <b>Annotations:</b><br/>
                               <ul>{{ range .Annotations.SortedPairs }}
                                   <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
                               {{ end }}</ul>
-                              
-                              <h5>Labels:</h5>
+                              <b>Labels:</b>
                               <ul>{{ range .Labels.SortedPairs }}
                                   <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
                               {{ end }}</ul>
-                              
                               <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
-                          </div>
                           {{ end }}
                           {%- endraw %}
-
                         text: |-
                           {%- raw %}
-                          Alerts Summary:
+                          You have the following alerts:
                           {{ range .Alerts }}
-                          * [{{ .Labels.severity | upper }}] {{.Labels.alertname}}
-                            
+                          * [{{ .Labels.severity }}] {{.Labels.alertname}}
                             Annotations:
                             {{ range .Annotations.SortedPairs }}
-                            - {{ .Name }}: {{ .Value }}
+                            {{ .Name }} = {{ .Value }}
                             {{ end }}
-                            
                             Labels:
                             {{ range .Labels.SortedPairs }}
-                            - {{ .Name }}: {{ .Value }}
+                            {{ .Name }} = {{ .Value }}
                             {{ end }}
-                            
                             View in Prometheus: {{ .GeneratorURL }}
                           {{ end }}
                           {%- endraw %}
