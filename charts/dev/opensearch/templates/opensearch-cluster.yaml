@@ -59,7 +59,7 @@ spec:
         pvc:
           accessModes:
             - {{ .accessModes | default "ReadWriteOnce" }}
-          storageClass: {{ .storageClass | default "longhorn" }}
+          storageClass: {{ .storageClass | default "longhorn-opensearch" }}
       nodeSelector: 
         {{- toYaml .nodeSelector | nindent 10 }}
       roles:

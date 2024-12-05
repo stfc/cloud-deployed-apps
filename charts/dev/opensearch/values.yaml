@@ -51,7 +51,7 @@ nodePools:
       pvc:
         accessModes:
           - ReadWriteOnce
-        storageClass: longhorn
+        storageClass: longhorn-opensearch
     nodeSelector: {}
     roles:
       - "cluster_manager"
