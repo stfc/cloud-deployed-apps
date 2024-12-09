@@ -257,7 +257,7 @@ openstack-cluster:
                           {%- raw %}
                           You have the following alerts:
                           {{ range .Alerts }}
-                          * [{{ .Labels.severity | upper }}] {{.Labels.alertname}}
+                          * [{{ .Labels.severity }}] {{.Labels.alertname}}
                             Annotations:
                             {{ range .Annotations.SortedPairs }}
                             {{ .Name }} = {{ .Value }}
