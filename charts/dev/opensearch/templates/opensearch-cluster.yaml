@@ -9,9 +9,9 @@ spec:
   security:
     config:
       adminCredentialsSecret:
-        name: admin-credentials-secret
+        name: {{ .Values.clusterName }}-admin-credentials-secret
       securityConfigSecret:
-        name: opensearch-securityconfig-secret
+        name: {{ .Values.clusterName }}-securityconfig-secret
     tls:
       transport:
         generate: true
@@ -35,7 +35,7 @@ spec:
     version: {{ .Values.version }}
     replicas: {{ .Values.dashboards.replicas | default 1 }}
     opensearchCredentialsSecret:
-      name: admin-credentials-secret
+      name: {{ .Values.clusterName }}-admin-credentials-secret
     additionalConfig:
       opensearch_security.multitenancy.enabled: "true"
       opensearch_security.cookie.secure: "true"
@@ -59,7 +59,7 @@ spec:
         pvc:
           accessModes:
             - {{ .accessModes | default "ReadWriteOnce" }}
-          storageClass: {{ .storageClass | default "longhorn" }}
+          storageClass: {{ .storageClass | default "longhorn-opensearch" }}
       nodeSelector: 
         {{- toYaml .nodeSelector | nindent 10 }}
       roles:

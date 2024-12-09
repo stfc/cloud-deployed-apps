@@ -19,7 +19,7 @@ spec:
       allowEmpty: true
     syncOptions:
       - CreateNamespace=true
-
+      
 ---
 
 apiVersion: argoproj.io/v1alpha1
@@ -58,6 +58,12 @@ spec:
             namespace: materials-galaxy
             valuesFile: ../../../clusters/dev/worker/materials-galaxy-values.yaml
             secretsFile: ../../../secrets/dev/worker/apps/materials-galaxy.yaml
+
+          - name: opensearch
+            chartName: opensearch
+            namespace: opensearch
+            valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
