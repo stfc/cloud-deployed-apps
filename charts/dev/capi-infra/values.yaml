@@ -238,14 +238,14 @@ openstack-cluster:
                             {%- endraw %}
                         html: |-
                           {%- raw %}
-                          <h3>You have the following alerts:</h3>
+                          <b>You have the following alerts:</b>
                           {{ range .Alerts }}
-                          <p><h4>{{.Labels.alertname}}</h4>
-                            <h5>Annotations:</h5>
+                          <p><b>{{.Labels.alertname}}</b>
+                            <b>Annotations:</b>
                             <ul>{{ range .Annotations.SortedPairs }}
                             <li>{{ .Name }} = {{ .Value }}</li>
                             {{ end }}</ul>
-                            <h5>Labels:</h5>
+                            <b>Labels:</b>
                             <ul>{{ range .Labels.SortedPairs }}
                             <li>{{ .Name }} = {{ .Value }}</li>
                             {{ end }}</ul>
