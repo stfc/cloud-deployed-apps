@@ -6,8 +6,10 @@ metadata:
 data:
   config.yml: |
   ---
-  user-map:
-    khalford: U07P058AF51
+  users:
+    - Kalibh Halford:
+        github_name: { { .Values.secrets.users.kalibh.github_name } }
+        slack_id: { { .Values.secrets.users.kalibh.slack_id } }
   repos:
     stfc:
       - cloud-deployed-apps
