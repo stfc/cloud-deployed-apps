@@ -7,25 +7,9 @@ data:
   config.yml: |
   ---
   users:
-    - Kalibh Halford:
-        github_name: { { .Values.secrets.users.kalibh.github_name } }
-        slack_id: { { .Values.secrets.users.kalibh.slack_id } }
-  repos:
-    stfc:
-      - cloud-deployed-apps
-      - st2-cloud-pack
-      - cloud-grafana-dashboards
-      - cloud-pe-jupyterhub
-      - cloud-ops-tools
-      - cloud-docker-images
-      - cloud-capi-values
-      - cloud-image-builders
-      - cloud-docs
-      - cloud-openstack-horizon
-      - ansible-harbor
-      - terraform-openstack
-      - cloud-rundeck-jobs
-      - openstack-guide
-      - ansible-jupyter
-      - SCD-Openstack-Utils
-      - check-version-action
+  {{ - range .Values.secrets.users }}
+    - real_name: {{ .name | quote }}
+      github_name: {{ .githubName | quote }}
+      slack_id: {{ .slackID | quote }}
+  {{ - end }}
+  repos: {{ toYaml .Values.repos | ndindent 2 }}
