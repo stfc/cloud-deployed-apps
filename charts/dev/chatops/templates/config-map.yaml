@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.env }}-cloud-chatops-config
+  namespace: cloud-chatops
+data:
+  config.yml: |
+  ---
+  users:
+  {{ - range .Values.secrets.users }}
+    - real_name: {{ .name | quote }}
+      github_name: {{ .githubName | quote }}
+      slack_id: {{ .slackID | quote }}
+  {{ - end }}
+  repos: {{ toYaml .Values.repos | ndindent 2 }}
