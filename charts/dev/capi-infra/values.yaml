@@ -240,17 +240,16 @@ openstack-cluster:
                           {%- raw %}
                           <b>You have the following alerts:</b>
                           {{ range .Alerts }}
-                          <p><b>{{.Labels.alertname}}</b>
-                            <b>Annotations:</b>
-                            <ul>{{ range .Annotations.SortedPairs }}
-                            <li>{{ .Name }} = {{ .Value }}</li>
-                            {{ end }}</ul>
-                            <b>Labels:</b>
-                            <ul>{{ range .Labels.SortedPairs }}
-                            <li>{{ .Name }} = {{ .Value }}</li>
-                            {{ end }}</ul>
-                            <a href="{{ .GeneratorURL }}">View in Prometheus<\a>
-                          </p>
+                              <b>{{.Labels.alertname}}</b><br/>
+                              <b>Annotations:</b><br/>
+                              <ul>{{ range .Annotations.SortedPairs }}
+                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                              {{ end }}</ul>
+                              <b>Labels:</b>
+                              <ul>{{ range .Labels.SortedPairs }}
+                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                              {{ end }}</ul>
+                              <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
                           {{ end }}
                           {%- endraw %}
                         text: |-
