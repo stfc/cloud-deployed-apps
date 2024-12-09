@@ -19,7 +19,7 @@ spec:
       allowEmpty: true
     syncOptions:
       - CreateNamespace=true
-
+      
 ---
 
 apiVersion: argoproj.io/v1alpha1
@@ -63,6 +63,12 @@ spec:
             chartName: chatops
             namespace: chatops
             secretsFile: ../../../secrets/dev/worker/apps/chatops.yaml
+            
+          - name: opensearch
+            chartName: opensearch
+            namespace: opensearch
+            valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
