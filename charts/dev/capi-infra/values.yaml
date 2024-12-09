@@ -159,6 +159,12 @@ openstack-cluster:
         release:
           values:
             alertmanager:
+              alertmanagerSpec:
+                storage:
+                  volumeClaimTemplate:
+                    spec:
+                      storageClassName: csi-cinder
+
               enabled: false
               service:
                 type: ClusterIP
@@ -297,6 +303,10 @@ openstack-cluster:
             prometheus:
               enabled: true
               prometheusSpec:
+                storageSpec:
+                  volumeClaimTemplate:
+                    spec:
+                      storageClassName: csi-cinder
                 externalLabels:
                   cluster: not-set
                   env: not-set
