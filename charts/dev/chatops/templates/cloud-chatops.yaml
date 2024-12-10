@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.app }}
-        image: {{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag}}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
         volumeMounts:
         - name: cloud-chatops-config
           mountPath: /usr/src/app/cloud_chatops/config
@@ -39,5 +39,3 @@ spec:
       - name: cloud-chatops-secrets
         secret:
           secretName: {{ .Values.env }}-cloud-chatops-secrets
-
-
