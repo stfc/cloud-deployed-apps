@@ -159,6 +159,12 @@ openstack-cluster:
         release:
           values:
             alertmanager:
+              alertmanagerSpec:
+                storage:
+                  volumeClaimTemplate:
+                    spec:
+                      storageClassName: csi-cinder
+
               enabled: false
               service:
                 type: ClusterIP
@@ -191,29 +197,30 @@ openstack-cluster:
                   # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/templates/monitoring/kube-prometheus-stack.yaml#L41-L44
                   receiver: "null"
                   routes:
-                    receiver: "default-receiver"
-                    group_by: ["cluster", "service"]
-                    group_wait: 30m
-                    group_interval: 4h
-                    repeat_interval: 2d
+                    - receiver: "default-receiver"
+                      group_by: ["cluster", "service"]
+                      group_wait: 30m
+                      group_interval: 4h
+                      repeat_interval: 2d
+                      active_time_intervals:
+                        - officehours
+
+                      # mute watchdog alert
+                      #   - this should always be firing
+                      # mute infoinhibitor alert
+                      #   - not useful by itself
+                      #   - if this is firing, we're suppressing severity=info alerts
+                      #   - infoinhibitor rules should be automatically configured
+                      matchers:
+                        - alertname !~ "Watchdog|InfoInhibitor" 
 
                 inhibit_rules:
                   # mute warning/info alerts on same service if a critical alert is firing - less noise
                   - source_matchers:
-                      - severity: critical
+                      - severity = "critical"
                     target_matchers:
-                      - severity: "warning"
+                      - severity = "warning"
                     equal: [cluster, service]
-
-                  # mute watchdog alert
-                  #   - this should always be firing
-                  # mute infoinhibitor alert
-                  #   - not useful by itself
-                  #   - if this is firing, we're suppressing severity=info alerts
-                  #   - infoinhibitor rules should be automatically configured
-                  - target_matchers:
-                      - alertname: Watchdog
-                      - alertname: InfoInhibitor
 
                 time_intervals:
                   - name: officehours
@@ -227,42 +234,44 @@ openstack-cluster:
                 receivers:
                   - name: "null"
                   - name: default-receiver
-                    active_time_intervals:
-                      - officehours
                     email_configs:
                       - to: cloud-support@stfc.ac.uk
                         send_resolved: true
                         headers:
                           subject: |
                             {%- raw %}
-                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }} : {{ .CommonLabels.service | default "Multiple Services" }}) {{ .Status | toUpper }} {{ .CommonLabels.alertname | default "Multiple Alerts" }}"
+                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ or .CommonLabels.alertname "Multiple Alerts" }}"
                             {%- endraw %}
                         html: |-
                           {%- raw %}
-                          <h3>You have the following alerts:</h3>
+                          <b>You have the following alerts:</b>
                           {{ range .Alerts }}
-                          <p><b>{{.Labels.alertname}}</b>
-                            <ul>{{ range .Annotations.SortedPairs }}
-                            <li>{{ .Name }} = {{ .Value }}</li>
-                            {{ end }}</ul>
-                            <ul>{{ range .Labels.SortedPairs }}
-                            <li>{{ .Name }} = {{ .Value }}</li>
-                            {{ end }}</ul>
-                            {{ .GeneratorURL }}</p>
+                              <b>{{.Labels.alertname}}</b><br/>
+                              <b>Annotations:</b><br/>
+                              <ul>{{ range .Annotations.SortedPairs }}
+                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                              {{ end }}</ul>
+                              <b>Labels:</b>
+                              <ul>{{ range .Labels.SortedPairs }}
+                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                              {{ end }}</ul>
+                              <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
                           {{ end }}
                           {%- endraw %}
                         text: |-
                           {%- raw %}
                           You have the following alerts:
                           {{ range .Alerts }}
-                          * {{.Labels.alertname}}
+                          * [{{ .Labels.severity }}] {{.Labels.alertname}}
+                            Annotations:
                             {{ range .Annotations.SortedPairs }}
                             {{ .Name }} = {{ .Value }}
                             {{ end }}
+                            Labels:
                             {{ range .Labels.SortedPairs }}
                             {{ .Name }} = {{ .Value }}
                             {{ end }}
-                            {{ .GeneratorURL }}
+                            View in Prometheus: {{ .GeneratorURL }}
                           {{ end }}
                           {%- endraw %}
 
@@ -294,6 +303,10 @@ openstack-cluster:
             prometheus:
               enabled: true
               prometheusSpec:
+                storageSpec:
+                  volumeClaimTemplate:
+                    spec:
+                      storageClassName: csi-cinder
                 externalLabels:
                   cluster: not-set
                   env: not-set
