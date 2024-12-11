@@ -18,10 +18,3 @@ openstack-cluster:
   addons:
     ingress:
       enabled: false
-      nginx:
-        release:
-          values:
-            controller:
-              service:
-                # create a floatip for ingress on your project and put it here
-                loadBalancerIP: "130.xxx.yyy.zzz"
