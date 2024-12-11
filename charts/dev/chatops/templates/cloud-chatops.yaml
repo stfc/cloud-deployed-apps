@@ -21,6 +21,11 @@ spec:
       containers:
       - name: {{ .Values.app }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag}}
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         volumeMounts:
         - name: cloud-chatops-config
           mountPath: /usr/src/app/cloud_chatops/config
