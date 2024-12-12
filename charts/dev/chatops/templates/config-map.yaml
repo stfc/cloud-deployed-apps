@@ -12,3 +12,4 @@ data:
         slack_id: {{ .slackID | quote }}
     {{- end }}
     repos: {{ toYaml .Values.repos | nindent 6 }}
+    channel: {{ .Values.channel }}
