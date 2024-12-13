@@ -5,7 +5,8 @@ openstack-cluster:
 
   nodeGroups:
     - name: default-md-0
-      machineCount: 2
+      machineCount: 3
+      machineFlavor: l3.micro
 
   nodeGroupDefaults:
     machineFlavor: l3.nano
