@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
     targetRevision: main
-    path: clusters/dev/worker
+    path: clusters/dev/cloud-chatops
   syncPolicy:
     automated:
       prune: false
@@ -25,7 +25,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: worker-apps
+  name: cloud-chatops-apps
   namespace: argocd
 spec:
   goTemplate: true
@@ -53,17 +53,10 @@ spec:
             namespace: longhorn-system
             valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
 
-          - name: materials-galaxy
-            chartName: materials-galaxy
-            namespace: materials-galaxy
-            valuesFile: ../../../clusters/dev/worker/materials-galaxy-values.yaml
-            secretsFile: ../../../secrets/dev/worker/apps/materials-galaxy.yaml
-            
-          - name: opensearch
-            chartName: opensearch
-            namespace: opensearch
-            valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
-            secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
+          - name: chatops
+            chartName: chatops
+            namespace: chatops
+            secretsFile: ../../../secrets/dev/worker/apps/chatops.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
