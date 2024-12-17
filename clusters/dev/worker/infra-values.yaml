@@ -27,7 +27,9 @@ openstack-cluster:
 
     monitoring:
       enabled: true
-      lokiStack:
+      # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
+      # ends up with too many messages in the ticket queue
+      blackBoxExporter: 
         enabled: false
       kubePrometheusStack:
         release:
