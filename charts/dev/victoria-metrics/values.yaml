@@ -47,10 +47,35 @@ victoria-metrics-cluster:
 
       size: 10Gi
       storageClass: "csi-manila-cephfs"
-
-    initContainers:
+    
+    extraContainers:
       - name: vmbackup
-        image: victoriametrics/vmbackup
-        imagePullPolicy: IfNotPresent
-        args:
-        - -snapshot.createURL=http://vmstorage:8482/snapshot/create
+        image: victoriametrics/vmbackup:v1.96.0 # Use the desired version
+        command:
+          - "/bin/bash"
+          - "-c"
+          - |
+            echo "vmbackup sidecar running. Use this container for backups."; \
+            while true; do sleep 3600; done
+        volumeMounts:
+          - name: storage-volume
+            mountPath: /storage
+
+    podSpec:
+      volumes:
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: vmstorage-pvc # Reference to the PVC created by csi-manila-cephfs            
+
+    # initContainers:
+    #   - name: vmbackup
+    #     image: victoriametrics/vmbackup
+    #     imagePullPolicy: IfNotPresent
+    #     args:
+    #     - -snapshot.createURL=https:/l:8482/snapshot/create
+    #     - -storageDataPath=/storage
+
+    #initContainers:
+    #  - name: ubuntu
+    #    image: ubuntu:20.04
+    #    restartPolicy: Always
