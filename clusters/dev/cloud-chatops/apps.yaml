@@ -40,23 +40,18 @@ spec:
             # so create one for each chart - even if its empty
 
             # argocd and all dependencies use the same file "argocd-setup-values.yaml"
-            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/cloud-chatops/argocd-setup-values.yaml
             namespace: argocd
 
           - name: "cert-manager"
             chartName: cert-manager
             namespace: cert-manager
-            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
-
-          - name: longhorn
-            chartName: longhorn
-            namespace: longhorn-system
-            valuesFile: ../../../clusters/dev/worker/argocd-setup-values.yaml
+            valuesFile: ../../../clusters/dev/cloud-chatops/argocd-setup-values.yaml
 
           - name: chatops
             chartName: chatops
             namespace: chatops
-            secretsFile: ../../../secrets/dev/worker/apps/chatops.yaml
+            secretsFile: ../../../secrets/dev/cloud-chatops/apps/chatops.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
