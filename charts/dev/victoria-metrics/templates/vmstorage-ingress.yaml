@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vmstorage-ingress
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.vmstorage.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: nginx
+  tls:
+    {{- range .Values.vmstorage.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+      - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  rules:
+  {{- range .Values.vmstorage.ingress.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+      {{- range .paths }}
+      - path: {{ .path }}
+        pathType: {{ .pathType }}
+        backend:
+          service:
+            name: victoria-metrics-victoria-metrics-cluster-vmstorage
+            port:
+              number: 8482
+      {{- end }}
+  {{- end }}
+
