@@ -46,3 +46,10 @@ victoria-metrics-cluster:
 
       size: 10Gi
       storageClass: "csi-manila-cephfs"
+
+    initContainers:
+      - name: vmbackup
+        image: victoriametrics/vmbackup
+        imagePullPolicy: IfNotPresent
+        args:
+        - -snapshot.createURL=http://localhost:8482/snapshot/create
