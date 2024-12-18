@@ -52,3 +52,12 @@ openstack-cluster:
                   - hosts: 
                     - grafana.dev-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
+            alertmanager:
+              enabled: true
+              ingress:
+                hosts:
+                  - alertmanager.dev-worker.nubes.stfc.ac.uk
+                tls:
+                  - hosts:
+                      - alertmanager.dev-worker.nubes.stfc.ac.uk
+                    secretName: tls-keypair
