@@ -39,6 +39,7 @@ victoria-metrics-cluster:
   vmstorage:
     retentionPeriod: 1 # month
     replicaCount: 5
+    fullnameOveride: "vmstorage"
 
     persistentVolume:
       enabled: true
@@ -52,4 +53,4 @@ victoria-metrics-cluster:
         image: victoriametrics/vmbackup
         imagePullPolicy: IfNotPresent
         args:
-        - -snapshot.createURL=http://localhost:8482/snapshot/create
+        - -snapshot.createURL=http://vmstorage:8482/snapshot/create
