@@ -17,4 +17,10 @@ openstack-cluster:
 # here we define an nginx ingress controller service
   addons:
     ingress:
-      enabled: false
+      enabled: true
+      nginx:
+        release:
+          values:
+            controller:
+              service:
+                loadBalancerIP: "130.246.211.56"
