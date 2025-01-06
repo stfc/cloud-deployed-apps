@@ -65,7 +65,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: dev-cloud-chatops
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
