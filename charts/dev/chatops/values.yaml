@@ -3,7 +3,7 @@ app: cloud-chatops
 replicaCount: 3
 image:
   repository: harbor.stfc.ac.uk/stfc-cloud/cloud-chatops
-  tag: 5.0.0
+  tag: 5.0.1
 repos:
   stfc:
     - cloud-deployed-apps
