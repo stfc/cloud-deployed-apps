@@ -23,4 +23,5 @@ repos:
     - ansible-jupyter
     - SCD-Openstack-Utils
     - check-version-action
+    - cloud-helm-charts
 channel: C03RT2F6WHZ
