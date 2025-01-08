@@ -48,10 +48,10 @@ spec:
             namespace: cert-manager
             valuesFile: ../../../clusters/dev/cloud-chatops/argocd-setup-values.yaml
 
-          - name: chatops
-            chartName: chatops
-            namespace: chatops
-            secretsFile: ../../../secrets/dev/cloud-chatops/apps/chatops.yaml
+          # - name: chatops
+          #   chartName: chatops
+          #   namespace: chatops
+          #   secretsFile: ../../../secrets/dev/cloud-chatops/apps/chatops.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset

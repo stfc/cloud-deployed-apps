@@ -1,6 +1,6 @@
 env: dev
 app: cloud-chatops
-replicaCount: 0
+replicaCount: 3
 image:
   repository: harbor.stfc.ac.uk/stfc-cloud-staging/cloud-chatops
   tag: some-sha
