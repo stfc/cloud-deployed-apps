@@ -1,9 +1,9 @@
 env: dev
 app: cloud-chatops
-replicaCount: 3
+replicaCount: 0
 image:
-  repository: harbor.stfc.ac.uk/stfc-cloud/cloud-chatops
-  tag: 5.0.1
+  repository: harbor.stfc.ac.uk/stfc-cloud-staging/cloud-chatops
+  tag: some-sha
 repos:
   stfc:
     - cloud-deployed-apps
@@ -25,4 +25,4 @@ repos:
     - check-version-action
     - cloud-helm-charts
     - openstack-query-library
-channel: C03RT2F6WHZ
+channel: C07QX38AR5W
