@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: staging-worker-chatops
     path: clusters/staging/worker
   syncPolicy:
     automated:
@@ -73,6 +73,11 @@ spec:
             valuesFile: ../../../clusters/staging/worker/materials-galaxy-values.yaml
             secretsFile: ../../../secrets/staging/worker/apps/materials-galaxy.yaml
 
+          - name: chatops
+            chartName: chatops
+            namespace: chatops
+            secretsFile: ../../../secrets/staging/worker/apps/chatops.yaml
+
 
   syncPolicy:
     # Don't remove everything if we remove the appset
@@ -86,7 +91,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: staging-worker-chatops
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
