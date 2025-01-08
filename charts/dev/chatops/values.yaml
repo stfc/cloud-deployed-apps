@@ -24,4 +24,5 @@ repos:
     - SCD-Openstack-Utils
     - check-version-action
     - cloud-helm-charts
+    - openstack-query-library
 channel: C03RT2F6WHZ
