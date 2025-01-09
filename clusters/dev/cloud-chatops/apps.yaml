@@ -52,6 +52,7 @@ spec:
           #   chartName: chatops
           #   namespace: chatops
           #   secretsFile: ../../../secrets/dev/cloud-chatops/apps/chatops.yaml
+          #   valuesFile: ../../../clusters/dev/cloud-chatops/chatops-values.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset

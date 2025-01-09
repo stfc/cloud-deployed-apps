@@ -77,6 +77,7 @@ spec:
             chartName: chatops
             namespace: chatops
             secretsFile: ../../../secrets/staging/worker/apps/chatops.yaml
+            valuesFile: ../../../clusters/staging/worker/chatops-values.yaml
 
 
   syncPolicy:
