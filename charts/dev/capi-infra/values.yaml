@@ -1,6 +1,6 @@
 openstack-cluster:
   kubernetesVersion: "1.31.4"
-  machineImage: "capi-ubuntu-2204-kube-v1.31.4-2025-01-02"
+  machineImage: "capi-ubuntu-2204-kube-v1.31.4-2025-01-07"
 
   # The PEM-encoded CA certificate for openstack.stfc.ac.uk
   # this expires 2023-12-05T23:59:59Z (UTC)
