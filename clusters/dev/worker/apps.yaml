@@ -65,6 +65,12 @@ spec:
             valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
             secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
 
+          - name: harbor
+            chartName: harbor
+            namespace: harbor
+            valuesFile: ../../../clusters/dev/worker/harbor-values.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/harbor.yaml
+
 # TODO: get secrets prepared for dev rabbit consumers
 #          - name: rabbit-consumer
 #            chartName: rabbit-consumer

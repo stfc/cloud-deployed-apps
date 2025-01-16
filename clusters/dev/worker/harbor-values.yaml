@@ -1,0 +1,5 @@
+harbor:
+  externalURL: "https://harbor.staging-worker.nubes.stfc.ac.uk"
+  ingress:
+  hosts:
+    core: "harbor.staging-worker.nubes.stfc.ac.uk"

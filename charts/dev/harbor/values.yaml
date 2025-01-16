@@ -8,7 +8,7 @@ harbor:
       auto:
         commonName: "harbor"
       secret:
-        secretName: "letsencrypt-staging"
+        secretName: "selfsigned"
         #secretName: "letsencrypt-prod"
     ingress:
       hosts:
