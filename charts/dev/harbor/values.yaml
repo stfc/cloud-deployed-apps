@@ -62,7 +62,7 @@ harbor:
     jobLoggers: 
       - database
   registry:
-    replicas: 3
+    replicas: 2
   trivy:
     replicas: 2
   exporter:
