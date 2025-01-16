@@ -21,11 +21,12 @@ longhorn:
   defaultSettings:
     taintToleration: "nvidia.com/gpu:NoSchedule"
     snapshotMaxCount: 10
-    snapshotDataIntegrity: true
-    snapshotDataIntegtrityCronjob: true
-    replicaAutoBalance: true
+    snapshotDataIntegrity: "enabled"
+    snapshotDataIntegrityCronjob: "0 12 * * 1"
+    replicaAutoBalance: "best-effort"
     autoDeletePodWhenVolumeDetachedUnexpectedly: true
     allowVolumeCreationWithDegradedAvailability: true
+    nodeDrainPolicy: "block-for-eviction"
 
   persistence:
     defaultClassReplicaCount: 3
