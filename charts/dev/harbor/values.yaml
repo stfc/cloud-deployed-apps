@@ -1,0 +1,87 @@
+harbor:
+  externalURL: "https://harbor.example.com"
+  expose:
+    type: ingress
+    tls:
+      enabled: true
+      certSource: auto
+      auto:
+        commonName: "harbor"
+      secret:
+        secretName: "letsencrypt-staging"
+        #secretName: "letsencrypt-prod"
+    ingress:
+      hosts:
+        core: "harbor.example.com"
+      controller: default
+      ## Allow .Capabilities.KubeVersion.Version to be overridden while creating ingress
+      kubeVersionOverride: ""
+      className: "nginx"
+      annotations:
+        # note different ingress controllers may require a different ssl-redirect annotation
+        # for Envoy, use ingress.kubernetes.io/force-ssl-redirect: "true" and remove the nginx lines below
+        ingress.kubernetes.io/ssl-redirect: "true"
+        ingress.kubernetes.io/proxy-body-size: "0"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        # Please change cluster issue to prod when you are happy 
+        cert-manager.io/cluster-issuer: "selfsigned"
+        #cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      # ingress-specific labels
+      labels: {}
+  database:
+    type: external
+    external:
+      host: "dbspg03.fds.rl.ac.uk"
+      port: "5432"
+      coreDatabase: "cloud_harbor_registry_dev"
+      username: "cloud_harbor_registry_dev_user"
+      # if using existing secret, the key must be "password"
+      password: "changeit"
+      # "disable" - No SSL
+      # "require" - Always SSL (skip verification)
+      # "verify-ca" - Always SSL (verify that the certificate presented by the
+      # server was signed by a trusted CA)
+      # "verify-full" - Always SSL (verify that the certification presented by the
+      # server was signed by a trusted CA and the server host name matches the one
+      # in the certificate)
+      sslmode: "disable"
+    # The maximum number of connections in the idle connection pool per pod (core+exporter).
+    # If it <=0, no idle connections are retained.
+    maxIdleConns: 100
+    # The maximum number of open connections to the database per pod (core+exporter).
+    # If it <= 0, then there is no limit on the number of open connections.
+    # Note: the default number of connections is 1024 for postgre of harbor.
+    maxOpenConns: 900
+    ## Additional deployment annotations
+    podAnnotations: {}
+    ## Additional deployment labels
+    podLabels: {}
+  jobservice:
+    replicas: 2
+    jobLoggers: 
+      - database
+  registry:
+    replicas: 2
+  trivy:
+    replicas: 2
+  exporter:
+    replicas: 2
+  portal:
+    replicas: 2
+  core:
+    replicas: 2
+  persistence:
+    enabled: false
+    resourcePolicy: ""
+    imageChartStorage:
+      disableredirect: false
+      type: s3
+      s3:
+        bucket: harbor-bucket
+        accesskey: awsaccesskey
+        secretkey: awssecretkey
+        regionendpoint: s3.echo.stfc.ac.uk
+        encrypt: true
+        secure: true
+        skipverify: true
