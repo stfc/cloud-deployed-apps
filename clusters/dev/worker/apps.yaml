@@ -65,6 +65,12 @@ spec:
             valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
             secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
 
+          - name: harbor
+            chartName: harbor
+            namespace: harbor
+            valuesFile: ../../../clusters/dev/worker/harbor-values.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/harbor.yaml
+
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
