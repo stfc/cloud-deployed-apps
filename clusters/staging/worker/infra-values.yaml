@@ -1,15 +1,15 @@
 openstack-cluster:
 
   controlPlane:
-    machineCount: 3
+    machineFlavor: dep-l2.tiny
 
   nodeGroups:
     - name: default-md-0
       machineCount: 3
-      machineFlavor: l3.micro
+      machineFlavor: dep-l2.tiny
 
   nodeGroupDefaults:
-    machineFlavor: l3.nano
+    machineFlavor: dep-l2.tiny
     nodeLabels:	
       # we're running longhorn on this cluster
       # set label so worker nodes can host longhorn volumes
