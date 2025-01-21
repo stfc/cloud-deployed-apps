@@ -1,5 +1,5 @@
 harbor:
-  externalURL: "https://harbor.example.com"
+  externalURL: "https://harbor.dev-worker.nubes.stfc.ac.uk"
   ingress:
   hosts:
     core: "harbor.example.com"

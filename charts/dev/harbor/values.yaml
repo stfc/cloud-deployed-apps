@@ -1,5 +1,5 @@
 harbor:
-  externalURL: "https://harbor.example.com"
+  externalURL: "https://harbor.dev-worker.nubes.stfc.ac.uk"
   expose:
     type: ingress
     tls:
