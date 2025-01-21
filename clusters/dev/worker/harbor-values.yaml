@@ -2,4 +2,4 @@ harbor:
   externalURL: "https://harbor.dev-worker.nubes.stfc.ac.uk"
   ingress:
   hosts:
-    core: "harbor.example.com"
+    core: "harbor.dev-worker.nubes.stfc.ac.uk"
