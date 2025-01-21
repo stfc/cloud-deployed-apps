@@ -12,7 +12,7 @@ harbor:
         #secretName: "letsencrypt-prod"
     ingress:
       hosts:
-        core: "harbor.example.com"
+        core: "harbor.dev-worker.nubes.stfc.ac.uk"
       controller: default
       ## Allow .Capabilities.KubeVersion.Version to be overridden while creating ingress
       kubeVersionOverride: ""
