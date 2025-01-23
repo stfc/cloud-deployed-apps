@@ -1,6 +1,6 @@
 openstack-cluster:
-  kubernetesVersion: "1.30.6"
-  machineImage: "capi-ubuntu-2204-kube-v1.30.6-2024-11-15"
+  kubernetesVersion: "1.31.4"
+  machineImage: "capi-ubuntu-2204-kube-v1.31.4-2025-01-07"
 
   # The PEM-encoded CA certificate for openstack.stfc.ac.uk
   # this expires 2023-12-05T23:59:59Z (UTC)
@@ -353,6 +353,19 @@ openstack-cluster:
   nodeGroupDefaults:
     autoscale: false
     machineFlavor: l3.micro
+
+    rolloutStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        # The maximum number of node group machines that can be unavailable during the update
+        # Can be an absolute number or a percentage of the desired count
+        maxUnavailable: 0
+        # The maximum number of machines that can be scheduled above the desired count for
+        # the group during an update
+        # Can be an absolute number or a percentage of the desired count
+        maxSurge: 1
+        # One of Random, Newest, Oldest
+        deletePolicy: Random
 
     healthCheck:
       enabled: true

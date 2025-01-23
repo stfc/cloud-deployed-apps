@@ -1,11 +1,15 @@
 openstack-cluster:
 
+  controlPlane:
+    machineFlavor: dep-l2.tiny
+
   nodeGroups:
     - name: default-md-0
       machineCount: 5
+      machineFlavor: dep-l2.tiny
 
   nodeGroupDefaults:
-    machineFlavor: l3.nano
+    machineFlavor: dep-l2.tiny
     nodeLabels:	
       # we're running longhorn on this cluster
       # set label so worker nodes can host longhorn volumes
@@ -22,6 +26,7 @@ openstack-cluster:
                 loadBalancerIP: "130.246.81.242"
 
     monitoring:
+      enabled: true
       # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
       # ends up with too many messages in the ticket queue
       blackBoxExporter: 
@@ -36,25 +41,25 @@ openstack-cluster:
                   env: staging
               ingress:
                 hosts:
-                  - prometheus-worker.staging.nubes.stfc.ac.uk
+                  - prometheus.staging-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - prometheus-worker.staging.nubes.stfc.ac.uk
+                      - prometheus.staging-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
             grafana:
               ingress:
                 hosts:
-                  - grafana-worker.staging.nubes.stfc.ac.uk
+                  - grafana.staging-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - grafana-worker.staging.nubes.stfc.ac.uk
+                      - grafana.staging-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
             alertmanager:
               enabled: true
               ingress:
                 hosts:
-                  - alertmanager-worker.staging.nubes.stfc.ac.uk
+                  - alertmanager.staging-worker.nubes.stfc.ac.uk
                 tls:
                   - hosts:
-                      - alertmanager-worker.staging.nubes.stfc.ac.uk
+                      - alertmanager.staging-worker.nubes.stfc.ac.uk
                     secretName: tls-keypair
