@@ -1,0 +1,7 @@
+apiVersion: v2
+name: rabbit-consumers
+version: 1.0.0
+dependencies:
+  - repository: https://stfc.github.io/cloud-helm-charts/
+    name: stfc-cloud-rabbit-consumers
+    version: 1.8.0

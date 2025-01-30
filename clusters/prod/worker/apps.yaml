@@ -61,6 +61,11 @@ spec:
             chartName: victoria-metrics
             namespace: victoria-metrics
             valuesFile: ../../../clusters/prod/worker/vicmet-values.yaml
+          
+          - name: rabbit-consumer
+            chartName: rabbit-consumer
+            namespace: rabbit-consumer
+            valuesFile: ../../../clusters/prod/worker/rabbit-consumer-values.yaml
 
 
   syncPolicy:
