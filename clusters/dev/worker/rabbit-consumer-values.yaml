@@ -1,5 +1,5 @@
 
-stfc-cloud-openstack-cluster:
+stfc-cloud-rabbit-consumers:
   consumer:
     logLevel: DEBUG
     image:
