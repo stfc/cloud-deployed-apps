@@ -65,6 +65,12 @@ spec:
             valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
             secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
 
+# TODO: get secrets prepared for dev rabbit consumers
+#          - name: rabbit-consumer
+#            chartName: rabbit-consumer
+#            namespace: rabbit-consumer
+#            valuesFile: ../../../clusters/dev/worker/rabbit-consumer-values.yaml
+
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
