@@ -1,4 +1,4 @@
-stfc-cloud-rabbit-consumers:
+stfc-cloud-rabbit-consumer:
   consumer:
     aquilon:
       defaultPrefix: vm-openstack-Prod-

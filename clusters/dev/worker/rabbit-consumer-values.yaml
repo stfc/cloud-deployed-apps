@@ -1,5 +1,5 @@
 
-stfc-cloud-rabbit-consumers:
+stfc-cloud-rabbit-consumer:
   consumer:
     logLevel: DEBUG
     image:
