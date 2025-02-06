@@ -1,3 +1,4 @@
+env: staging
 repos:
   stfc:
     - cloud-deployed-apps

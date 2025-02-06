@@ -1,4 +1,4 @@
-env: staging
+env: dev
 app: cloud-chatops
 replicaCount: 1
 image:

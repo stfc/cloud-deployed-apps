@@ -9,6 +9,4 @@ cert-manager:
   le-prod:
     enabled: false
 
-  crds:
-    enabled: true
-    keep: true
+  installCRDs: true
