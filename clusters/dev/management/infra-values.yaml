@@ -1,48 +1,49 @@
-openstack-cluster:
-  addons:
-    ingress:
-      enabled: true
-      nginx:
-        release:
-          values:
-            controller:
-              service:
-                loadBalancerIP: "130.246.211.178"
+stfc-cloud-openstack-cluster:
+  openstack-cluster:
+    addons:
+      ingress:
+        enabled: true
+        nginx:
+          release:
+            values:
+              controller:
+                service:
+                  loadBalancerIP: "130.246.211.178"
 
-    monitoring:
-      # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
-      # ends up with too many messages in the ticket queue
-      blackBoxExporter: 
-        enabled: false
-      kubePrometheusStack:
-        release:
-          values:
-            prometheus:
-              prometheusSpec:
-                externalLabels:
-                  cluster: management
-                  env: dev
-              ingress:
-                hosts:
-                  - prometheus.dev-mgmt.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - prometheus.dev-mgmt.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            grafana:
-              ingress:
-                hosts:
-                  - grafana.dev-mgmt.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - grafana.dev-mgmt.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            alertmanager:
-              enabled: true
-              ingress:
-                hosts:
-                  - alertmanager.dev-mgmt.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - alertmanager.dev-mgmt.nubes.stfc.ac.uk
-                    secretName: tls-keypair                
+      monitoring:
+        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
+        # ends up with too many messages in the ticket queue
+        blackBoxExporter: 
+          enabled: false
+        kubePrometheusStack:
+          release:
+            values:
+              prometheus:
+                prometheusSpec:
+                  externalLabels:
+                    cluster: management
+                    env: dev
+                ingress:
+                  hosts:
+                    - prometheus.dev-mgmt.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - prometheus.dev-mgmt.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              grafana:
+                ingress:
+                  hosts:
+                    - grafana.dev-mgmt.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - grafana.dev-mgmt.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              alertmanager:
+                enabled: true
+                ingress:
+                  hosts:
+                    - alertmanager.dev-mgmt.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - alertmanager.dev-mgmt.nubes.stfc.ac.uk
+                      secretName: tls-keypair                
