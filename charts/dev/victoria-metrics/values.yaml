@@ -60,6 +60,18 @@ victoria-metrics-cluster:
         volumeMounts:
           - name: vmstorage-volume # Matches the StatefulSet volume claim name
             mountPath: /storage
+
+    env:
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          key: access_key
+          name: vmbackup-credentials
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          key: secret_key
+          name: vmbackup-credentials
   
     podSpec:
       volumes: [] 
