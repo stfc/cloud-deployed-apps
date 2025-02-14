@@ -1,0 +1,84 @@
+openstack-cluster:
+  monitoring:
+    enabled: true
+    lokiStack:
+      enabled: false
+    kubePrometheusStack:
+      release:
+        values:
+          alertmanager:
+            alertmanagerSpec:
+              storage:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: csi-cinder
+
+            enabled: false
+            service:
+              type: ClusterIP
+
+            ingress:
+              ingressClassName: nginx
+              enabled: true
+              annotations:
+                cert-manager.io/cluster-issuer: "self-signed"
+              hosts:
+                - alertmanager.example.com
+              paths:
+                - "/"
+              tls:
+                - hosts:
+                    - "alertmanager.example.com"
+                  secretName: tls-keypair
+              ingressPerReplica:
+                enabled: false
+          
+          grafana:
+            enabled: true
+
+            service:
+              type: ClusterIP
+
+            ingress:
+              ingressClassName: nginx
+              enabled: true
+              annotations:
+                cert-manager.io/cluster-issuer: "self-signed"
+              path: /
+              hosts:
+                - grafana.example.com
+              tls:
+                - hosts:
+                    - "grafana.example.com"
+                  secretName: tls-keypair
+
+          prometheus-operator:
+            enabled: true
+
+          prometheus:
+            enabled: true
+            prometheusSpec:
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: csi-cinder
+              externalLabels:
+                cluster: not-set
+                env: not-set
+
+            service:
+              type: ClusterIP
+
+            ingress:
+              ingressClassName: nginx
+              annotations:
+                cert-manager.io/cluster-issuer: "self-signed"
+              enabled: true
+              paths:
+                - /
+              hosts:
+                - prometheus.example.com
+              tls:
+                - hosts:
+                    - "prometheus.example.com"
+                  secretName: tls-keypair
