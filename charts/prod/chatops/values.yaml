@@ -1,0 +1,6 @@
+env: dev
+app: cloud-chatops
+replicaCount: 1
+image:
+  repository: harbor.stfc.ac.uk/stfc-cloud/cloud-chatops
+  tag: 5.0.2
