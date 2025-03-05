@@ -2,16 +2,6 @@
 
 This documentation outlines how to set up clusters managed by ArgoCD in the STFC Cloud.
 
-## Quick Start
-
-## Looking to Deploy and Setup an App?
-
-- [ArgoCD Setup](apps/argocd.md)
-- [Cert-manager](apps/cert-manager.md)
-- [Storage - Manila or Longhorn](apps/storage.md)
-- [Galaxy](apps/galaxy.md) (IN DEVELOPMENT)
-- Victoria Metrics (DOCS NEEDED) 
-
 ### New to the ArgoCD folder workflow used? 
 
 **Start with:** [How it works - folder-based flow & promotion flowchart](folder-based-flow.md)
@@ -34,8 +24,8 @@ See [Adding a New Chart to This Repo](charts.md)
 ### Deploying a Chart onto a Cluster?
 See [Deploying a Chart Onto a Cluster](deploying-apps.md)
 
-### Need to Set Up Longhorn App?
-See [App Setup Steps](app-setup.md)
+### Need to configure ArgoCD?
+See [ArgoCD Setup](apps/argocd.md)
 
 ### Need to Set Up Specific Infra?
 See [Infra Setup Steps](infra-setup.md)

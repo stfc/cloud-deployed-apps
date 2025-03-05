@@ -40,9 +40,19 @@ spec:
           valuesFile: ../../../clusters/<environment>/<cluster-name>/<cluster-values-file>.yaml
         
         # OPTIONAL
-        # PATH TO ANY SECRETS - see app-specific docs to see if any secrets are needed
+        # PATH TO ANY CLUSTER-SPECIFIC SECRETS - see upstream chart docs to see if any secrets are needed
         # (relative to chart location in repo)
-          secretsFile: ../../../secrets/<environment>/<cluster-name>/apps/<secrets-file>.yaml
+          secretsFile: ../../../clusters/<environment>/<cluster-name>/secrets/apps/<secrets-file>.yaml
+
+        # OPTIONAL
+        # PATH TO ANY ENVIRONMENT-SPECIFIC VALUES - see upstream chart docs to see if any secrets are needed
+        # (relative to chart location in repo)
+          sharedValuesFile: ../../../clusters/<environment>/_shared/<shared-values-file>.yaml
+        
+        # OPTIONAL
+        # PATH TO ANY ENVIRONMENT-SPECIFIC SECRET VALUES - see upstream chart docs to see if any secrets are needed
+        # (relative to chart location in repo)
+          sharedValuesFile: ../../../clusters/<environment>/_shared/secrets/<shared-secrets-file>.yaml
 
 ```
 
@@ -56,8 +66,15 @@ spec:
     
     - NOTE: tempalate for Chart secrets can be found in `charts/<environment>/<chartname>/secrets-templates`
 
+`sharedValuesFile`: path to environment-specific values file for chart 
+  - shared values that apply to all instances of the chart running on environment
+
+`sharedSecretsFile`: path to any environment-specific secrets for chart
+  - shared secrets that apply to all instances of the chart running on environment
+
+
 > [!NOTE]
-> Remember to encase any cluster-specific values and secrets for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
+> Remember to encase any values and secrets for the chart in the sub-chart name to which they apply. E.g. for argo-cd values - they should be defined like: 
 
 ```yaml
 argo-cd:
@@ -67,6 +84,6 @@ argo-cd:
 
 This is because `argo-cd` is the name of the subchart that installs argocd
 
-4. Populate and encrypt any secrets needed for the chart - see [Secrets](./secrets.md) 
+3. Populate and encrypt any secrets needed for the chart - see [Secrets](./secrets.md) 
 
-5. Commit and make a PR
+4. Commit and make a PR
