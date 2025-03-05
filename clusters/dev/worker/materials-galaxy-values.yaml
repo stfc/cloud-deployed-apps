@@ -1,16 +1,16 @@
-oauth2-proxy:
 
+materials-galaxy:
+  oauth2-proxy:
+    extraArgs:
+      redirect-url: "https://galaxy.dev-worker.nubes.stfc.ac.uk/oauth2/callback"
 
-  extraArgs:
-    redirect-url: "https://galaxy.dev-worker.nubes.stfc.ac.uk/oauth2/callback"
-
-galaxy:
-  ingress:
-    hosts:
-    - host: "galaxy.dev-worker.nubes.stfc.ac.uk"
-      paths:
-        - path: "/"
-    tls:
-    - hosts:
-        - "galaxy.dev-worker.nubes.stfc.ac.uk" 
-      secretName: galaxy-tls
+  galaxy:
+    ingress:
+      hosts:
+      - host: "galaxy.dev-worker.nubes.stfc.ac.uk"
+        paths:
+          - path: "/"
+      tls:
+      - hosts:
+          - "galaxy.dev-worker.nubes.stfc.ac.uk" 
+        secretName: galaxy-tls
