@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: cloud-helm-charts-test-branch
     path: clusters/dev/worker
   syncPolicy:
     automated:
@@ -83,7 +83,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: cloud-helm-charts-test-branch
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
