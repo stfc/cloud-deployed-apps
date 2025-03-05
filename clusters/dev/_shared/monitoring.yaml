@@ -1,84 +1,46 @@
-openstack-cluster:
-  monitoring:
-    enabled: true
-    lokiStack:
-      enabled: false
-    kubePrometheusStack:
-      release:
-        values:
-          alertmanager:
-            alertmanagerSpec:
-              storage:
-                volumeClaimTemplate:
-                  spec:
-                    storageClassName: csi-cinder
+stfc-cloud-openstack-cluster:
+  openstack-cluster:
 
-            enabled: false
-            service:
-              type: ClusterIP
+    kubernetesVersion: "1.31.4"
+    # The name of the image to use for cluster machines
+    machineImage: "capi-ubuntu-2204-kube-v1.31.4-2025-01-24"
 
-            ingress:
-              ingressClassName: nginx
-              enabled: true
-              annotations:
-                cert-manager.io/cluster-issuer: "self-signed"
-              hosts:
-                - alertmanager.example.com
-              paths:
-                - "/"
-              tls:
-                - hosts:
-                    - "alertmanager.example.com"
-                  secretName: tls-keypair
-              ingressPerReplica:
-                enabled: false
-          
-          grafana:
-            enabled: true
+    # Defaults for node groups
+    nodeGroupDefaults:
+      # Indicates if the node group should be autoscaled
+      autoscale: false
+      # The flavor to use for machines in the node group
+      machineFlavor: l3.micro
 
-            service:
-              type: ClusterIP
+    rolloutStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        # The maximum number of node group machines that can be unavailable during the update
+        # Can be an absolute number or a percentage of the desired count
+        maxUnavailable: 0
+        # The maximum number of machines that can be scheduled above the desired count for
+        # the group during an update
+        # Can be an absolute number or a percentage of the desired count
+        maxSurge: 1
+        # One of Random, Newest, Oldest
+        deletePolicy: Random
 
-            ingress:
-              ingressClassName: nginx
-              enabled: true
-              annotations:
-                cert-manager.io/cluster-issuer: "self-signed"
-              path: /
-              hosts:
-                - grafana.example.com
-              tls:
-                - hosts:
-                    - "grafana.example.com"
-                  secretName: tls-keypair
-
-          prometheus-operator:
-            enabled: true
-
-          prometheus:
-            enabled: true
-            prometheusSpec:
-              storageSpec:
-                volumeClaimTemplate:
-                  spec:
-                    storageClassName: csi-cinder
-              externalLabels:
-                cluster: not-set
-                env: not-set
-
-            service:
-              type: ClusterIP
-
-            ingress:
-              ingressClassName: nginx
-              annotations:
-                cert-manager.io/cluster-issuer: "self-signed"
-              enabled: true
-              paths:
-                - /
-              hosts:
-                - prometheus.example.com
-              tls:
-                - hosts:
-                    - "prometheus.example.com"
-                  secretName: tls-keypair
+    healthCheck:
+      # Indicates if the machine health check should be enabled
+      enabled: true
+      # The spec for the health check
+      spec:
+        # By default, 20% unhealthy worker nodes remediated at a time
+        # https://cluster-api.sigs.k8s.io/tasks/automated-machine-management/healthchecking#max-unhealthy
+        maxUnhealthy: 20%
+        # If a node takes longer than 10 mins to startup, remediate it
+        nodeStartupTimeout: 10m0s
+        # By default, consider a worker node that has not been Ready for
+        # more than 5 mins unhealthy
+        unhealthyConditions:
+          - type: Ready
+            status: Unknown
+            timeout: 10m0s
+          - type: Ready
+            status: "False"
+            timeout: 10m0s
