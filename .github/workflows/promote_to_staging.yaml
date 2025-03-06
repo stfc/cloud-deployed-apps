@@ -1,8 +1,6 @@
 name: Promote Dev to Staging
 
 on:
-  schedule:
-    - cron: '0 12 * * 2'  # Tuesday at 12pm UTC
   workflow_dispatch:
 
 jobs:
