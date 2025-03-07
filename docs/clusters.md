@@ -40,6 +40,7 @@ To deploy another environment - follow these steps:
 You can optionally copy or create any other cluster subfolders you want to be in this environment here as well
 
 6. Edit `apps.yaml`: 
+See [Deploying apps](./deploying-apps.md) steps 2-3
 
 - Any entries that begin with `path` should use charts from the new environment
 - Any entries that begin with `valuesFiles` should use paths from the new environment
@@ -51,21 +52,24 @@ You can optionally copy or create any other cluster subfolders you want to be in
 - see [infra-setup](infra-setup.md) - "Pre-deployment" Steps
 
 8. Modify/add any cluster-specific values for any apps you want to manage.
-- see [app-setup](app-setup.md) - "Pre-deployment" Steps
+- see the upstream docs on what/how to change
+- environment-specific values go in `clusters/<your-environment>/_shared`
 
-9. Create a new folder `mkdir -p ./secrets/<your-environment>/management/infra`
-You will also need to create another subfolder for each extra cluster subfolder you've copied/added
-
-10. Add secret files `.sops.yaml`, `api-sever-fip.yaml`, and `app-creds.yaml` as above 
-See ([Deploying a child cluster on an existing environment](child-clusters.md) steps 5-7). 
+9.  Modify infra secret files `.sops.yaml`, `api-sever-fip.yaml`, and `app-creds.yaml` under `clusters/<your-environment>/secrets/infra` 
+See ([Deploying a child cluster on an existing environment](child-clusters.md) steps 6-8). 
 Repeat for all other clusters you want to add
+
+10.  Modify apps secret files including `.sops.yaml` under `clusters/<your-environment>/secrets/apps`
+See ([Deploying a child cluster on an existing environment](child-clusters.md) steps 9-12). 
+
+Repeat the steps 4-10 for all other clusters you want to add
 
 > [!CAUTION]
 > Make sure these files has been **encrypted** using SOPS in the steps above before committing and pushing changes to your branch.
 
-11. **(Optional)** If this is not a temporary environment - and you want to keep it around long term in `main` make a PR for it and get it merged
+11.  **(Optional)** If this is not a temporary environment - and you want to keep it around long term in `main` make a PR for it and get it merged
 
-12. Deploy age private key secret to management cluster
+12.  Deploy age private key secret to management cluster
 
 **New to generating age keys and generating secrets?** See [secrets](secrets.md) for more information
 
@@ -85,11 +89,9 @@ e.g. to deploy worker cluster apps - run
 ```bash
 cd scripts; ./deploy.sh worker <your-environment>  
 ```
+14.  Wait for argocd to deploy and all apps should spring to life in the UI and spin up any other clusters you've defined
 
-14.  Wait for argocd to deploy and it should spring to life and spin up any other clusters you've defined
+15.  Repeat step 12-14 for each extra cluster that you have running - to deploy argocd onto the cluster.
 
-15.  Perform any Post-Deployment steps - see [infra-setup](infra-setup.md) and [app-setup](app-setup.md) for any apps you want to manage
-
-16.  Repeat step 12-14 for each extra cluster that you have running that you want to manage apps with.
-
-You can get the kubeconfig to access these clusters by accessing the `management` cluster and running `clusterctl get kubeconfig $CLUSTER_NAME -n clusters > $CLUSTER_NAME.kubeconfig`
+You can get the kubeconfig to access these clusters once all the apps on the `management` cluster is up and running 
+`clusterctl get kubeconfig $CLUSTER_NAME -n clusters > $CLUSTER_NAME.kubeconfig`

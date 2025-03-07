@@ -10,7 +10,10 @@ We utilise StackHPCs CAPI Chart to do this. See the docs [here](https://github.c
 
 ## Pre-deployment steps
 
-1. **(Optional)** Add TLS Certs - for CAPI Monitoring
+1. Setup Secrets
+- see [Deploying clusters](./child-clusters.md) steps 7-8
+
+2. **(Optional)** Add TLS Certs - for CAPI Monitoring
 
 CAPI monitoring (which is enabled by default) requires TLS certs. 
 
@@ -29,98 +32,64 @@ kubectl create secret tls tls-keypair --cert certificate.crt --key privateKey.ke
 ```
 
 
-2. **(Optional)** Enable sending monitoring alerts
+3. **(Optional)** Enable sending monitoring alerts
 
 Monitoring is enabled by default but will not send alerts out unless configured to. 
-In order to turn on alerts - edit the file `clusters/<environment>/<cluster-name>infra-values.yaml` and add the following
+In order to turn on alerts - edit the file `clusters/<environment>/<cluster-name>/infra-values.yaml` and add the following
 
 ```yaml
-openstack-cluster:
-  addons:
-    monitoring:
-      kubePrometheusStack:
-        release:
-          values:
-            defaultRules:
-              additionalRuleLabels:
+stfc-cloud-openstack-cluster:
+  openstack-cluster:
+    addons:
+      monitoring:
+        kubePrometheusStack:
+          release:
+            values:
+              defaultRules:
+                additionalRuleLabels:
+                  cluster: foo # name of cluster
+                  env: dev # dev/prod
+              alertmanager:
+                enabled: true
+```
+
+
+4. **(Optional)** Change the ingress hostnames for monitoring endpoints
+
+```yaml
+stfc-cloud-openstack-cluster:
+  openstack-cluster:
+    addons:
+      monitoring:
+        kubePrometheusStack:
+          release:
+            values:
+              defaultRules: # see above
                 cluster: foo # name of cluster
                 env: dev # dev/prod
-            alertmanager:
-              enabled: true
-```
-
-
-3. **(Optional)** Change the ingress hostnames for monitoring endpoints
-
-```yaml
-openstack-cluster:
-  addons:
-    monitoring:
-      kubePrometheusStack:
-        release:
-          values:
-            defaultRules: # see above
-              cluster: foo # name of cluster
-              env: dev # dev/prod
-            alertmanager:
-              enabled: true # see above
-              ingress:
-                hosts:
-                  - <alertmanager-hostname>.nubes.stfc.ac.uk
-                tls:
-                  - hosts: 
+              alertmanager:
+                enabled: true # see above
+                ingress:
+                  hosts:
                     - <alertmanager-hostname>.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            prometheus:
-              ingress:
-                hosts:
-                  - <prometheus-hostname>.nubes.stfc.ac.uk
-                tls:
-                  - hosts: 
+                  tls:
+                    - hosts: 
+                      - <alertmanager-hostname>.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              prometheus:
+                ingress:
+                  hosts:
                     - <prometheus-hostname>.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            grafana:
-              ingress:
-                hosts:
-                  - <grafana-hostname>.nubes.stfc.ac.uk
-                tls:
-                  - hosts: 
+                  tls:
+                    - hosts: 
+                      - <prometheus-hostname>.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              grafana:
+                ingress:
+                  hosts:
                     - <grafana-hostname>.nubes.stfc.ac.uk
-                    secretName: tls-keypair
+                  tls:
+                    - hosts: 
+                      - <grafana-hostname>.nubes.stfc.ac.uk
+                      secretName: tls-keypair
 ``` 
-
-> [!NOTE]
-> Make sure to follow post-deployment steps below for configuring sending emails
-
-
-## Post-deployment
-
-> [!WARNING]
-> This will likely be deprecated for using secrets
-
-If you have enabled monitoring. You need to manually set a few secrets that capi requires - this includes: 
-
-1. The mail server to use to send alerts (If sending alerts)
-2. Which email address to send alerts to. (If sending alerts)
-
-Create a temporary file `/tmp/capi_patch.yaml`
-
-```yaml
-# /tmp/capi_patch.yaml
-spec:
-  source:
-    helm:
-      parameters:
-      - name: >-
-          openstack-cluster.addons.monitoring.kubePrometheusStack.release.values.alertmanager.config.global.smtp_smarthost
-        value: <hostname>:<port>
-      - name: >-
-          openstack-cluster.addons.monitoring.kubePrometheusStack.release.values.alertmanager.config.receivers[1].email_configs[0].to
-        value: <email-address>
-```
-
-Then you can run: 
-```bash
-kubectl patch -n argocd app <cluster-name> --patch-file /tmp/capi_patch.yaml --type merge
-```
- 

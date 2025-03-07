@@ -31,12 +31,12 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 BASE_DIR="$(dirname "$SCRIPTPATH")"
 
 # Paths to the target directories
-CLUSTER_DIR="$BASE_DIR/secrets/$ENVIRONMENT/$CLUSTER_NAME/apps"
-SHARED_DIR="$BASE_DIR/secrets/$ENVIRONMENT/_shared/apps"
+CLUSTER_DIR="$BASE_DIR/clusters/$ENVIRONMENT/$CLUSTER_NAME/secrets/apps"
+SHARED_DIR="$BASE_DIR/clusters/$ENVIRONMENT/_shared/secrets/apps"
 
 # if cluster name is management - update all infra secrets too
 if [[ "$CLUSTER_NAME" == "management" ]]; then
-    for CLUSTER_INFRA_DIR in "$BASE_DIR"/secrets/"$ENVIRONMENT"/*/infra; do
+    for CLUSTER_INFRA_DIR in "$BASE_DIR"/clusters/"$ENVIRONMENT"/*/secrets/infra; do
         process_directory "$CLUSTER_INFRA_DIR"
     done
 fi

@@ -37,11 +37,11 @@ Note: You do not need access to a private key to encrypt a file, only to decrypt
 
 For example: to add an infra-related secret for dev management cluster:
 
-- Add yours to the relevant sections in `secrets/dev/management/infra/.sops.yaml`
+- Add yours to the relevant sections in `clusters/dev/management/secrets/infra/.sops.yaml`
 - Add or edit your secret as follows:
 
 ```bash
-cd secrets/dev/management/infra/  # Currently we have to be in the same dir
+cd clusters/dev/management/secrets/infra/  # Currently we have to be in the same dir
 sops example-secret.yaml
 ```
 
@@ -51,7 +51,7 @@ sops example-secret.yaml
 
 ## Using App Secrets
 
-If a chart requires a secret - a template file for how the secret file should look will be provided in `charts/<environment>/<chartname>/secrets-templates/` 
+If a chart requires a secret - see upstream docs - if upstream chart is in [capi-helm-chart repo](https://github.com/stfc/cloud-helm-charts) there should be a `secrets-templates.yaml` that define the template for any secrets  
 
 1. Make sure you can access the cluster secrets you want to run the chart on
    - check if your age key is in `.sops.yaml` for that cluster
@@ -65,7 +65,7 @@ If a chart requires a secret - a template file for how the secret file should lo
 4. Encrypt and save the file using 
 
 ```
-sops -e /tmp/<filename> -o <path-to-repo>/secrets/apps/<environment>/<clustername>/<filename>.yaml
+sops -e /tmp/<filename> -o <path-to-repo>/clusters/<environment>/<clustername>/secrets/apps/<filename>.yaml
 ```
 
 5. Add to your apps.yaml an extra line in the Appset list generator to point to your secrets file. 
