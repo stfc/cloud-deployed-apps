@@ -68,8 +68,10 @@ spec:
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
-            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
-            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
+            - '{{.sharedValuesFile | default "../../../clusters/_shared/dummy.yaml"}}'
+            - '{{.sharedSecretsFile | default "../../../clusters/_shared/dummy.yaml"}}'
+            - '{{.valuesFile | default "../../../clusters/_shared/dummy.yaml"}}'
+            - secrets://{{ .secretsFile | default "../../../clusters/_shared/dummy.yaml"}}
 
       destination:
         server: https://kubernetes.default.svc
@@ -118,10 +120,13 @@ spec:
           valueFiles:
             # Bring in infra values specific to this cluster 
             - "../../../{{path}}/{{path.filename}}"
+            # Bring in shared environment values
+            - "../../../clusters/{{path[1]}}/_shared/monitoring.yaml"
+            - "../../../clusters/{{path[1]}}/_shared/alerting.yaml"
             # Bring in infra secrets specific to this cluster
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/api-server-fip.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/app-creds.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/_shared/infra/smtp-smarthost.yaml"
+            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
+            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
+            - "secrets://../../../clusters/{{path[1]}}/_shared/secrets/infra/smtp-smarthost.yaml"
 
       syncPolicy:
         automated:

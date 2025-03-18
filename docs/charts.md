@@ -1,9 +1,14 @@
 # Charts Directory
 
-In this section we will outline how to modify or add new charts to this repo for argocd to potentially manage for a cluster.
+In this section we will outline what the charts directory is and how to modify it.
 
-This repository uses folder-based revision management to manage the helm charts that argocd will manage. This avoids
-us having to reconcile git branches, and the current HEAD of the repo is always the current state of the cluster.
+The Charts directory is a workaround for ArgoCD to work properly with upstream helm charts
+
+[Argocd multiple sources](https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/) and [Sops secrets](https://github.com/jkroepke/helm-secrets/wiki/ArgoCD-Integration) cannot be used together
+    - see issue [11866](https://github.com/argoproj/argo-cd/issues/11866), and PR [11966](https://github.com/argoproj/argo-cd/pull/11966)
+
+Charts directory contains boilerplate "wrapper" charts. For each app argocd manages, there is a "wrapper" chart - which just installs the corresponding upstream chart as a "dependency" - allowing ArgoCD to function
+
 
 ## Directory Structure
 The `charts` directory is subdivided into environment they can be installed on. 
@@ -15,50 +20,37 @@ The `staging` and `prod` environments are special. These should not be edited di
 copied from `dev` to `staging` and `prod` as part of the release process without modification. This is further described later in the documentation - see [promotion workflow](promotion.md).
 
 ## Chart structures
-Each chart contains:
+Each chart contains `Chart.yaml` 
+- `version` of the chart is not used or important
+- `dependencies` should be to an upstream chart - in [cloud helm charts](https://github.com/stfc/cloud-helm-charts) or another upstream chart
 
-- `Chart.yaml` - which is boilerplate, the version of the chart is not currently used.
-- `requirements.yaml` - this should contain the upstream chart(s) and versions. See [Helm Documentation](https://v2.helm.sh/docs/developing_charts/#managing-dependencies-with-requirements-yaml). (NOTE: `requirements.yaml` is deprecated and will be merged into `Charts.yaml`)
-- `values.yaml` files that applies to all environments, but are tailored to our platform.
+Nothing else should go here - DO NOT PUT VALUES HERE - they should go in [cloud helm charts](https://github.com/stfc/cloud-helm-charts) or `clusters/<env>/_shared` 
 
-Optionally they contain:
+If its a chart from [cloud helm charts](https://github.com/stfc/cloud-helm-charts) - consult the corresponding README docs
 
-- `templates` - any extra kubernetes resources can be defined here and can be configured using helm templating
-- `secrets-templates` - any chart values that need to be secrets are located in this directory. These need to be filled and encrypted by sops 
+Only the `argocd` chart has `values.yaml` which can be edited
 
-Note: environment or cluster specific values, e.g. domain names, do not belong here. See [Deploying Apps to a cluster](deploying-apps.md) for more info on cluster/environment-specific values
-We only include values that are generic across all environments here - this allows us to copy the chart from `dev` to `staging` and `prod` without modification.
+## Updating/testing versions
 
-## Promoting changes to staging and prod
+To test a new version of a chart - use the dev environment. 
+Make a PR to change the dependency version in `Chart.yaml`. see [Promotion Workflow](promotion.md) for more info
 
-see [Promotion Workflow](promotion.md) for more info
-
-Changes are promoted as-is from a developers environment (e.g. `charts/dev`) to the staging environment initially, then prod later.
-This can be done in one of two ways
-
-- Single application. Useful for security patches, targeted changes, or hot-fixes.
-- Full release. This is preferred, where all changes are promoted at once on a scheduled basis.
-
-Note: Applications can be held back from a full release if required, e.g. if a platform is in change-freeze during a "full" release.
+- Staging should automatically pick up new version changes
+- Prod promotion will happen automatically 
 
 ## Deploying a new app, or modifying an existing app
 
-1. Create a test cluster - either a self-managed cluster or a child cluster of dev/management - see [Deploying a new cluster](clusters.md)
+> [!NOTE]
+> Only upstream charts are allowed - if this is a new chart - upload it to [cloud helm charts](https://github.com/stfc/cloud-helm-charts)
 
-2. Create a branch for development off of `main` for making changes
+1. Create a branch for development off of `main` for making changes
 
-3. Create a new directory under `charts/dev` (or similar) for your new chart - you can also choose to deploy a new cluster for testing - see [Deploying a new cluster](clusters.md)
+2. Create a new directory under `charts/dev` (or similar) for your new chart 
 
-4. Simply use `helm install` to install the chart on a test cluster to see if it works, iterating on the chart until it does.
+3. Create `Chart.yaml`add your Chart as a dependency under `dependencies`
+    - `name` must match directory name
+    - `version` doesn't matter
 
-5. Ensure there are no environment specific values are present in the values file e.g. domain name, monitoring....etc. If you have env specific values we cannot promote by simply copying the charts. As a rule of thumb, if you need to consider a value per cluster (e.g. domain name) place it into the clusters dir
+4. Create a PR and get it reviewed and merged
 
-6. You should store these (non-sensitive) cluster-specific values alongside the cluster you are using to test these changes - see [Deploying Apps to a cluster](deploying-apps.md)
-
-7. Follow the instructions for adding your application to the appset as described in [Deploying Apps to a cluster](deploying-apps.md)
-
-8. Create a PR and get it reviewed and merged
-
-9. Delete your test cluster
-
-10. Follow steps in [promotion workflow](promotion.md) for promoting your new app/app changes to staging and then production
+5. Then you can deploy the chart - see [Deploying Apps to a cluster](deploying-apps.md) - setting cluster/environment specific values as needed
