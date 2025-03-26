@@ -57,13 +57,13 @@ spec:
             chartName: materials-galaxy
             namespace: materials-galaxy
             valuesFile: ../../../clusters/dev/worker/materials-galaxy-values.yaml
-            secretsFile: ../../../secrets/dev/worker/apps/materials-galaxy.yaml
+            secretsFile: ../../../clusters/dev/worker/secrets/apps/materials-galaxy.yaml
             
           - name: opensearch
             chartName: opensearch
             namespace: opensearch
             valuesFile: ../../../clusters/dev/worker/opensearch-values.yaml
-            secretsFile: ../../../secrets/dev/worker/apps/opensearch.yaml
+            secretsFile: ../../../clusters/dev/worker/secrets/apps/opensearch.yaml
 
 # TODO: get secrets prepared for dev rabbit consumers
 #          - name: rabbit-consumer
