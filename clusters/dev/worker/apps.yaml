@@ -1,3 +1,5 @@
+---
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -83,7 +85,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: update-capi-branch
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:

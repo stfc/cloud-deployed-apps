@@ -1,14 +1,6 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
-
-    controlPlane:
-      machineCount: 3
-
-    nodeGroups:
-      - name: default-md-0
-        machineCount: 3
-        machineFlavor: l3.micro
-
+    cloudCredentialsSecretName: dev-worker-cluster-cloud-credentials
     nodeGroupDefaults:
       nodeLabels:	
         # we're running longhorn on this cluster
