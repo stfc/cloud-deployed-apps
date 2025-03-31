@@ -110,7 +110,7 @@ spec:
     spec:
       project: default
       destination:
-        namespace: {{path.basename}}-cluster
+        namespace: "dev-{{path.basename}}-cluster"
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
@@ -118,7 +118,7 @@ spec:
         path: charts/dev/capi-infra
         helm:
           valueFiles:
-            # Bring in infra values specific to this cluster 
+            # Bring in infra values specific to this cluster
             - "../../../{{path}}/{{path.filename}}"
             # Bring in shared environment values
             - "../../../clusters/{{path[1]}}/_shared/monitoring.yaml"
