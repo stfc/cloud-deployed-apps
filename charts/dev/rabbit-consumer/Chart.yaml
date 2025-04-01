@@ -1,0 +1,7 @@
+apiVersion: v2
+name: rabbit-consumer
+version: 2.0.0
+dependencies:
+  - repository: https://stfc.github.io/cloud-helm-charts/
+    name: stfc-cloud-rabbit-consumer
+    version: 1.8.1-alpha.bf27244 # testing the alpha chart
