@@ -1,5 +1,6 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
+    cloudCredentialsSecretName: dev-management-cluster-cloud-credentials
     addons:
       ingress:
         enabled: true
