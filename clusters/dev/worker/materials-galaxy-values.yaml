@@ -14,3 +14,24 @@ materials-galaxy:
       - hosts:
           - "galaxy.dev-worker.nubes.stfc.ac.uk" 
         secretName: galaxy-tls
+  
+    # standalone db to reduce galaxy memory footprint
+    postgresql:
+      enabled: true
+      deploy: false
+      persistence: 
+        enabled: true
+        storageClassName: longhorn
+        storage: 10Gi
+    
+    cvmfs:
+      deploy: false
+
+    # turn off file transfering for now
+    tusd:
+      enabled: false
+    
+    rabbitmq:
+      persistence:
+        storageClassName: longhorn
+        storage: 10Gi
