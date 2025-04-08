@@ -1,5 +1,21 @@
 
 materials-galaxy:
+  galaxy-deps:
+    postgresql:
+      #- Whether to deploy the postgresl operator.
+      #- In general, we recommend installing the operator globally in production.
+      deploy: true
+
+    #- Configuration block if `cvmfs` is used as `refdata.type`
+    cvmfs:
+      deploy: false
+    
+    s3csi:
+      deploy: false
+
+    rabbitmq:
+      deploy: true
+  
   oauth2-proxy:
     extraArgs:
       redirect-url: "https://galaxy.dev-worker.nubes.stfc.ac.uk/oauth2/callback"
