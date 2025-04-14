@@ -71,6 +71,12 @@ spec:
 #            namespace: rabbit-consumer
 #            valuesFile: ../../../clusters/dev/worker/rabbit-consumer-values.yaml
 
+          - name: harbor
+            chartName: harbor
+            namespace: harbor
+            valuesFile: ../../../clusters/dev/worker/harbor-values.yaml
+            secretsFile: ../../../secrets/dev/worker/apps/harbor.yaml
+
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
