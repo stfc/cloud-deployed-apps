@@ -1,5 +1,6 @@
 stfc-cloud-rabbit-consumer:
   consumer:
+    logLevel: DEBUG
     aquilon:
       defaultPrefix: vm-openstack-Prod-
 
