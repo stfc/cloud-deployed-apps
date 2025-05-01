@@ -8,6 +8,10 @@ stfc-cloud-rabbit-consumer:
       # This allows us to build the image locally and use it in the chart
       pullPolicy: Never
 
+      queues:
+      - "ral.info"
+      - "ral.error"
+
     aquilon:
       defaultPrefix: vm-openstack-Dev-
 
