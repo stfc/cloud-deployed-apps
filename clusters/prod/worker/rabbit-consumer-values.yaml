@@ -1,7 +1,12 @@
 stfc-cloud-rabbit-consumer:
   consumer:
+    logLevel: INFO
     aquilon:
       defaultPrefix: vm-openstack-Prod-
+
+    queues:
+      - "ral.info"
+      - "ral.error"
 
     rabbitmq:
       host: hv748.nubes.rl.ac.uk
