@@ -124,7 +124,7 @@ spec:
             # Bring in infra values specific to this cluster
             - "../../../{{path}}/{{path.filename}}"
             # Bring in shared secrets
-            - "secrets://../../../clusters/{{path[1]}}/_shared/secrets/infra/smtp-smarthost.yaml"
+            - "secrets://../../../clusters/_shared/secrets/infra/smtp-smarthost.yaml"
             # Bring in infra secrets specific to this cluster
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
