@@ -10,7 +10,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - id: changed-files
-        # v46 patches CVE-2025-30066
         uses: tj-actions/changed-files@v46
         with:
           files_yaml: |
