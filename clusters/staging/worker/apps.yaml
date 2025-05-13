@@ -51,7 +51,7 @@ spec:
             chartName: cluster-api-addon-provider
             namespace: clusters
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
-          
+
           - name: manila-csi
             chartName: manila-csi
             namespace: manila-csi
@@ -78,6 +78,12 @@ spec:
             namespace: chatops
             secretsFile: ../../../secrets/staging/worker/apps/chatops.yaml
             valuesFile: ../../../clusters/staging/worker/chatops-values.yaml
+
+          - name: harbor
+            chartName: harbor
+            namespace: harbor
+            secretsFile: ../../../secrets/staging/worker/apps/harbor.yaml
+            valuesFile: ../../../clusters/staging/worker/harbor-values.yaml
 
 
   syncPolicy:
