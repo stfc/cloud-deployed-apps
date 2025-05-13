@@ -49,7 +49,7 @@ spec:
 
           - name: cluster-api-addon-provider
             chartName: cluster-api-addon-provider
-            namespace: clusters
+            namespace: capi-addon-system
             valuesFile: ../../../clusters/dev/management/argocd-setup-values.yaml
 
   syncPolicy:
@@ -110,7 +110,7 @@ spec:
     spec:
       project: default
       destination:
-        namespace: clusters
+        namespace: "dev-{{path.basename}}-cluster"
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
