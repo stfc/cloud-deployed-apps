@@ -3,13 +3,13 @@ stfc-cloud-harbor:
   harbor:
     externalURL: "https://harbor.staging-worker.nubes.stfc.ac.uk"
 
-  expose:
-    ingress:
-      hosts:
-        core: "harbor.staging-worker.nubes.stfc.ac.uk"
+    expose:
+      ingress:
+        hosts:
+          core: "harbor.staging-worker.nubes.stfc.ac.uk"
 
-  database:
-    type: external
-    external:
-      host: "dbspg03.fds.rl.ac.uk"
-      coreDatabase: "cloud_harbor_registry_dev"
+    database:
+      type: external
+      external:
+        host: "dbspg03.fds.rl.ac.uk"
+        coreDatabase: "cloud_harbor_registry_dev"
