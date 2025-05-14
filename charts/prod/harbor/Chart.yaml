@@ -1,0 +1,7 @@
+apiVersion: v2
+name: harbor
+version: 1.0.0
+dependencies:
+  - name: stfc-cloud-harbor
+    version: 1.0.0
+    repository: https://stfc.github.io/cloud-helm-charts
