@@ -29,6 +29,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
+  goTemplateOptions: ["missingkey=invalid"]
   generators:
     - list:
         elements:
@@ -71,18 +72,18 @@ spec:
             chartName: materials-galaxy
             namespace: materials-galaxy
             valuesFile: ../../../clusters/staging/worker/materials-galaxy-values.yaml
-            secretsFile: ../../../secrets/staging/worker/apps/materials-galaxy.yaml
+            secretsFile: ../../../clusters/staging/worker/secrets/apps/materials-galaxy.yaml
 
           - name: chatops
             chartName: chatops
             namespace: chatops
-            secretsFile: ../../../secrets/staging/worker/apps/chatops.yaml
+            secretsFile: ../../../clusters/staging/worker/secrets/apps/chatops.yaml
             valuesFile: ../../../clusters/staging/worker/chatops-values.yaml
 
           - name: harbor
             chartName: harbor
             namespace: harbor
-            secretsFile: ../../../secrets/staging/worker/apps/harbor.yaml
+            secretsFile: ../../../clusters/staging/worker/secrets/apps/harbor.yaml
             valuesFile: ../../../clusters/staging/worker/harbor-values.yaml
 
 
@@ -102,8 +103,9 @@ spec:
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
-            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
-            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
+            - '{{.valuesFile | default "../../../clusters/_shared/dummy.yaml"}}'
+            - secrets://{{ .secretsFile | default "../../../clusters/_shared/dummy.yaml"}}
+
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{.namespace}}"

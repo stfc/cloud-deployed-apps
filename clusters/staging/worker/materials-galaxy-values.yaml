@@ -1,16 +1,193 @@
-oauth2-proxy:
 
+materials-galaxy:
+  oauth2-proxy:
+    extraArgs:
+      redirect-url: "https://galaxy.staging-worker.nubes.stfc.ac.uk/oauth2/callback"
 
-  extraArgs:
-    redirect-url: "https://galaxy.staging-worker.nubes.stfc.ac.uk/oauth2/callback"
+  galaxy:
+    ingress:
+      hosts:
+      - host: "galaxy.staging-worker.nubes.stfc.ac.uk"
+        paths:
+          - path: "/"
+      tls:
+      - hosts:
+          - "galaxy.staging-worker.nubes.stfc.ac.uk" 
+        secretName: galaxy-tls
 
-galaxy:
-  ingress:
-    hosts:
-    - host: "galaxy.staging-worker.nubes.stfc.ac.uk"
-      paths:
-        - path: "/"
-    tls:
-    - hosts:
-        - "galaxy.staging-worker.nubes.stfc.ac.uk" 
-      secretName: galaxy-tls
+    #- Allow users to specify extra init containers
+    # We use init containers to install tools using git-sync (which aren't available via galaxy toolshed)
+    # TODO: find a better way to do this so we can change tool versions easily
+    extraInitContainers: 
+      - name: clone-muon-tools
+        applyToJob: false
+        applyToWeb: true
+        applyToWorkflow: false
+        image: "registry.k8s.io/git-sync/git-sync:v4.4.0"
+        securityContext:
+          runAsGroup: 0
+          runAsUser: 0
+        volumeMounts:
+          - name: galaxy-data
+            mountPath: "{{.Values.persistence.mountPath}}"
+        env:
+          - name: GITSYNC_REPO
+            value: https://github.com/muon-spectroscopy-computational-project/muon-galaxy-tools.git
+          - name: GITSYNC_REF
+            value: main
+          - name: GITSYNC_ROOT
+            value: "{{.Values.persistence.mountPath}}/git-sync/muon-galaxy-tools"
+          - name: GITSYNC_LINK
+            value: "{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools"
+          - name: GITSYNC_ONE_TIME
+            value: "true"
+          - name: GITSYNC_DEPTH
+            value: "1"
+        
+      - name: clone-larch-tools
+        applyToJob: false
+        applyToWeb: true
+        applyToWorkflow: false
+        image: "registry.k8s.io/git-sync/git-sync:v4.4.0"
+        securityContext:
+          runAsGroup: 0
+          runAsUser: 0
+        volumeMounts:
+          - name: galaxy-data
+            mountPath: "{{.Values.persistence.mountPath}}"
+        env:
+          - name: GITSYNC_ROOT
+            value: "{{.Values.persistence.mountPath}}/git-sync/larch-tools"
+          - name: GITSYNC_LINK
+            value: "{{.Values.persistence.mountPath}}/tool-data/larch-tools"
+          - name: GITSYNC_ONE_TIME
+            value: "true"
+          - name: GITSYNC_DEPTH
+            value: "1"
+          - name: GITSYNC_REPO
+            value: https://github.com/MaterialsGalaxy/larch-tools.git
+          - name: GITSYNC_REF
+            value: main
+    
+      - name: clone-clf-vepac-tools
+        applyToJob: false
+        applyToWeb: true
+        applyToWorkflow: false
+        image: "registry.k8s.io/git-sync/git-sync:v4.4.0"
+        command: 
+          - sh
+          - -c 
+          - |
+            mkdir -p /root/.ssh &&\
+            echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa &&\
+            chmod 600 /root/.ssh/id_rsa &&\
+            exec /git-sync
+        securityContext:
+          runAsGroup: 0
+          runAsUser: 0
+        volumeMounts:
+          - name: galaxy-data
+            mountPath: "{{.Values.persistence.mountPath}}"
+        env:
+          - name: SSH_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: git-deploy-keys
+                key: clf-vepac-key
+          - name: GITSYNC_ROOT
+            value: "{{.Values.persistence.mountPath}}/git-sync/clf-vepac-tools"
+          - name: GITSYNC_LINK
+            value: "{{.Values.persistence.mountPath}}/tool-data/clf-vepac-tools"
+          - name: GITSYNC_ONE_TIME
+            value: "true"
+          - name: GITSYNC_DEPTH
+            value: "1"
+          - name: GITSYNC_REPO
+            value: git@github.com:CLF-vEPAC/Galaxy-tools.git
+          - name: GITSYNC_REF
+            value: dev
+          - name: GITSYNC_SSH
+            value: "true"
+          - name: GITSYNC_SSH_KEY_FILE
+            value: /root/.ssh/id_rsa
+          - name: GITSYNC_SSH_KNOWN_HOSTS
+            value: "false"
+    
+    configs:
+      integrated_tool_panel.xml: |-
+        <?xml version='1.0' encoding='utf-8'?>
+        <toolbox monitor="true">
+          <section id="get_data" name="Get Data">
+          </section>
+          <label id="muon_label" text="Muons" />
+          <section id="muspinsim" name="MuSpinSim">
+          </section>
+          <section id="muon_stopping_sites" name="Muon Stopping Sites">
+          </section>
+          <section id="muon_other" name="Other Muon Tools">
+          </section>
+          <section id="clf_vpac" name="CLF vEPAC Tools">
+          </section>
+          <label id="xas_label" text="xas" />
+          <label id="other_tools" text="Other Tools" />
+          <section id="file_conversion" name="File Conversion">
+          </section>
+          <section id="collection_operations" name="Collection Operations">
+          </section>
+        </toolbox>
+
+      tool_conf.xml: |-
+        <?xml version='1.0' encoding='utf-8'?>
+        <toolbox monitor="true">
+          <section id="get_data" name="Get Data">
+            <tool file="data_source/upload.xml" />
+          </section>
+          <label id="muon_label" text="Muons" />
+          <section id="muspinsim" name="MuSpinSim">
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/muspinsim_combine/muspinsim_combine.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/muspinsim_config/muspinsim_config.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/muspinsim_plot/muspinsim_plot.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/muspinsim/muspinsim.xml"/>
+          </section>
+          <section id="muon_stopping_sites" name="Muon Stopping Sites">
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/pm_muairss_read/pm_muairss_read.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/pm_uep_opt/pm_uep_opt.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/pm_symmetry/pm_symmetry.xml"/>
+          </section>
+          <section id="muon_other" name="Other Muon Tools">
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/mudirac/mudirac.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/pm_asephonons/pm_asephonons.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/pm_nq/pm_nq.xml"/>
+          </section>
+          <section id="clf_vepac" name="CLF vEPAC Tools">
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/clf-vepac-tools/geant4-plot/geant4_plot.xml"/>
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/clf-vepac-tools/geant4-sim/geant4_particles.xml"/>
+          </section>
+          <label id="xas_label" text="xas" />
+          <tool file="{{.Values.persistence.mountPath}}/tool-data/larch-tools/larch_select_paths/larch_select_paths.xml" />
+          <tool file="{{.Values.persistence.mountPath}}/tool-data/larch-tools/larch_plot/larch_plot.xml" />
+          <tool file="{{.Values.persistence.mountPath}}/tool-data/larch-tools/larch_athena/larch_athena.xml" />
+          <tool file="{{.Values.persistence.mountPath}}/tool-data/larch-tools/larch_artemis/larch_artemis.xml" />
+          <tool file="{{.Values.persistence.mountPath}}/tool-data/larch-tools/larch_feff/larch_feff.xml" />
+          <tool file="{{.Values.persistence.mountPath}}/tool-data/larch-tools/larch_lcf/larch_lcf.xml" />
+          <tool file="{{.Values.persistence.mountPath}}/tool-data/larch-tools/larch_criteria_report/larch_criteria_report.xml" />
+          <label id="other_tools" text="Other Tools" />
+          <section id="file_conversion" name="File Conversion">
+            <tool file="{{.Values.persistence.mountPath}}/tool-data/muon-galaxy-tools/cif2cell/cif2cell.xml" />
+          </section>
+          <section id="collection_operations" name="Collection Operations">
+            <tool file="${model_tools_path}/tool-data/unzip_collection.xml" />
+            <tool file="${model_tools_path}/tool-data/zip_collection.xml" />
+            <tool file="${model_tools_path}/tool-data/filter_failed_collection.xml" />
+            <tool file="${model_tools_path}/tool-data/filter_empty_collection.xml" />
+            <tool file="${model_tools_path}/tool-data/flatten_collection.xml" />
+            <tool file="${model_tools_path}/tool-data/merge_collection.xml" />
+            <tool file="${model_tools_path}/tool-data/relabel_from_file.xml" />
+            <tool file="${model_tools_path}/tool-data/filter_from_file.xml" />
+            <tool file="${model_tools_path}/tool-data/sort_collection_list.xml" />
+            <tool file="${model_tools_path}/tool-data/tag_collection_from_file.xml" />
+            <tool file="${model_tools_path}/tool-data/apply_rules.xml" />
+            <tool file="${model_tools_path}/tool-data/build_list.xml" />
+            <tool file="${model_tools_path}/tool-data/extract_dataset.xml" />
+          </section>
+        </toolbox>

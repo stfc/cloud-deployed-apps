@@ -68,8 +68,6 @@ spec:
         path: "charts/dev/{{.chartName}}"
         helm:
           valueFiles:
-            - '{{.sharedValuesFile | default "../../../clusters/_shared/dummy.yaml"}}'
-            - '{{.sharedSecretsFile | default "../../../clusters/_shared/dummy.yaml"}}'
             - '{{.valuesFile | default "../../../clusters/_shared/dummy.yaml"}}'
             - secrets://{{ .secretsFile | default "../../../clusters/_shared/dummy.yaml"}}
 

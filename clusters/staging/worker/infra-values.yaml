@@ -1,65 +1,67 @@
-openstack-cluster:
+stfc-cloud-openstack-cluster:
+  openstack-cluster:
+    cloudCredentialsSecretName: staging-worker-cluster-cloud-credentials
 
-  controlPlane:
-    machineFlavor: dep-l2.tiny
-
-  nodeGroups:
-    - name: default-md-0
-      machineCount: 5
+    controlPlane:
       machineFlavor: dep-l2.tiny
 
-  nodeGroupDefaults:
-    machineFlavor: dep-l2.tiny
-    nodeLabels:	
-      # we're running longhorn on this cluster
-      # set label so worker nodes can host longhorn volumes
-      longhorn.store.nodeselect/longhorn-storage-node: true
+    nodeGroups:
+      - name: default-md-0
+        machineCount: 5
+        machineFlavor: dep-l2.tiny
 
-  addons:
-    ingress:
-      enabled: true
-      nginx:
-        release:
-          values:
-            controller:
-              service:
-                loadBalancerIP: "130.246.81.242"
+    nodeGroupDefaults:
+      machineFlavor: dep-l2.tiny
+      nodeLabels:	
+        # we're running longhorn on this cluster
+        # set label so worker nodes can host longhorn volumes
+        longhorn.store.nodeselect/longhorn-storage-node: true
 
-    monitoring:
-      enabled: true
-      # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
-      # ends up with too many messages in the ticket queue
-      blackBoxExporter: 
-        enabled: false
-      kubePrometheusStack:
-        release:
-          values:
-            prometheus:
-              prometheusSpec:
-                externalLabels:
-                  cluster: worker
-                  env: staging
-              ingress:
-                hosts:
-                  - prometheus.staging-worker.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - prometheus.staging-worker.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            grafana:
-              ingress:
-                hosts:
-                  - grafana.staging-worker.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - grafana.staging-worker.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            alertmanager:
-              enabled: true
-              ingress:
-                hosts:
-                  - alertmanager.staging-worker.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - alertmanager.staging-worker.nubes.stfc.ac.uk
-                    secretName: tls-keypair
+    addons:
+      ingress:
+        enabled: true
+        nginx:
+          release:
+            values:
+              controller:
+                service:
+                  loadBalancerIP: "130.246.81.242"
+
+      monitoring:
+        enabled: true
+        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
+        # ends up with too many messages in the ticket queue
+        blackBoxExporter: 
+          enabled: false
+        kubePrometheusStack:
+          release:
+            values:
+              prometheus:
+                prometheusSpec:
+                  externalLabels:
+                    cluster: worker
+                    env: staging
+                ingress:
+                  hosts:
+                    - prometheus.staging-worker.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - prometheus.staging-worker.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              grafana:
+                ingress:
+                  hosts:
+                    - grafana.staging-worker.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - grafana.staging-worker.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              alertmanager:
+                enabled: true
+                ingress:
+                  hosts:
+                    - alertmanager.staging-worker.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - alertmanager.staging-worker.nubes.stfc.ac.uk
+                      secretName: tls-keypair
