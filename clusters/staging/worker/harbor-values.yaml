@@ -11,5 +11,5 @@ stfc-cloud-harbor:
     database:
       type: external
       external:
-        host: "dbspg03.fds.rl.ac.uk"
+        host: "dbspgha03.fds.rl.ac.uk"
         coreDatabase: "cloud_harbor_registry_dev"
