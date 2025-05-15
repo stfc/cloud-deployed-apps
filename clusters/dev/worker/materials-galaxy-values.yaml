@@ -33,7 +33,7 @@ materials-galaxy:
         env:
           - name: GITSYNC_REPO
             value: https://github.com/muon-spectroscopy-computational-project/muon-galaxy-tools.git
-          - name: GITSYNC_BRANCH
+          - name: GITSYNC_REF
             value: main
           - name: GITSYNC_ROOT
             value: "{{.Values.persistence.mountPath}}/git-sync/muon-galaxy-tools"
@@ -66,10 +66,10 @@ materials-galaxy:
             value: "1"
           - name: GITSYNC_REPO
             value: https://github.com/MaterialsGalaxy/larch-tools.git
-          - name: GITSYNC_BRANCH
+          - name: GITSYNC_REF
             value: main
     
-      - name: clf-vepac-tools
+      - name: clone-clf-vepac-tools
         applyToJob: false
         applyToWeb: true
         applyToWorkflow: false
