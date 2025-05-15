@@ -49,7 +49,7 @@ spec:
 
           - name: cluster-api-addon-provider
             chartName: cluster-api-addon-provider
-            namespace: clusters
+            namespace: capi-addon-system
             valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
 
   syncPolicy:
@@ -68,8 +68,9 @@ spec:
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
-            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
-            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
+            - '{{.valuesFile | default "../../../clusters/_shared/dummy.yaml"}}'
+            - secrets://{{ .secretsFile | default "../../../clusters/_shared/dummy.yaml"}}
+
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{.namespace}}"
@@ -107,7 +108,7 @@ spec:
     spec:
       project: default
       destination:
-        namespace: clusters
+        namespace: "staging-{{path.basename}}-cluster"
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
@@ -115,12 +116,16 @@ spec:
         path: charts/staging/capi-infra
         helm:
           valueFiles:
-            # Bring in infra values specific to this cluster 
+            # Bring in shared environment values
+            - "../../../clusters/_shared/monitoring.yaml"
+            - "../../../clusters/_shared/alerting.yaml"
+            # Bring in infra values specific to this cluster
             - "../../../{{path}}/{{path.filename}}"
+            # Bring in shared secrets
+            - "secrets://../../../clusters/_shared/secrets/infra/smtp-smarthost.yaml"
             # Bring in infra secrets specific to this cluster
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/api-server-fip.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/{{path[2]}}/infra/app-creds.yaml"
-            - "secrets://../../../secrets/{{path[1]}}/_shared/infra/smtp-smarthost.yaml"
+            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
+            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
 
       syncPolicy:
         automated:

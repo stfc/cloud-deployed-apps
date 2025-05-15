@@ -1,4 +1,3 @@
-
 stfc-cloud-harbor:
   harbor:
     externalURL: "https://harbor.staging-worker.nubes.stfc.ac.uk"
