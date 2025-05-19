@@ -112,6 +112,7 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
   templatePatch: |
     {{- if eq .name "manila-csi" }}
