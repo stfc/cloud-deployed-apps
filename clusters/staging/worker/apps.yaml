@@ -57,6 +57,7 @@ spec:
             chartName: manila-csi
             namespace: manila-csi
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
+            secretsFile: ../../../clusters/staging/worker/secrets/apps/manila-csi.yaml
 
           - name: victoria-metrics
             chartName: victoria-metrics
