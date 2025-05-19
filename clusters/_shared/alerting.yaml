@@ -1,102 +1,103 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
-    monitoring:
-      enabled: true
-      lokiStack:
-        enabled: false
-      kubePrometheusStack:
-        release:
-          values:
-            alertmanager:
-              config:
-                global:
-                  resolve_timeout: 1h
-                  smtp_smarthost:
-                  smtp_from: cloud-support@stfc.ac.uk
-                  smtp_require_tls: false
+    addons:
+      monitoring:
+        enabled: true
+        lokiStack:
+          enabled: false
+        kubePrometheusStack:
+          release:
+            values:
+              alertmanager:
+                config:
+                  global:
+                    resolve_timeout: 1h
+                    smtp_smarthost:
+                    smtp_from: cloud-support@stfc.ac.uk
+                    smtp_require_tls: false
 
-                route:
-                  # we need a null reciever to workaround azimuth addon enforced defaults 
-                  # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/templates/monitoring/kube-prometheus-stack.yaml#L41-L44
-                  receiver: "null"
-                  routes:
-                    - receiver: "default-receiver"
-                      group_by: ["cluster", "service"]
-                      group_wait: 30m
-                      group_interval: 4h
-                      repeat_interval: 2d
-                      active_time_intervals:
-                        - officehours
+                  route:
+                    # we need a null reciever to workaround azimuth addon enforced defaults 
+                    # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/templates/monitoring/kube-prometheus-stack.yaml#L41-L44
+                    receiver: "null"
+                    routes:
+                      - receiver: "default-receiver"
+                        group_by: ["cluster", "service"]
+                        group_wait: 30m
+                        group_interval: 4h
+                        repeat_interval: 2d
+                        active_time_intervals:
+                          - officehours
 
-                      # mute watchdog alert
-                      #   - this should always be firing
-                      # mute infoinhibitor alert
-                      #   - not useful by itself
-                      #   - if this is firing, we're suppressing severity=info alerts
-                      #   - infoinhibitor rules should be automatically configured
-                      matchers:
-                        - alertname !~ "Watchdog|InfoInhibitor" 
+                        # mute watchdog alert
+                        #   - this should always be firing
+                        # mute infoinhibitor alert
+                        #   - not useful by itself
+                        #   - if this is firing, we're suppressing severity=info alerts
+                        #   - infoinhibitor rules should be automatically configured
+                        matchers:
+                          - alertname !~ "Watchdog|InfoInhibitor" 
 
-                inhibit_rules:
-                  # mute warning/info alerts on same service if a critical alert is firing - less noise
-                  - source_matchers:
-                      - severity = "critical"
-                    target_matchers:
-                      - severity = "warning"
-                    equal: [cluster, service]
+                  inhibit_rules:
+                    # mute warning/info alerts on same service if a critical alert is firing - less noise
+                    - source_matchers:
+                        - severity = "critical"
+                      target_matchers:
+                        - severity = "warning"
+                      equal: [cluster, service]
 
-                time_intervals:
-                  - name: officehours
-                    time_intervals:
-                      - times:
-                          - start_time: 07:00
-                            end_time: 18:00
-                        weekdays: ["monday:friday"]
-                        location: "Europe/London"
+                  time_intervals:
+                    - name: officehours
+                      time_intervals:
+                        - times:
+                            - start_time: 07:00
+                              end_time: 18:00
+                          weekdays: ["monday:friday"]
+                          location: "Europe/London"
 
-                receivers:
-                  - name: "null"
-                  - name: default-receiver
-                    email_configs:
-                      - to: cloud-support@stfc.ac.uk
-                        send_resolved: true
-                        headers:
-                          subject: |
+                  receivers:
+                    - name: "null"
+                    - name: default-receiver
+                      email_configs:
+                        - to: cloud-support@stfc.ac.uk
+                          send_resolved: true
+                          headers:
+                            subject: |
+                              {%- raw %}
+                              "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ or .CommonLabels.alertname "Multiple Alerts" }}"
+                              {%- endraw %}
+                          html: |-
                             {%- raw %}
-                            "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ or .CommonLabels.alertname "Multiple Alerts" }}"
+                            <b>You have the following alerts:</b>
+                            {{ range .Alerts }}
+                                <b>{{.Labels.alertname}}</b><br/>
+                                <b>Annotations:</b><br/>
+                                <ul>{{ range .Annotations.SortedPairs }}
+                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                                {{ end }}</ul>
+                                <b>Labels:</b>
+                                <ul>{{ range .Labels.SortedPairs }}
+                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                                {{ end }}</ul>
+                                <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
+                            {{ end }}
                             {%- endraw %}
-                        html: |-
-                          {%- raw %}
-                          <b>You have the following alerts:</b>
-                          {{ range .Alerts }}
-                              <b>{{.Labels.alertname}}</b><br/>
-                              <b>Annotations:</b><br/>
-                              <ul>{{ range .Annotations.SortedPairs }}
-                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
-                              {{ end }}</ul>
-                              <b>Labels:</b>
-                              <ul>{{ range .Labels.SortedPairs }}
-                                  <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
-                              {{ end }}</ul>
-                              <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
-                          {{ end }}
-                          {%- endraw %}
-                        text: |-
-                          {%- raw %}
-                          You have the following alerts:
-                          {{ range .Alerts }}
-                          * [{{ .Labels.severity }}] {{.Labels.alertname}}
-                            Annotations:
-                            {{ range .Annotations.SortedPairs }}
-                            {{ .Name }} = {{ .Value }}
+                          text: |-
+                            {%- raw %}
+                            You have the following alerts:
+                            {{ range .Alerts }}
+                            * [{{ .Labels.severity }}] {{.Labels.alertname}}
+                              Annotations:
+                              {{ range .Annotations.SortedPairs }}
+                              {{ .Name }} = {{ .Value }}
+                              {{ end }}
+                              Labels:
+                              {{ range .Labels.SortedPairs }}
+                              {{ .Name }} = {{ .Value }}
+                              {{ end }}
+                              View in Prometheus: {{ .GeneratorURL }}
                             {{ end }}
-                            Labels:
-                            {{ range .Labels.SortedPairs }}
-                            {{ .Name }} = {{ .Value }}
-                            {{ end }}
-                            View in Prometheus: {{ .GeneratorURL }}
-                          {{ end }}
-                          {%- endraw %}
+                            {%- endraw %}
 
-                templates:
-                  - "/etc/alertmanager/config/*.tmpl"
+                  templates:
+                    - "/etc/alertmanager/config/*.tmpl"
