@@ -74,12 +74,6 @@ spec:
             valuesFile: ../../../clusters/staging/worker/materials-galaxy-values.yaml
             secretsFile: ../../../clusters/staging/worker/secrets/apps/materials-galaxy.yaml
 
-          - name: chatops
-            chartName: chatops
-            namespace: chatops
-            secretsFile: ../../../clusters/staging/worker/secrets/apps/chatops.yaml
-            valuesFile: ../../../clusters/staging/worker/chatops-values.yaml
-
           - name: harbor
             chartName: harbor
             namespace: harbor
