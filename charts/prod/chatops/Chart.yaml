@@ -1,6 +1,7 @@
 apiVersion: v2
-name: cloud-chatops
-description: Cloud ChatOps helm chart
-type: application
-version: 0.1.0
-appVersion: "5.0.2"
+name: chatops
+version: 2.0.0
+dependencies:
+  - repository: https://stfc.github.io/cloud-helm-charts/
+    name: stfc-cloud-chatops
+    version: 0.1.0
