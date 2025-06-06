@@ -15,7 +15,7 @@ stfc-cloud-harbor:
 
   backup:
     enabled: true
-    sourceBucket: "s3://harbor-bucket"
+    sourceBucket: "s3://staging-harbor-bucket"
     destination:
       daily: "s3://harbor-backup/daily"
       weekly: "s3://harbor-backup/weekly"
