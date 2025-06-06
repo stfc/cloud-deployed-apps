@@ -12,3 +12,12 @@ stfc-cloud-harbor:
       external:
         host: "dbspgha03.fds.rl.ac.uk"
         coreDatabase: "cloud_harbor_registry_dev"
+
+  backup:
+    enabled: true
+    sourceBucket: "s3://staging-harbor-bucket"
+    destination:
+      daily: "s3://harbor-backup/daily"
+      weekly: "s3://harbor-backup/weekly"
+      monthly: "s3://harbor-backup/monthly"
+    endpoint: "https://s3.echo.stfc.ac.uk"
