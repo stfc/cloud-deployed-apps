@@ -17,7 +17,7 @@ stfc-cloud-harbor:
     enabled: true
     sourceBucket: "s3://staging-harbor-bucket"
     destination:
-      daily: "s3://harbor-backup/daily"
-      weekly: "s3://harbor-backup/weekly"
-      monthly: "s3://harbor-backup/monthly"
+      daily: "s3://staging-harbor-backup/daily"
+      weekly: "s3://staging-harbor-backup/weekly"
+      monthly: "s3://staging-harbor-backup/monthly"
     endpoint: "https://s3.echo.stfc.ac.uk"
