@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: dual-ingress
     path: clusters/staging/worker
   syncPolicy:
     automated:
@@ -21,7 +21,6 @@ spec:
       - CreateNamespace=true
 
 ---
-
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -81,7 +80,6 @@ spec:
             secretsFile: ../../../clusters/staging/worker/secrets/apps/harbor.yaml
             valuesFile: ../../../clusters/staging/worker/harbor-values.yaml
 
-
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
@@ -94,7 +92,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: dual-ingress
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
@@ -117,10 +115,10 @@ spec:
       # ignore outofsync issues with longhorn CRDs with "preserveUnknownField"
       # https://github.com/argoproj/argo-cd/issues/6401#issuecomment-854995249
       ignoreDifferences:
-      - group: apiextensions.k8s.io
-        kind: CustomResourceDefinition
-        jsonPointers:
-        - /spec/preserveUnknownFields
+        - group: apiextensions.k8s.io
+          kind: CustomResourceDefinition
+          jsonPointers:
+            - /spec/preserveUnknownFields
 
   templatePatch: |
     {{- if eq .name "manila-csi" }}
