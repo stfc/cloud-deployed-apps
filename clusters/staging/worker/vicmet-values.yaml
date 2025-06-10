@@ -1,1 +1,12 @@
-#Placeholder file for cluster specific values
+stfc-cloud-vm:
+  vmselect:
+    ingress:
+      ingressClassName: internal-nginx
+      annotations:
+        kubernetes.io/ingress.class: "internal-nginx"
+
+  vminsert:
+    ingress:
+      ingressClassName: internal-nginx
+      annotations:
+        kubernetes.io/ingress.class: "internal-nginx"

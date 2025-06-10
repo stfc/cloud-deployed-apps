@@ -28,8 +28,6 @@ argo-cd:
         # This is overriden per-cluster in the cluster's argo-values.yaml
         name: "self-signed"
 
-
-
   # Inject Helm-Secrets into the ArgoCD server
   repoServer:
     env:

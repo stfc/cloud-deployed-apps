@@ -12,7 +12,7 @@ stfc-cloud-openstack-cluster:
 
     nodeGroupDefaults:
       machineFlavor: dep-l2.tiny
-      nodeLabels:	
+      nodeLabels:
         # we're running longhorn on this cluster
         # set label so worker nodes can host longhorn volumes
         longhorn.store.nodeselect/longhorn-storage-node: true
@@ -24,14 +24,25 @@ stfc-cloud-openstack-cluster:
           release:
             values:
               controller:
+                electionID: ingress-controller-leader
+                ingressClass: internal-nginx
+                ingressClassResource:
+                  name: internal-nginx
+                  enabled: true
+                  default: true
+                  controllerValue: "k8s.io/ingress-internal-nginx"
                 service:
+                  annotations:
+                    # Don't delete the floating ip when deleting loadbalancers
+                    # prevents errors when deleting clusters, leave as true
+                    loadbalancer.openstack.org/keep-floatingip: true
                   loadBalancerIP: "130.246.81.242"
 
       monitoring:
         enabled: true
-        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
+        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters
         # ends up with too many messages in the ticket queue
-        blackBoxExporter: 
+        blackBoxExporter:
           enabled: false
         kubePrometheusStack:
           release:
@@ -42,6 +53,7 @@ stfc-cloud-openstack-cluster:
                     cluster: worker
                     env: staging
                 ingress:
+                  ingressClassName: internal-nginx
                   hosts:
                     - prometheus.staging-worker.nubes.stfc.ac.uk
                   tls:
@@ -50,6 +62,7 @@ stfc-cloud-openstack-cluster:
                       secretName: tls-keypair
               grafana:
                 ingress:
+                  ingressClassName: internal-nginx
                   hosts:
                     - grafana.staging-worker.nubes.stfc.ac.uk
                   tls:
@@ -59,6 +72,7 @@ stfc-cloud-openstack-cluster:
               alertmanager:
                 enabled: true
                 ingress:
+                  ingressClassName: internal-nginx
                   hosts:
                     - alertmanager.staging-worker.nubes.stfc.ac.uk
                   tls:
