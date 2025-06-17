@@ -1,0 +1,11 @@
+{{- if .Values.addons.monitoring.basicAuth }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: monitoring-auth
+  # Needs to be created in same namespace as the ingress
+  namespace: monitoring-system
+type: Opaque
+data:
+  auth: {{ .Values.addons.monitoring.basicAuth | b64enc }}
+{{- end }}
