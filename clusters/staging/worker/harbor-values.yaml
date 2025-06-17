@@ -8,6 +8,11 @@ stfc-cloud-harbor:
         hosts:
           core: "staging.harbor.stfc.ac.uk"
 
+    persistence:
+      imageChartStorage:
+        s3:
+          encrypt: false
+
     database:
       type: external
       external:

@@ -1,5 +1,9 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
+    auth:
+      monitoring:
+        enabled: true
+
     cloudCredentialsSecretName: staging-worker-cluster-cloud-credentials
 
     controlPlane:
@@ -54,6 +58,10 @@ stfc-cloud-openstack-cluster:
                     env: staging
                 ingress:
                   ingressClassName: internal-nginx
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Worker"
                   hosts:
                     - prometheus.staging-worker.nubes.stfc.ac.uk
                   tls:
@@ -63,6 +71,10 @@ stfc-cloud-openstack-cluster:
               grafana:
                 ingress:
                   ingressClassName: internal-nginx
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Worker"
                   hosts:
                     - grafana.staging-worker.nubes.stfc.ac.uk
                   tls:
@@ -73,6 +85,10 @@ stfc-cloud-openstack-cluster:
                 enabled: true
                 ingress:
                   ingressClassName: internal-nginx
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Worker"
                   hosts:
                     - alertmanager.staging-worker.nubes.stfc.ac.uk
                   tls:
