@@ -19,9 +19,9 @@ stfc-cloud-openstack-cluster:
                   loadBalancerIP: "130.246.215.233"
 
       monitoring:
-        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters 
+        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters
         # ends up with too many messages in the ticket queue
-        blackBoxExporter: 
+        blackBoxExporter:
           enabled: false
         kubePrometheusStack:
           release:
@@ -32,6 +32,10 @@ stfc-cloud-openstack-cluster:
                     cluster: management
                     env: staging
                 ingress:
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Management"
                   hosts:
                     - prometheus.staging-mgmt.nubes.stfc.ac.uk
                   tls:
@@ -40,6 +44,10 @@ stfc-cloud-openstack-cluster:
                       secretName: tls-keypair
               grafana:
                 ingress:
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Management"
                   hosts:
                     - grafana.staging-mgmt.nubes.stfc.ac.uk
                   tls:
@@ -49,6 +57,10 @@ stfc-cloud-openstack-cluster:
               alertmanager:
                 enabled: true
                 ingress:
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Management"
                   hosts:
                     - alertmanager.staging-mgmt.nubes.stfc.ac.uk
                   tls:
