@@ -109,12 +109,33 @@ opensearch-cluster:
             - "indices:monitor/recovery"
       tenantPermissions:
         - tenantPatterns:
-            - "*-dev"
+            - "azimuth-dev"
+            - "cloud-dev"
           allowedActions:
             # so to allow creating dashboards
             - "kibana_all_write"
 
-    # setup separate writers for each cluster environment to write logs to
+    # setup separate writer for azimuth user clusters to write logs to
+    # should only be able to write to azimuth tenant
+    - name: "write-only-azimuth-role"
+      clusterPermissions:
+        - "indices:data/write/bulk"
+      indexPermissions:
+        - indexPatterns:
+          - "kube_logs_azimuth_*"
+          - "trivy_azimuth_*"
+          allowedActions:
+            - "indices:data/write/index"
+            - "indices:data/write/update"
+            - "indices:admin/create"
+            - "indices:data/write/bulk*"
+            - "indices:admin/mapping/put"
+      tenantPermissions:
+        - tenantPatterns:
+            - "azimuth"
+          allowedActions:
+            - "kibana_all_write"
+
     - name: "write-only-dev-role"
       clusterPermissions:
         - "indices:data/write/bulk"
@@ -123,12 +144,17 @@ opensearch-cluster:
           - "kube_logs_*"
           - "trivy_*"
           allowedActions:
+            - "indices:data/write/bulk"
             - "indices:data/write/index"
             - "indices:data/write/update"
             - "indices:admin/create"
-            - "indices:data/write/bulk*"
-            - "indices:admin/mapping/put"
-    
+      tenantPermissions:
+        - tenantPatterns:
+            - "azimuth-dev"
+            - "cloud-dev"
+          allowedActions:
+            - "kibana_all_write"
+
     - name: "write-only-prod-role"
       clusterPermissions:
         - "indices:data/write/bulk"
@@ -136,13 +162,12 @@ opensearch-cluster:
         - indexPatterns:
           - "kube_logs_*"
           - "trivy_*"
-          - "azimuth_user_kube_logs_*"
-          - "azimuth_kube_logs_*"
           allowedActions:
             - "indices:data/write/bulk"
             - "indices:data/write/index"
             - "indices:data/write/update"
             - "indices:admin/create"
+
       
   usersRoleBinding:
     - name: "write-only-dev-role-binding" 
@@ -157,6 +182,12 @@ opensearch-cluster:
       roles:
         - "write-only-prod-role"
     
+    - name: "write-only-azimuth-role-binding"
+      users: 
+        - "writer-azimuth"
+      roles:
+        - "write-only-azimuth-role"
+
     # user role mappings
     # dev role-mapping - accessing dev cluster logs available to everyone in team
     - name: "read-only-dev-role-binding"
