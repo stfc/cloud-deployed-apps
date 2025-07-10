@@ -49,7 +49,7 @@ spec:
 
           - name: cluster-api-addon-provider
             chartName: cluster-api-addon-provider
-            namespace: clusters
+            namespace: capi-addon-system
             valuesFile: ../../../clusters/prod/worker/argocd-setup-values.yaml
           
           - name: manila-csi
@@ -84,8 +84,8 @@ spec:
         path: "charts/prod/{{.chartName}}"
         helm:
           valueFiles:
-            - '{{.valuesFile | default "../../../secrets/dummy-secret.yaml"}}'
-            - secrets://{{ .secretsFile | default "../../../secrets/dummy-secret.yaml"}}
+            - '{{.valuesFile | default "../../../clusters/_shared/dummy.yaml"}}'
+            - secrets://{{ .secretsFile | default "../../../clusters/_shared/dummy.yaml"}}
       destination:
         server: https://kubernetes.default.svc
         namespace: "{{.namespace}}"
