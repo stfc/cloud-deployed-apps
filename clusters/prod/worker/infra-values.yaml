@@ -1,52 +1,56 @@
-openstack-cluster:
-  nodeGroups:
-    - name: default-md-0
-      machineCount: 5
-  addons:
-    ingress:
-      enabled: true
-      nginx:
-        release:
-          values:
-            controller:
-              service:
-                # *.prod-worker.nubes.stfc.ac.uk
-                loadBalancerIP: "130.246.80.243"
+stfc-cloud-openstack-cluster:
+  openstack-cluster:
 
-    monitoring:
-      kubePrometheusStack:
-        release:
-          values:
-            defaultRules:
-              additionalRuleLabels:
-                cluster: worker
-                env: prod
-            prometheus:
-              prometheusSpec:
-                externalLabels:
+    cloudCredentialsSecretName: prod-worker-cluster-cloud-credentials
+
+    nodeGroups:
+      - name: default-md-0
+        machineCount: 5
+    addons:
+      ingress:
+        enabled: true
+        nginx:
+          release:
+            values:
+              controller:
+                service:
+                  # *.prod-worker.nubes.stfc.ac.uk
+                  loadBalancerIP: "130.246.80.243"
+
+      monitoring:
+        kubePrometheusStack:
+          release:
+            values:
+              defaultRules:
+                additionalRuleLabels:
                   cluster: worker
                   env: prod
-              ingress:
-                hosts:
-                  - prometheus.prod-worker.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - prometheus.prod-worker.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            grafana:
-              ingress:
-                hosts:
-                  - grafana.prod-worker.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - grafana.prod-worker.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            alertmanager:
-              enabled: true
-              ingress:
-                hosts:
-                  - alertmanager.prod-worker.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - alertmanager.prod-worker.nubes.stfc.ac.uk
-                    secretName: tls-keypair
+              prometheus:
+                prometheusSpec:
+                  externalLabels:
+                    cluster: worker
+                    env: prod
+                ingress:
+                  hosts:
+                    - prometheus.prod-worker.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - prometheus.prod-worker.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              grafana:
+                ingress:
+                  hosts:
+                    - grafana.prod-worker.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - grafana.prod-worker.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              alertmanager:
+                enabled: true
+                ingress:
+                  hosts:
+                    - alertmanager.prod-worker.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - alertmanager.prod-worker.nubes.stfc.ac.uk
+                      secretName: tls-keypair
