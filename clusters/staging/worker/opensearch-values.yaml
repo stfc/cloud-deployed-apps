@@ -32,32 +32,32 @@ stfc-cloud-opensearch:
       ingress: 
         dashboards:
           hosts:
-            - host: opensearch-dashboards.dev-worker.nubes.stfc.ac.uk
+            - host: opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
               paths:
                 - path: /
                   pathType: ImplementationSpecific
           tls:
             - secretName: opensearch-tls
               hosts:
-                - opensearch-dashboards.dev-worker.nubes.stfc.ac.uk
+                - opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
         
         opensearch:
           hosts:
-            - host: opensearch.dev-worker.nubes.stfc.ac.uk
+            - host: opensearch.staging-worker.nubes.stfc.ac.uk
               paths:
                 - path: /
                   pathType: ImplementationSpecific
           tls:
             - secretName: opensearch-tls
               hosts:
-                - opensearch.dev-worker.nubes.stfc.ac.uk
+                - opensearch.staging-worker.nubes.stfc.ac.uk
 
     # This is a Opensearch cluster that collects logs from all clusters 
     # and stores in different tenants
     users:
-      - name: "writer-dev"
+      - name: "writer-staging"
         secretName: opensearch-internal-user-credentials
-        secretKey: "writer-dev"
+        secretKey: "writer-staging"
 
       - name: "writer-prod"
         secretName: opensearch-internal-user-credentials
@@ -70,15 +70,15 @@ stfc-cloud-opensearch:
     tenants:
       - name: "azimuth"
         description: "logs from production azimuth and azimuth created clusters"
-      - name: "azimuth-dev"
+      - name: "azimuth-staging"
         description: "logs from staging azimuth and staging azimuth created clusters"
-      - name: "cloud-dev" 
-        description: "logs from dev k8s clusters"
+      - name: "cloud-staging" 
+        description: "logs from staging k8s clusters"
       - name: "cloud"
         description: "logs for prod/staging k8s clusters"
 
     roles:  
-      - name: "read-only-dev-role"
+      - name: "read-only-staging-role"
         clusterPermissions: 
           - "cluster_composite_ops_ro"
         indexPermissions:
@@ -113,8 +113,8 @@ stfc-cloud-opensearch:
               - "indices:monitor/recovery"
         tenantPermissions:
           - tenantPatterns:
-              - "azimuth-dev"
-              - "cloud-dev"
+              - "azimuth-staging"
+              - "cloud-staging"
             allowedActions:
               # so to allow creating dashboards
               - "kibana_all_write"
@@ -140,7 +140,7 @@ stfc-cloud-opensearch:
             allowedActions:
               - "kibana_all_write"
 
-      - name: "write-only-dev-role"
+      - name: "write-only-staging-role"
         clusterPermissions:
           - "indices:data/write/bulk"
         indexPermissions:
@@ -154,8 +154,8 @@ stfc-cloud-opensearch:
               - "indices:admin/create"
         tenantPermissions:
           - tenantPatterns:
-              - "azimuth-dev"
-              - "cloud-dev"
+              - "azimuth-staging"
+              - "cloud-staging"
             allowedActions:
               - "kibana_all_write"
 
@@ -178,11 +178,11 @@ stfc-cloud-opensearch:
               - "kibana_all_write"
         
     usersRoleBinding:
-      - name: "write-only-dev-role-binding" 
+      - name: "write-only-staging-role-binding" 
         users: 
-          - "writer-dev"
+          - "writer-staging"
         roles:
-          - "write-only-dev-role"
+          - "write-only-staging-role"
         
       - name: "write-only-prod-role-binding"
         users: 
@@ -197,10 +197,10 @@ stfc-cloud-opensearch:
           - "write-only-azimuth-role"
 
       # user role mappings
-      # dev role-mapping - accessing dev cluster logs available to everyone in team
-      - name: "read-only-dev-role-binding"
+      # staging role-mapping - accessing staging cluster logs available to everyone in team
+      - name: "read-only-staging-role-binding"
         roles: 
-          - "read-only-dev-role"
+          - "read-only-staging-role"
         backend_roles:
           - "stfc-cloud/team"
 
