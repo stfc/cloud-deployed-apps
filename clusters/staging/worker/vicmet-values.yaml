@@ -1,12 +1,13 @@
 stfc-cloud-vm:
-  vmselect:
-    ingress:
-      ingressClassName: internal-nginx
-      annotations:
-        kubernetes.io/ingress.class: "internal-nginx"
+  victoria-metrics-cluster:
+    vmselect:
+      ingress:
+        ingressClassName: internal-nginx
+        annotations:
+          kubernetes.io/ingress.class: "internal-nginx"
 
-  vminsert:
-    ingress:
-      ingressClassName: internal-nginx
-      annotations:
-        kubernetes.io/ingress.class: "internal-nginx"
+    vminsert:
+      ingress:
+        ingressClassName: internal-nginx
+        annotations:
+          kubernetes.io/ingress.class: "internal-nginx"
