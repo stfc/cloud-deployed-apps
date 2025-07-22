@@ -1,0 +1,344 @@
+stfc-cloud-opensearch:
+  
+  opensearch-cluster:
+    
+    cluster:
+      name: log-storage
+      
+      general:
+        version: 3.1.0
+      
+      dashboards:
+        opensearchCredentialsSecret:
+          name: log-storage-admin-credentials
+        version: 3.1.0
+        enable: true
+        additionalConfig: 
+          opensearch_security.auth.multiple_auth_enabled: "true"
+          opensearch_security.auth.type: |
+            '["basicauth", "openid"]'
+          opensearch_security.openid.connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
+          opensearch_security.openid.scope: "openid profile email preferred_username groups"
+          opensearch_security.openid.base_redirect_url: https://opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
+      
+      nodePools:
+        - component: nodes
+          diskSize: "50Gi"
+          replicas: 5
+          persistence:
+            pvc:
+              accessModes:
+                - ReadWriteOnce
+              storageClass: csi-cinder
+          nodeSelector: {}
+          roles:
+            - "cluster_manager"
+            - "data"
+          pdb:
+            enable: true
+            maxUnavailable: 1  
+
+      ingress: 
+        dashboards:
+          enabled: true 
+          className: internal-nginx
+          hosts:
+            - host: opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+          tls:
+            - secretName: opensearch-tls
+              hosts:
+                - opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
+        
+        opensearch:
+          enabled: true 
+          className: internal-nginx
+          hosts:
+            - host: opensearch.staging-worker.nubes.stfc.ac.uk
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+          tls:
+            - secretName: opensearch-tls
+              hosts:
+                - opensearch.staging-worker.nubes.stfc.ac.uk
+
+      # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
+      # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
+      security:
+        config: 
+          adminCredentialsSecret: 
+            name: log-storage-admin-credentials
+          securityConfigSecret:
+            name: log-storage-securityconfig-secret
+
+  customSecurityConfigFiles:
+    config.yml: |
+      _meta:
+        type: "config"
+        config_version: "2"
+
+      config:
+        dynamic:
+          http:
+            anonymous_auth_enabled: false
+          authc:
+            basic_internal_auth_domain:
+              description: "Authenticate via HTTP Basic against Internal Users Database"
+              http_enabled: true
+              transport_enabled: true
+              order: "1"
+              http_authenticator:
+                type: basic
+                challenge: false
+              authentication_backend:
+                type: intern
+
+            openid_auth_domain:
+              http_enabled: true
+              transport_enabled: true
+              order: 2
+              http_authenticator:
+                type: openid
+                challenge: false
+                config:
+                  subject_key: preferred_username
+                  roles_key: groups
+                  openid_connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
+                  enable_ssl: true
+                  verify_hostnames: true
+              authentication_backend:
+                type: noop
+           
+    roles.yml: |
+      _meta:
+        type: "roles"
+        config_version: 2
+
+      # Admin role - full cluster access
+      admin_role:
+        reserved: true
+        cluster_permissions:
+          - "cluster:admin/*"
+          - "cluster:monitor/*"
+          - "indices:admin/*"
+          - "indices:monitor/*"
+        index_permissions:
+          - index_patterns:
+              - "*"
+            allowed_actions:
+              - "indices:*"
+        tenant_permissions:
+          - tenant_patterns:
+              - "*"
+            allowed_actions:
+              - "kibana_all_write"
+
+      # Cloud staging writer role
+      writer_staging_role:
+        reserved: false
+        cluster_permissions:
+          - "cluster:monitor/health"
+          - "indices:data/write/bulk"
+        index_permissions:
+          - index_patterns:
+              - "kube_logs_*"
+              - "trivy_*"
+              - ".kibana_cloud_staging_*"
+            allowed_actions:
+              - "indices:data/write/index"
+              - "indices:data/write/update"
+              - "indices:admin/mapping/put"
+              - "indices:admin/create"
+              - "indices:data/write/bulk"
+              - "indices:data/write/bulk*"
+        tenant_permissions:
+          - tenant_patterns:
+              - "cloud-staging"
+            allowed_actions:
+              - "kibana_all_write"
+
+      # Cloud production writer role
+      writer_prod_role:
+        reserved: false
+        cluster_permissions:
+          - "cluster:monitor/health"
+          - "indices:data/write/bulk"
+        index_permissions:
+          - index_patterns:
+              - "kube_logs_*"
+              - "trivy_*"
+              - ".kibana_cloud_*"
+            allowed_actions:
+              - "indices:data/write/index"
+              - "indices:data/write/update"
+              - "indices:admin/mapping/put"
+              - "indices:admin/create"
+              - "indices:data/write/bulk"
+              - "indices:data/write/bulk*"
+        tenant_permissions:
+          - tenant_patterns:
+              - "cloud"
+            allowed_actions:
+              - "kibana_all_write"
+
+      # Cloud staging reader role
+      reader_staging_role:
+        reserved: false
+        cluster_permissions:
+          - "cluster:monitor/nodes/info"
+          - "cluster:monitor/health"
+        index_permissions:
+          - index_patterns:
+              - "kube_logs_*"
+              - "trivy_*"
+              - "kube_logs_azimuth_*"
+              - "trivy_azimuth_*"
+              - ".kibana_cloud_staging_*"
+              - ".kibana_azimuth_staging_*"
+            allowed_actions:
+              - "indices:admin/resolve/index"
+              - "indices:data/read/*"
+              - "indices:admin/mappings/get"
+              - "indices:monitor/*"
+        tenant_permissions:
+          - tenant_patterns:
+              - "cloud-staging"
+              - "azimuth-staging"
+            allowed_actions:
+              - "kibana_all_read"
+
+      # Azimuth production writer role
+      writer_azimuth_prod_role:
+        reserved: false
+        cluster_permissions:
+          - "cluster:monitor/health"
+          - "indices:data/write/bulk"
+        index_permissions:
+          - index_patterns:
+              - "kube_logs_azimuth_*"
+              - "trivy_azimuth_*"
+              - ".kibana_azimuth_*"
+            allowed_actions:
+              - "indices:data/write/index"
+              - "indices:data/write/update"
+              - "indices:admin/mapping/put"
+              - "indices:admin/create"
+              - "indices:data/write/bulk"
+              - "indices:data/write/bulk*"
+        tenant_permissions:
+          - tenant_patterns:
+              - "azimuth"
+            allowed_actions:
+              - "kibana_all_write"
+
+      # Azimuth staging writer role
+      writer_azimuth_staging_role:
+        reserved: false
+        cluster_permissions:
+          - "cluster:monitor/health"
+          - "indices:data/write/bulk"
+        index_permissions:
+          - index_patterns:
+              - "kube_logs_azimuth_*"
+              - "trivy_azimuth_*"
+              - ".kibana_azimuth_staging_*"
+            allowed_actions:
+              - "indices:data/write/index"
+              - "indices:data/write/update"
+              - "indices:admin/mapping/put"
+              - "indices:admin/create"
+              - "indices:data/write/bulk"
+              - "indices:data/write/bulk*"
+        tenant_permissions:
+          - tenant_patterns:
+              - "azimuth-staging"
+            allowed_actions:
+              - "kibana_all_write"
+
+    tenants.yml: |
+      _meta:
+        type: "tenants"
+        config_version: 2
+
+      # Cloud production tenant
+      cloud:
+        reserved: false
+        description: "Cloud production environment tenant"
+
+      # Cloud staging tenant
+      cloud-staging:
+        reserved: false
+        description: "Cloud staging environment tenant"
+
+      # Azimuth production tenant
+      azimuth:
+        reserved: false
+        description: "Azimuth production environment tenant"
+
+      # Azimuth staging tenant
+      azimuth-staging:
+        reserved: false
+        description: "Azimuth staging environment tenant"
+
+      # Admin tenant (reserved)
+      admin_tenant:
+        reserved: true
+        description: "Admin tenant for administrative tasks"
+
+    roles_mapping.yml: |
+      _meta:
+        type: "rolesmapping"
+        config_version: 2
+
+      # Admin role mapping
+      admin_role:
+        reserved: true
+        backend_roles:
+          - "admin"
+          - "stfc-cloud/admins"
+        description: "Maps admin backend role to admin_role"
+
+      # Cloud staging writer role mapping
+      writer_staging_role:
+        reserved: false
+        backend_roles:
+          - "writer_staging_role"
+        description: "Maps writer-staging user to cloud-staging tenant write access"
+
+      # Cloud production writer role mapping
+      writer_prod_role:
+        reserved: false
+        backend_roles:
+          - "writer_prod_role"
+        description: "Maps writer-prod user to cloud tenant write access"
+
+      # Cloud staging reader role mapping
+      reader_staging_role:
+        reserved: false
+        backend_roles:
+          - "reader_staging_role"
+          - "stfc-cloud/team"
+        description: "Maps reader-staging user to cloud-staging and azimuth-staging read access"
+
+      # Azimuth production writer role mapping
+      writer_azimuth_prod_role:
+        reserved: false
+        backend_roles:
+          - "writer_azimuth_prod_role"
+        description: "Maps writer-azimuth-user-prod to azimuth tenant write access"
+
+      # Azimuth staging writer role mapping
+      writer_azimuth_staging_role:
+        reserved: false
+        backend_roles:
+          - "writer_azimuth_staging_role"
+        description: "Maps writer-azimuth-user-staging to azimuth-staging tenant write access"
+
+      # Built-in mappings
+      all_access:
+        reserved: true
+        backend_roles:
+          - "admin"

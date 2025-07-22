@@ -81,6 +81,12 @@ spec:
             secretsFile: ../../../clusters/staging/worker/secrets/apps/harbor.yaml
             valuesFile: ../../../clusters/staging/worker/harbor-values.yaml
 
+          - name: opensearch
+            chartName: opensearch
+            namespace: opensearch
+            valuesFile: ../../../clusters/staging/worker/opensearch-values.yaml
+            secretsFile: ../../../clusters/staging/worker/secrets/apps/opensearch.yaml
+
 
   syncPolicy:
     # Don't remove everything if we remove the appset

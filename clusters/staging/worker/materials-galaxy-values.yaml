@@ -6,6 +6,9 @@ materials-galaxy:
   galaxy:
     ingress:
       ingressClassName: internal-nginx
+      annotations:
+        kubernetes.io/ingress.class: "internal-nginx"
+
       hosts:
         - host: "galaxy.staging-worker.nubes.stfc.ac.uk"
           paths:
