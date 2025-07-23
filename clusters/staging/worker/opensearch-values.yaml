@@ -9,10 +9,9 @@ stfc-cloud-opensearch:
       
       dashboards:
         version: 3.1.0
-        enable: false
+        enable: true
         additionalConfig: 
           opensearch_security.auth.multiple_auth_enabled: "true"
-          opensearch_security.auth.anonymous_auth_enabled: "false"
           opensearch_security.auth.type: |
             '["openid", "basicauth"]'
           opensearch_security.openid.connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
