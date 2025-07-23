@@ -9,7 +9,8 @@ stfc-cloud-opensearch:
             name: log-storage-admin-credentials
 
       dashboards:
-        opensearchCredentialsSecret: log-storage-admin-credentials
+        opensearchCredentialsSecret: 
+          name: log-storage-admin-credentials
         enable: true
         additionalConfig: 
           opensearch_security.auth.type: |
