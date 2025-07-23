@@ -7,15 +7,8 @@ stfc-cloud-opensearch:
       general:
         version: 3.1.0
       
-      security:
-        config:
-          adminCredentialsSecret:
-            name: log-storage-admin-credentials
-
       dashboards:
         version: 3.1.0
-        opensearchCredentialsSecret: 
-          name: log-storage-admin-credentials
         enable: false
         additionalConfig: 
           opensearch_security.auth.multiple_auth_enabled: "true"
