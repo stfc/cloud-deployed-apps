@@ -16,7 +16,7 @@ stfc-cloud-opensearch:
         version: 3.1.0
         opensearchCredentialsSecret: 
           name: log-storage-admin-credentials
-        enable: true
+        enable: false
         additionalConfig: 
           opensearch_security.auth.multiple_auth_enabled: "true"
           opensearch_security.auth.anonymous_auth_enabled: "false"
@@ -45,6 +45,8 @@ stfc-cloud-opensearch:
 
       ingress: 
         dashboards:
+          enabled: false 
+          className: internal-nginx
           hosts:
             - host: opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
               paths:
@@ -56,6 +58,8 @@ stfc-cloud-opensearch:
                 - opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
         
         opensearch:
+          enabled: true 
+          className: internal-nginx
           hosts:
             - host: opensearch.staging-worker.nubes.stfc.ac.uk
               paths:
