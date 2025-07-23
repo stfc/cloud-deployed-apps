@@ -34,7 +34,7 @@ stfc-cloud-opensearch:
             pvc:
               accessModes:
                 - ReadWriteOnce
-              storageClass: longhorn-opensearch
+              storageClass: csi-cinder
           nodeSelector: {}
           roles:
             - "cluster_manager"
