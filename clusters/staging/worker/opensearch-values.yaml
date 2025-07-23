@@ -13,9 +13,10 @@ stfc-cloud-opensearch:
           name: log-storage-admin-credentials
         enable: true
         additionalConfig: 
-          opensearch_security.auth.type: |
-            ["basicauth", "openid"]
           opensearch_security.auth.multiple_auth_enabled: "true"
+          opensearch_security.auth.anonymous_auth_enabled: "false"
+          opensearch_security.auth.type: |
+            '["openid", "basicauth"]'
           opensearch_security.openid.connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
           opensearch_security.openid.scope: "openid profile email preferred_username groups"
           opensearch_security.openid.base_redirect_url: https://opensearch.example.com
