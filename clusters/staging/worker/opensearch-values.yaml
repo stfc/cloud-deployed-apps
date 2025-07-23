@@ -73,19 +73,23 @@ stfc-cloud-opensearch:
         secretName: opensearch-internal-user-credentials
         secretKey: "writer-prod"
       
-      - name: "writer-azimuth"
+      - name: "writer-azimuth-user-prod"
         secretName: opensearch-internal-user-credentials
-        secretKey: "writer-azimuth"
+        secretKey: "writer-azimuth-user-prod"
+      
+      - name: "writer-azimuth-user-staging"
+        secretName: opensearch-internal-user-credentials
+        secretKey: "writer-azimuth-user-staging"
 
     tenants:
       - name: "azimuth"
-        description: "logs from production azimuth and azimuth created clusters"
+        description: "logs from user created azimuth created clusters"
       - name: "azimuth-staging"
-        description: "logs from staging azimuth and staging azimuth created clusters"
+        description: "logs from staging azimuth created clusters"
       - name: "cloud-staging" 
-        description: "logs from staging k8s clusters"
+        description: "logs from all of our internal staging k8s clusters"
       - name: "cloud"
-        description: "logs for prod/staging k8s clusters"
+        description: "logs from all of our internal production k8s clusters"
 
     roles:  
       - name: "read-only-staging-role"
@@ -131,7 +135,7 @@ stfc-cloud-opensearch:
 
       # setup separate writer for azimuth user clusters to write logs to
       # should only be able to write to azimuth tenant
-      - name: "write-only-azimuth-role"
+      - name: "write-only-azimuth-user-prod-role"
         clusterPermissions:
           - "indices:data/write/bulk"
         indexPermissions:
@@ -150,7 +154,7 @@ stfc-cloud-opensearch:
             allowedActions:
               - "kibana_all_write"
 
-      - name: "write-only-staging-role"
+      - name: "write-only-azimuth-user-staging-role"
         clusterPermissions:
           - "indices:data/write/bulk"
         indexPermissions:
@@ -165,7 +169,6 @@ stfc-cloud-opensearch:
         tenantPermissions:
           - tenantPatterns:
               - "azimuth-staging"
-              - "cloud-staging"
             allowedActions:
               - "kibana_all_write"
 
@@ -187,24 +190,48 @@ stfc-cloud-opensearch:
             allowedActions:
               - "kibana_all_write"
         
+      - name: "write-only-staging-role"
+        clusterPermissions:
+          - "indices:data/write/bulk"
+        indexPermissions:
+          - indexPatterns:
+            - "kube_logs_*"
+            - "trivy_*"
+            allowedActions:
+              - "indices:data/write/bulk"
+              - "indices:data/write/index"
+              - "indices:data/write/update"
+              - "indices:admin/create"
+        tenantPermissions:
+          - tenantPatterns:
+              - "cloud-staging"
+            allowedActions:
+              - "kibana_all_write"
+    
     usersRoleBinding:
-      - name: "write-only-staging-role-binding" 
+      - name: "write-only-azimuth-user-staging-role-binding" 
+        users: 
+          - "writer-azimuth-user-staging"
+        roles:
+          - "write-only-azimuth-user-staging-role"
+        
+      - name: "write-only-azimuth-user-prod-role-binding"
+        users: 
+          - "writer-azimuth-user-prod"
+        roles:
+          - "write-only-azimuth-user-prod-role"
+      
+      - name: "write-only-staging-role-binding"
         users: 
           - "writer-staging"
         roles:
           - "write-only-staging-role"
-        
+
       - name: "write-only-prod-role-binding"
         users: 
           - "writer-prod"
         roles:
           - "write-only-prod-role"
-      
-      - name: "write-only-azimuth-role-binding"
-        users: 
-          - "writer-azimuth"
-        roles:
-          - "write-only-azimuth-role"
 
       # user role mappings
       # staging role-mapping - accessing staging cluster logs available to everyone in team
