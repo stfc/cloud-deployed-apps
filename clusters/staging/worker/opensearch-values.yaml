@@ -37,7 +37,7 @@ stfc-cloud-opensearch:
 
       ingress: 
         dashboards:
-          enabled: false 
+          enabled: true 
           className: internal-nginx
           hosts:
             - host: opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
