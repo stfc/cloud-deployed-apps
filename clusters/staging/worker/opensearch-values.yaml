@@ -1,14 +1,19 @@
 stfc-cloud-opensearch:
   opensearch-cluster:
+    
     cluster:
       name: log-storage
-
+      
+      general:
+        version: 3.1.0
+      
       security:
         config:
           adminCredentialsSecret:
             name: log-storage-admin-credentials
 
       dashboards:
+        version: 3.1.0
         opensearchCredentialsSecret: 
           name: log-storage-admin-credentials
         enable: true
