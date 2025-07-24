@@ -16,7 +16,7 @@ stfc-cloud-opensearch:
             '["openid", "basicauth"]'
           opensearch_security.openid.connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
           opensearch_security.openid.scope: "openid profile email preferred_username groups"
-          opensearch_security.openid.base_redirect_url: https://opensearch.example.com
+          opensearch_security.openid.base_redirect_url: https://opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
       
       nodePools:
         - component: nodes
@@ -244,8 +244,6 @@ stfc-cloud-opensearch:
       - name: "admin-role-binding"
         roles:
           - "admin"
-        backendRoles:
-          - stfc-cloud/admins
 
     # simple policy to delete index older than 90 days
     ismPolicies:
