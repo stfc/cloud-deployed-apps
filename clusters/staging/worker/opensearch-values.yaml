@@ -238,13 +238,13 @@ stfc-cloud-opensearch:
       - name: "read-only-staging-role-binding"
         roles: 
           - "read-only-staging-role"
-        backend_roles:
+        backendRoles:
           - "stfc-cloud/team"
 
       - name: "admin-role-binding"
         roles:
           - "admin"
-        backend_roles:
+        backendRoles:
           - stfc-cloud/admins
 
     # simple policy to delete index older than 90 days
