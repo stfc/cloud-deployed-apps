@@ -5,6 +5,11 @@ stfc-cloud-openstack-cluster:
     controlPlane:
       machineFlavor: dep-l2.tiny
 
+    nodeGroups:
+      - name: default-md-0
+        machineCount: 2
+        machineFlavor: dep-l2.tiny
+
     nodeGroupDefaults:
       machineFlavor: dep-l2.tiny
 
