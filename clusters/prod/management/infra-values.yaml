@@ -1,4 +1,12 @@
 openstack-cluster:
+  nodeGroups:
+    - name: default-md-0
+      machineCount: 2
+      machineFlavor: dep-l2.tiny
+
+  nodeGroupDefaults:
+    machineFlavor: dep-l2.tiny
+
   addons:
     ingress:
       enabled: true
