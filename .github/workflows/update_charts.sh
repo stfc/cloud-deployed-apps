@@ -1,7 +1,10 @@
+#!/bin/bash
+
 set -eo pipefail
 updated_charts=()
 
 helm repo add cloud-charts https://stfc.github.io/cloud-helm-charts/
+helm repo add capi-addon-chart https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo add argo-cd https://argoproj.github.io/argo-helm
 helm repo update
 
@@ -16,7 +19,6 @@ for chart in ../../charts/staging/*; do
     modified=false
 
     for dep in $deps; do
-        repo=$(yq e ".dependencies[] | select(.name == \"$dep\") | .repository" "$chart_yaml")
         current_version=$(yq e ".dependencies[] | select(.name == \"$dep\") | .version" "$chart_yaml")
 
         # Find latest version from helm repo
