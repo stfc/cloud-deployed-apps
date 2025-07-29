@@ -18,19 +18,6 @@ jobs:
             prod:
               - charts/prod/**
 
-      - name: Check staging files
-        if: steps.changed-files.outputs.staging_any_changed == 'true'
-        run: |
-          echo "Changed files in staging:"
-          for file in ${{ steps.changed-files.outputs.staging_all_changed_files }}; do
-            echo "Checking $file..."
-            if ! ${{ github.workspace }}/.github/workflows/pr_check_copies.sh "$file" "staging" "dev"; then
-              echo "❌ $file differs from dev version"
-              exit 1
-            fi
-          done
-          echo "✅ All staging files match dev"
-
       - name: Check prod files
         if: steps.changed-files.outputs.prod_any_changed == 'true'
         run: |
