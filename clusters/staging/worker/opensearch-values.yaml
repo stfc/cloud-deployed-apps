@@ -218,7 +218,7 @@ stfc-cloud-opensearch:
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_azimuth_*"
+              - "kube_logs_azimuth_user_cluster*"
               - "trivy_azimuth_*"
               - ".kibana_azimuth_*"
             allowed_actions:
@@ -242,7 +242,7 @@ stfc-cloud-opensearch:
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_azimuth_*"
+              - "kube_logs_azimuth_staging_user_cluster*"
               - "trivy_azimuth_*"
               - ".kibana_azimuth_staging_*"
             allowed_actions:
