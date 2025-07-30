@@ -191,6 +191,7 @@ stfc-cloud-opensearch:
         cluster_permissions:
           - "cluster:monitor/nodes/info"
           - "cluster:monitor/health"
+          - "cluster_composite_ops_ro"
         index_permissions:
           - index_patterns:
               - "kube_logs_*"
@@ -200,10 +201,8 @@ stfc-cloud-opensearch:
               - ".kibana_cloud_staging_*"
               - ".kibana_azimuth_staging_*"
             allowed_actions:
-              - "indices:admin/resolve/index"
-              - "indices:data/read/*"
-              - "indices:admin/mappings/get"
-              - "indices:monitor/*"
+              - "read"
+              - "indices_monitor"
         tenant_permissions:
           - tenant_patterns:
               - "cloud-staging"
