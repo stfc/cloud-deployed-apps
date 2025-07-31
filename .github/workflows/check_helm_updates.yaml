@@ -4,7 +4,7 @@ name: Update Chart Dependencies
 
 on:
   schedule:
-    - cron: '0 13 * * 1-5'  # Every working day at 1pm UTC
+    - cron: '0 13 * * 1-5' # Every working day at 1pm UTC
   workflow_dispatch:
 
 env:
@@ -13,17 +13,16 @@ env:
 jobs:
   update-deps:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
+        
       - name: Set up Helm
         uses: azure/setup-helm@v3
-      
+        
       - name: Install yq
         uses: mikefarah/yq@v4
-
+        
       - name: Update dependencies for Staging Charts
         id: updater
         run: .github/workflows/update_charts.sh
@@ -37,5 +36,5 @@ jobs:
           body: |
             This PR updates dependencies for Helm charts under `charts/staging/*` to the latest available versions.
             - Automatically generated via GitHub Actions
-          branch: update-staging-staging-versions
+          branch: update-staging-chart-versions
           delete-branch: true
