@@ -8,7 +8,7 @@ helm repo add capi-addon-chart https://azimuth-cloud.github.io/cluster-api-addon
 helm repo add argo-cd https://argoproj.github.io/argo-helm
 helm repo update
 
-for chart in ../../charts/staging/*; do
+for chart in charts/staging/*; do
     chart_yaml="$chart/Chart.yaml"
     [ -f "$chart_yaml" ] || continue
 
@@ -35,3 +35,16 @@ for chart in ../../charts/staging/*; do
         updated_charts+=("$chart")
     fi
 done
+
+# Output the results for GitHub Actions (if running in GitHub Actions)
+if [ -n "$GITHUB_OUTPUT" ]; then
+    echo "updated_charts=${#updated_charts[@]}" >> $GITHUB_OUTPUT
+fi
+
+if [ ${#updated_charts[@]} -gt 0 ]; then
+    echo "Updated charts:"
+    printf '%s\n' "${updated_charts[@]}"
+    echo "Total updated charts: ${#updated_charts[@]}"
+else
+    echo "No charts were updated."
+fi
