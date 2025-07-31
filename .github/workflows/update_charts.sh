@@ -4,6 +4,7 @@ set -eo pipefail
 updated_charts=()
 
 helm repo add cloud-charts https://stfc.github.io/cloud-helm-charts/
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo add capi-addon-chart https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo add argo-cd https://argoproj.github.io/argo-helm
 helm repo update
