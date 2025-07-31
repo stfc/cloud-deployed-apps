@@ -26,7 +26,7 @@ jobs:
 
       - name: Update dependencies for Staging Charts
         id: updater
-        run: ./update_charts.sh
+        run: .github/workflows/update_charts.sh
 
       - name: Create PR with Chart updates
         if: steps.updater.outputs.updated_charts != '0'
