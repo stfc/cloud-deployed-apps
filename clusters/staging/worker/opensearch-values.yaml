@@ -118,19 +118,15 @@ stfc-cloud-opensearch:
         type: "roles"
         config_version: 2
 
-      # Admin role - full cluster access
       admin_role:
         reserved: true
         cluster_permissions:
-          - "cluster:admin/*"
-          - "cluster:monitor/*"
-          - "indices:admin/*"
-          - "indices:monitor/*"
+          - "cluster_all"
         index_permissions:
           - index_patterns:
               - "*"
             allowed_actions:
-              - "indices:*"
+              - "indices_all"
         tenant_permissions:
           - tenant_patterns:
               - "*"
@@ -155,11 +151,6 @@ stfc-cloud-opensearch:
               - "indices:admin/create"
               - "indices:data/write/bulk"
               - "indices:data/write/bulk*"
-        tenant_permissions:
-          - tenant_patterns:
-              - "cloud-staging"
-            allowed_actions:
-              - "kibana_all_write"
 
       # Cloud production writer role
       writer_prod_role:
@@ -179,11 +170,6 @@ stfc-cloud-opensearch:
               - "indices:admin/create"
               - "indices:data/write/bulk"
               - "indices:data/write/bulk*"
-        tenant_permissions:
-          - tenant_patterns:
-              - "cloud"
-            allowed_actions:
-              - "kibana_all_write"
 
       # Cloud staging reader role
       reader_staging_role:
@@ -220,7 +206,6 @@ stfc-cloud-opensearch:
           - index_patterns:
               - "kube_logs_azimuth_user_cluster*"
               - "trivy_azimuth_*"
-              - ".kibana_azimuth_*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -228,11 +213,6 @@ stfc-cloud-opensearch:
               - "indices:admin/create"
               - "indices:data/write/bulk"
               - "indices:data/write/bulk*"
-        tenant_permissions:
-          - tenant_patterns:
-              - "azimuth"
-            allowed_actions:
-              - "kibana_all_write"
 
       # Azimuth staging writer role
       writer_azimuth_staging_role:
@@ -244,7 +224,6 @@ stfc-cloud-opensearch:
           - index_patterns:
               - "kube_logs_azimuth_staging_user_cluster*"
               - "trivy_azimuth_*"
-              - ".kibana_azimuth_staging_*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -252,11 +231,6 @@ stfc-cloud-opensearch:
               - "indices:admin/create"
               - "indices:data/write/bulk"
               - "indices:data/write/bulk*"
-        tenant_permissions:
-          - tenant_patterns:
-              - "azimuth-staging"
-            allowed_actions:
-              - "kibana_all_write"
 
     tenants.yml: |
       _meta:
@@ -301,6 +275,14 @@ stfc-cloud-opensearch:
           - "stfc-cloud/admins"
         description: "Maps admin backend role to admin_role"
 
+      # all-access role mapping
+      all_access:
+        reserved: true
+        backend_roles:
+          - "admin"
+          - "stfc-cloud/admins"
+        description: "Maps admin backend role to admin_role"
+
       # Cloud staging writer role mapping
       writer_staging_role:
         reserved: false
@@ -336,9 +318,3 @@ stfc-cloud-opensearch:
         backend_roles:
           - "writer_azimuth_staging_role"
         description: "Maps writer-azimuth-user-staging to azimuth-staging tenant write access"
-
-      # Built-in mappings
-      all_access:
-        reserved: true
-        backend_roles:
-          - "admin"
