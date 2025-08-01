@@ -4,5 +4,5 @@ version: 2.0.0
 dependencies:
   - repository: https://stfc.github.io/cloud-helm-charts/
     name: stfc-cloud-opensearch
-    version: 3.0.0-alpha.4aca71a
+    version: 3.0.0
 
