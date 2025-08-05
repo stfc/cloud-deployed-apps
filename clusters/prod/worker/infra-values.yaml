@@ -19,6 +19,11 @@ openstack-cluster:
                 loadBalancerIP: "130.246.80.243"
 
     monitoring:
+      # no need to send alerts around certs/openstack API endpoints
+      # ends up with too many messages in the ticket queue
+      # sending blackbox alerts from prod management cluster should be enough 
+      blackboxExporter:
+        enabled: false
       kubePrometheusStack:
         release:
           values:
