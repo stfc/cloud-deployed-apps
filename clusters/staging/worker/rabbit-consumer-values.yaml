@@ -3,7 +3,7 @@ stfc-cloud-rabbit-consumer:
   consumer:
     logLevel: INFO
 
-      queues:
+    queues:
       - "ral.info"
       - "ral.error"
 
