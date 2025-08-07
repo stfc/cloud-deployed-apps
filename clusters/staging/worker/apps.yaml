@@ -81,6 +81,11 @@ spec:
             secretsFile: ../../../clusters/staging/worker/secrets/apps/harbor.yaml
             valuesFile: ../../../clusters/staging/worker/harbor-values.yaml
 
+          - name: rabbit-consumer
+            chartName: rabbit-consumer
+            namespace: rabbit-consumer
+            valuesFile: ../../../clusters/staging/worker/rabbit-consumer-values.yaml
+
 
   syncPolicy:
     # Don't remove everything if we remove the appset
