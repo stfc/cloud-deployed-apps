@@ -2,9 +2,6 @@
 stfc-cloud-rabbit-consumer:
   consumer:
     logLevel: INFO
-    image:
-      repository: rabbit-consumer
-      tag: latest
 
       queues:
       - "ral.info"
