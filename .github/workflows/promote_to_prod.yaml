@@ -19,7 +19,7 @@ jobs:
       - name: Set branch and PR names
         id: env-vars
         run: |
-          echo "branch_name=staging-to-prod-${{ steps.date.outputs.date }}" >> $GITHUB_OUTPUT
+          echo "branch_name=staging-to-prod" >> $GITHUB_OUTPUT
           echo "pr_title=Promote Staging to Prod - ${{ steps.date.outputs.date }}" >> $GITHUB_OUTPUT
 
       - name: Check for changes

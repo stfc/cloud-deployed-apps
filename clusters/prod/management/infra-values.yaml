@@ -1,57 +1,64 @@
-openstack-cluster:
-  nodeGroups:
-    - name: default-md-0
-      machineCount: 2
-      machineFlavor: dep-l2.tiny
+stfc-cloud-openstack-cluster:
+  openstack-cluster:
+    cloudCredentialsSecretName: prod-management-cluster-cloud-credentials
 
-  nodeGroupDefaults:
-    machineFlavor: dep-l2.tiny
+    addons:
+      ingress:
+        enabled: true
+        nginx:
+          release:
+            values:
+              controller:
+                service:
+                  # *.prod-mgmt.nubes.stfc.ac.uk
+                  loadBalancerIP: "130.246.80.233"
 
-  addons:
-    ingress:
-      enabled: true
-      nginx:
-        release:
-          values:
-            controller:
-              service:
-                # *.prod-mgmt.nubes.stfc.ac.uk
-                loadBalancerIP: "130.246.80.233"
-
-    monitoring:
-      kubePrometheusStack:
-        release:
-          values:
-            defaultRules:
-              additionalRuleLabels:
-                cluster: management
-                env: prod
-            prometheus:
-              prometheusSpec:
-                externalLabels:
+      monitoring:
+        kubePrometheusStack:
+          release:
+            values:
+              defaultRules:
+                additionalRuleLabels:
                   cluster: management
                   env: prod
-              ingress:
-                hosts:
-                  - prometheus.prod-mgmt.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - prometheus.prod-mgmt.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            grafana:
-              ingress:
-                hosts:
-                  - grafana.prod-mgmt.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - grafana.prod-mgmt.nubes.stfc.ac.uk
-                    secretName: tls-keypair
-            alertmanager:
-              enabled: true
-              ingress:
-                hosts:
-                  - alertmanager.prod-mgmt.nubes.stfc.ac.uk
-                tls:
-                  - hosts:
-                      - alertmanager.prod-mgmt.nubes.stfc.ac.uk
-                    secretName: tls-keypair
+              prometheus:
+                prometheusSpec:
+                  externalLabels:
+                    cluster: management
+                    env: prod
+                ingress:
+                  annotations:
+                      nginx.ingress.kubernetes.io/auth-type: basic
+                      nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                      nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Prod Management"
+                  hosts:
+                    - prometheus.prod-mgmt.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - prometheus.prod-mgmt.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              grafana:
+                ingress:
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Prod Management"
+                  hosts:
+                    - grafana.prod-mgmt.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - grafana.prod-mgmt.nubes.stfc.ac.uk
+                      secretName: tls-keypair
+              alertmanager:
+                enabled: true
+                ingress:
+                  annotations:
+                    nginx.ingress.kubernetes.io/auth-type: basic
+                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Prod Management"
+                  hosts:
+                    - alertmanager.prod-mgmt.nubes.stfc.ac.uk
+                  tls:
+                    - hosts:
+                        - alertmanager.prod-mgmt.nubes.stfc.ac.uk
+                      secretName: tls-keypair
