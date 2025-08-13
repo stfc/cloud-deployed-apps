@@ -22,7 +22,12 @@ stfc-cloud-openstack-cluster:
             values:
               controller:
                 service:
-                  loadBalancerIP: "130.246.215.233"
+                  annotations:
+                    # Don't delete the floating ip when deleting loadbalancers
+                    # prevents errors when deleting clusters, leave as true
+                    loadbalancer.openstack.org/keep-floatingip: true
+                  # *.staging-mgmt.nubes.stfc.ac.uk
+                  loadBalancerIP: "130.246.211.181"
 
       monitoring:
         kubePrometheusStack:
