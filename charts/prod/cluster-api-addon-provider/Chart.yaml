@@ -4,4 +4,4 @@ version: 1.2.0
 dependencies:
   - repository: https://azimuth-cloud.github.io/cluster-api-addon-provider
     name: cluster-api-addon-provider
-    version: 0.9.0
+    version: 0.9.1
