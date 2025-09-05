@@ -21,7 +21,7 @@ stfc-cloud-openstack-cluster:
             values:
               controller:
                 service:
-                  loadBalancerIP: "130.246.215.233"
+                  loadBalancerIP: "130.246.211.94"
 
       monitoring:
         # no need to send alerts around certs/openstack API endpoints for dev/staging clusters
