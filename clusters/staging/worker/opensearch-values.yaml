@@ -24,8 +24,8 @@ stfc-cloud-opensearch:
       
       nodePools:
         - component: nodes
-          diskSize: "50Gi"
-          replicas: 5
+          diskSize: "500Gi"
+          replicas: 3
           persistence:
             pvc:
               accessModes:
