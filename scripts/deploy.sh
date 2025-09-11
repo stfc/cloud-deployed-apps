@@ -3,19 +3,20 @@
 set -euo pipefail
 
 if [ -z "$1" ]; then
-  echo "Please provide the cluster name as an argument."
-  echo "Usage: $0 <cluster-name>"
+  echo "Please provide the environment and cluster name as an argument."
+  echo "Usage: $0 <environment> <cluster-name>"
   exit 1
 fi
 
 if [ -z "$2" ]; then
-  echo "Please provide the environment as an argument (prod/staging)."
-  echo "Usage: $0 <cluster-name> <environment>"
+  echo "Please provide the environment and cluster name as an argument (prod/staging)."
+  echo "Usage: $0 <environment> <cluster-name>"
   exit 1
 fi
 
-CLUSTER_NAME=$1
-ENVIRONMENT=$2
+ENVIRONMENT=$1
+CLUSTER_NAME=$2
+
 
 echo "Installing ArgoCD on cluster $CLUSTER_NAME using Helm..."
 echo "THIS COULD TAKE A WHILE"
