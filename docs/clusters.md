@@ -1,4 +1,9 @@
-# Deploying a new environment
+# (Deprecated) Deploying a new environment
+
+> [!CAUTION]
+> Its not recommended to deploy new environments to this repo, these docs are for information only
+> To limit complexity, this repo will only manage `staging/management`, `staging/worker`, `prod/management` and `prod/worker` clusters and no others
+
 
 > [!NOTE]
 > The following documentation outlines how to deploy a **new** ArgoCD envrionment onto a `management` cluster.

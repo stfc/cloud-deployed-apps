@@ -1,6 +1,6 @@
 # adapted from https://github.com/camptocamp/helm-dependency-update-action example
 
-name: Update Chart Dependencies
+name: Update Chart Dependencies on Staging
 
 on:
   schedule:
@@ -31,10 +31,14 @@ jobs:
         if: steps.updater.outputs.updated_charts != '0'
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update Helm chart dependencies on Staging"
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          branch: update-staging-chart-versions
           title: "Update Helm chart dependencies"
           body: |
             This PR updates dependencies for Helm charts under `charts/staging/*` to the latest available versions.
             - Automatically generated via GitHub Actions
-          branch: update-staging-chart-versions
-          delete-branch: true
+          base: main
+          labels: |
+            automated

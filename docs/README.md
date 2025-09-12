@@ -1,31 +1,24 @@
-# Deploying Apps using ArgoCD for STFC Cloud
+# STFC Cloud GitOps Repo
 
-This documentation outlines how to set up clusters managed by ArgoCD in the STFC Cloud.
+This repo is our GitOps repository which we use to manage the various Cloud services we run on Kubernetes. We use ArgoCD to manage the deployment of our services
 
-### New to the ArgoCD folder workflow used? 
+Our charts are hosted here: [cloud-helm-charts](https://github.com/stfc/cloud-helm-charts.git).
 
-**Start with:** [How it works - folder-based flow & promotion flowchart](folder-based-flow.md)
+### How does this repo work?
+See [Overview](overview.md)
 
-### Deploying a New ArgoCD Environment?
-If you are starting from scratch and need to set up a new environment (e.g. deploying a new dev ArgoCD cluster), start with: [Deploying a new cluster](clusters.md)
+### How to setup GitOps using this repo?
+See [Setup Steps](infra-setup.md)
 
-> [!NOTE]
-> This guide assumes you already have a CAPI cluster already deployed to configure into a new ArgoCD environment.
+### Configuring ArgoCD?
+See [ArgoCD Setup](argocd.md)
 
-### Need to Deploy Secrets?
+### Deploying Secrets?
 Whether deploying from scratch or need to update secrets, see [Deploying Secrets](secrets.md)
 
-### Add a New Cluster to an Existing ArgoCD Environment?
-For new clusters being added to an existing environment to be managed through ArgoCD, see: [Deploying Child Clusters](child-clusters.md)
+### New to the ArgoCD, GitOps and Folder-flows structure?
 
-### Adding a New Chart to this Repository?
-See [Adding a New Chart to This Repo](charts.md)
+**Start with:** [Our folder-based flow & promotion flowchart](folder-based-flow.md)
 
-### Deploying a Chart onto a Cluster?
-See [Deploying a Chart Onto a Cluster](deploying-apps.md)
+[ArgoCD Docs](https://argo-cd.readthedocs.io/en/stable/)
 
-### Need to configure ArgoCD?
-See [ArgoCD Setup](apps/argocd.md)
-
-### Need to Set Up Specific Infra?
-See [Infra Setup Steps](infra-setup.md)

@@ -1,4 +1,9 @@
-# Deploying a child cluster on an existing environment
+
+# (Deprecated) Deploying a child cluster on an existing environment
+
+> [!CAUTION]
+> Its not recommended to deploy new child clusters to this repo, these docs are for information only
+> To limit complexity, this repo will only manage `staging/management`, `staging/worker`, `prod/management` and `prod/worker` clusters and no others
 
 > [!NOTE]
 > The following documentation outlines how to deploy child clusters in an **existing** environment.
