@@ -2,14 +2,8 @@
 
 set -euo pipefail
 
-if [ -z "$1" ]; then
+if  [ -z "$1" ] || [ -z "$2" ]; then
   echo "Please provide the environment and cluster name as an argument."
-  echo "Usage: $0 <environment> <cluster-name>"
-  exit 1
-fi
-
-if [ -z "$2" ]; then
-  echo "Please provide the environment and cluster name as an argument (prod/staging)."
   echo "Usage: $0 <environment> <cluster-name>"
   exit 1
 fi

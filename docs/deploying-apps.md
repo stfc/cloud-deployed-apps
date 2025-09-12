@@ -117,3 +117,17 @@ This is because `argo-cd` is the name of the subchart that installs argocd
 12. Create/Edit the `apps.yaml` file on the cluster you want to add a new app to. (Copy and modify an existing apps.yaml from another cluster - remember to change all relevant filepaths to point to your cluster's sub-directory) 
    - make a change to `ApplicationSet` with the `metadata.name` entry matching `<cluster-name>-apps` 
    - where `<cluster-name>` is the name of the cluster
+
+# Updating/testing versions of Existing Apps
+
+1. Release a new version of the chart in [cloud helm charts](https://github.com/stfc/cloud-helm-charts).
+   - Test this on a dev/local cluster to make sure it works
+2. Run GitHub Action "Update Helm Chart Dependencies on Dev", or wait for it to automatically run 
+3. tweak cluster-specific values for `staging` cluster for the service if necessary
+4. Merge created PR to change the dependency version in staging `chart` 
+5. New version to sync automatically and begin running on staging - keep an eye on alerts and the service, if it fails, you might need to:
+   - rollback the merge, resync changes
+   - tweak the cluster-specific values as needed
+   - re-merge, repeat the steps until it works
+6. Perform long-term user-acceptance testing on staging
+7. CI/CD job for promotion to prod to will happen automatically, but you can force it by manually running "Promote Staging to Prod" Github Action 
