@@ -3,6 +3,10 @@ stfc-cloud-openstack-cluster:
     auth:
       monitoring:
         enabled: true
+    
+    kubernetesVersion: "1.33.4"
+    # The name of the image to use for cluster machines
+    machineImage: "capi-ubuntu-2204-kube-v1.33.4-2025-08-27"
 
     cloudCredentialsSecretName: staging-worker-cluster-cloud-credentials
 

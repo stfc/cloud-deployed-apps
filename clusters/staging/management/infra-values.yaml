@@ -2,6 +2,10 @@ stfc-cloud-openstack-cluster:
   openstack-cluster:
     cloudCredentialsSecretName: staging-management-cluster-cloud-credentials
 
+    kubernetesVersion: "1.33.4"
+    # The name of the image to use for cluster machines
+    machineImage: "capi-ubuntu-2204-kube-v1.33.4-2025-08-27"
+
     controlPlane:
       machineFlavor: dep-l2.tiny
 
