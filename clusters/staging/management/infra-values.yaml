@@ -6,7 +6,7 @@ stfc-cloud-openstack-cluster:
       machineFlavor: dep-l2.tiny
 
     nodeGroups:
-      - name: default-md-0
+      - name: md-0
         machineCount: 2
         machineFlavor: dep-l2.tiny
 
