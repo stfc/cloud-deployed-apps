@@ -59,6 +59,10 @@ stfc-cloud-openstack-cluster:
 
               prometheus:
                 enabled: true
+                # no need to send alerts around certs/openstack API endpoints K8s clusters
+                # ends up with too many messages in the ticket queue and we have other monitoring to track this
+                blackboxExporter:
+                  enabled: false
                 prometheusSpec:
                   storageSpec:
                     volumeClaimTemplate:
