@@ -2,6 +2,12 @@ stfc-cloud-harbor:
   harbor:
     externalURL: "https://staging.harbor.stfc.ac.uk"
 
+    persistence:
+      imageChartStorage:
+        s3:
+          bucket: staging-harbor-bucket
+          regionendpoint: s3.echo.stfc.ac.uk
+
     expose:
       ingress:
         className: ingress-nginx-external
