@@ -5,7 +5,6 @@ stfc-cloud-docker-registry:
     enabled: true
     ingressClassName: ingress-nginx-harbor
     path: /
-    # Used to create an Ingress record.
     annotations: 
       kubernetes.io/ingress.class: ingress-nginx-harbor
       cert-manager.io/cluster-issuer: "self-signed"  
@@ -27,39 +26,12 @@ stfc-cloud-docker-registry:
     bucket: staging-registry
     regionEndpoint: s3.echo.stfc.ac.uk
 
-
-  ## Pass extra environment variables to the Docker Registry container.
-  extraEnvVars:
-  # - name: EXTRA_VAR_1
-  #  value: extra-var-value-1
-  # - name: EXTRA_VAR_2
-  #   value: extra-var-value-2
-
   # remote url for pull-through cache 
   proxy:
     remoteURL: https://registry-1.docker.io
 
   metrics:
-    enabled: false
+    enabled: true
     # Create a prometheus-operator servicemonitor
     serviceMonitor:
-      enabled: false
-
-  # Config to pass to 
-  configData:
-    version: 0.1
-    log:
-      fields:
-        service: registry
-    storage:
-      cache:
-        blobdescriptor: inmemory
-    http:
-      addr: :5000
-      headers:
-        X-Content-Type-Options: [nosniff]
-    health:
-      storagedriver:
-        enabled: true
-        interval: 10s
-        threshold: 3
+      enabled: true
