@@ -44,10 +44,6 @@ stfc-cloud-openstack-cluster:
 
       monitoring:
         enabled: true
-        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters
-        # ends up with too many messages in the ticket queue
-        blackboxExporter:
-          enabled: false
         kubePrometheusStack:
           release:
             values:

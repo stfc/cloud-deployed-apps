@@ -24,10 +24,6 @@ stfc-cloud-openstack-cluster:
                   loadBalancerIP: "130.246.215.233"
 
       monitoring:
-        # no need to send alerts around certs/openstack API endpoints for dev/staging clusters
-        # ends up with too many messages in the ticket queue
-        blackboxExporter:
-          enabled: false
         kubePrometheusStack:
           release:
             values:
