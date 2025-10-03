@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: test-registry
     path: clusters/staging/worker
   syncPolicy:
     automated:
@@ -115,7 +115,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: test-registry
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
