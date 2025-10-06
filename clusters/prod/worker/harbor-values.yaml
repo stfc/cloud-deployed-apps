@@ -1,0 +1,65 @@
+stfc-cloud-harbor:
+  harbor:
+    externalURL: "https://harbor.stfc.ac.uk"
+
+    expose:
+      type: ingress
+      tls:
+        enabled: true
+        certSource: secret
+        secretName: "selfsigned"
+
+      ingress:
+        className: ingress-nginx-harbor
+        annotations:
+          kubernetes.io/ingress.class: ingress-nginx-harbor
+          cert-manager.io/cluster-issuer: "selfsigned"
+        hosts:
+          core: "harbor.stfc.ac.uk"
+
+    database:
+      type: external
+      external:
+        host: "dbspgha01.fds.rl.ac.uk"
+        coreDatabase: "cloud_harbor_registry_prod"
+        sslmode: "require"
+
+    persistence:
+      imageChartStorage:
+        s3:
+          bucket: prod-harbor-bucket
+          regionendpoint: s3.echo.stfc.ac.uk
+
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: kube-prometheus
+        interval: 30s
+        scrapeTimeout: 25s
+
+  backup:
+    enabled: true
+    sourceBucket: "s3://prod-harbor-bucket"
+    destination:
+      daily: "s3://prod-harbor-backup/daily"
+      weekly: "s3://prod-harbor-backup/weekly"
+      monthly: "s3://prod-harbor-backup/monthly"
+    endpoint: "https://s3.echo.stfc.ac.uk"
+
+ingress-nginx-harbor:
+  controller:
+    electionID: harbor-ingress-controller-leader
+    ingressClass: ingress-nginx-harbor
+    ingressClassResource:
+      name: ingress-nginx-harbor
+      enabled: true
+      default: false
+      controllerValue: "k8s.io/ingress-nginx-harbor"
+    service:
+      annotations:
+        # Don't delete the floating ip when deleting loadbalancers
+        # prevents errors when deleting clusters, leave as true
+        loadbalancer.openstack.org/keep-floatingip: true
+      loadBalancerIP: "130.246.81.113"
