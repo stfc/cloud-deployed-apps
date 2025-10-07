@@ -22,7 +22,6 @@ stfc-cloud-harbor:
       external:
         host: "dbspgha01.fds.rl.ac.uk"
         coreDatabase: "cloud_harbor_registry_prod"
-        sslmode: "require"
 
     persistence:
       imageChartStorage:
