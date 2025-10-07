@@ -21,7 +21,6 @@ spec:
       - CreateNamespace=true
 
 ---
-
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -51,7 +50,7 @@ spec:
             chartName: cluster-api-addon-provider
             namespace: capi-addon-system
             valuesFile: ../../../clusters/prod/worker/argocd-setup-values.yaml
-          
+
           - name: manila-csi
             chartName: manila-csi
             namespace: manila-csi
@@ -61,12 +60,17 @@ spec:
             chartName: victoria-metrics
             namespace: victoria-metrics
             valuesFile: ../../../clusters/prod/worker/vicmet-values.yaml
-          
+
           - name: rabbit-consumer
             chartName: rabbit-consumer
             namespace: rabbit-consumer
             valuesFile: ../../../clusters/prod/worker/rabbit-consumer-values.yaml
 
+          - name: harbor
+            chartName: harbor
+            namespace: harbor
+            secretsFile: ../../../clusters/prod/worker/secrets/apps/harbor.yaml
+            valuesFile: ../../../clusters/prod/worker/harbor-values.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
@@ -97,10 +101,10 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
-  
+
   # Clusterrole and clusterrolebinding get updated after creation by the helm chart
-  # this causes ArgoCD outofsync issues so we ignore differences 
-  # rules gets updated 
+  # this causes ArgoCD outofsync issues so we ignore differences
+  # rules gets updated
   templatePatch: |
     {{- if eq .name "manila-csi" }}
       spec:
