@@ -3,9 +3,9 @@ name: harbor
 version: 1.1.4
 dependencies:
   - name: stfc-cloud-harbor
-    version: 1.1.7
+    version: 1.1.8
     repository: https://stfc.github.io/cloud-helm-charts
   - name: ingress-nginx
-    version: 4.13.2
+    version: 4.13.3
     repository: "https://kubernetes.github.io/ingress-nginx"
     alias: ingress-nginx-harbor
