@@ -1,5 +1,5 @@
 ingress-nginx-external:
-  ingress-nginx:
+  nginx-external:
     controller:
       electionID: external-ingress-controller-leader
       ingressClass: ingress-nginx-external
@@ -14,3 +14,4 @@ ingress-nginx-external:
           # prevents errors when deleting clusters, leave as true
           loadbalancer.openstack.org/keep-floatingip: true
         loadBalancerIP: "130.246.81.227"
+;
