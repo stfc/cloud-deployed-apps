@@ -53,6 +53,11 @@ spec:
             namespace: clusters
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
 
+          - name: ingress-nginx-external
+            chartName: ingress-nginx-external
+            namespace: ingress-nginx-external
+            valuesFile: ../../../clusters/staging/worker/ingress-nginx-external-values.yaml
+
           - name: manila-csi
             chartName: manila-csi
             namespace: manila-csi
