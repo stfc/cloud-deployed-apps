@@ -97,6 +97,11 @@ spec:
             valuesFile: ../../../clusters/staging/worker/opensearch-values.yaml
             secretsFile: ../../../clusters/staging/worker/secrets/apps/opensearch.yaml
 
+          - name: docker-registry
+            chartName: docker-registry
+            namespace: docker-registry
+            valuesFile: ../../../clusters/staging/worker/docker-registry-values.yaml
+            secretsFile: ../../../clusters/staging/worker/secrets/apps/docker-registry.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
