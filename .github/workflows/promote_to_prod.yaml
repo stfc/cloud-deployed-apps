@@ -5,6 +5,9 @@ on:
     - cron: '0 12 * * 3'  # Wednesday at 12pm UTC
   workflow_dispatch:
 
+env:
+  author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+
 jobs:
   copy-files:
     runs-on: ubuntu-latest
@@ -61,8 +64,8 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "${{ steps.env-vars.outputs.pr_title }}"
-          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
+          committer: ${{ env.author }}
+          author: ${{ env.author }}
           branch: promote-staging-to-prod
           delete-branch: true
           title: ${{ steps.env-vars.outputs.pr_title }}
