@@ -40,6 +40,7 @@ stfc-cloud-openstack-cluster:
                     # Don't delete the floating ip when deleting loadbalancers
                     # prevents errors when deleting clusters, leave as true
                     loadbalancer.openstack.org/keep-floatingip: true
+                  # *.staging-worker.nubes.stfc.ac.uk
                   loadBalancerIP: "130.246.81.242"
 
       monitoring:
