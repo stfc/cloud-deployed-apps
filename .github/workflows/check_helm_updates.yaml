@@ -2,48 +2,19 @@
 
 name: Update Chart Dependencies on Staging
 
+env:
+  author: "${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
+  committer: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+
 on:
   schedule:
     - cron: '0 13 * * 1-5' # Every working day at 1pm UTC
   workflow_dispatch:
 
-env:
-  author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-
 jobs:
   update-deps:
     runs-on: ubuntu-latest
-    outputs: 
-      updated-charts: ${{ steps.updater.outputs.updated_charts }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        
-      - name: Set up Helm
-        uses: azure/setup-helm@v3
-        
-      - name: Install yq
-        uses: mikefarah/yq@v4
-        
-      - name: Update dependencies for Staging Charts
-        id: updater
-        run: .github/workflows/update_charts.sh
-
-  make-pr:
-    runs-on: ubuntu-latest
-    needs: update-deps
-    if:  needs.update-deps.outputs.updated-charts != '0'
-    steps:
-
-      - name: Get current date
-        id: date
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
-      - name: Set branch and PR names
-        id: env-vars
-        run: |
-          echo "pr_title=Update Helm Chart Dependencies - ${{ steps.date.outputs.date }}" >> $GITHUB_OUTPUT
-
       - name: "Setup Github Token"
         uses: actions/create-github-app-token@v2
         id: app-token
@@ -51,13 +22,40 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Install yq
+        uses: mikefarah/yq@v4
+        
+      - name: Update dependencies for Staging Charts
+        id: updater
+        run: .github/workflows/update_charts.sh
+
+      - name: Get current date
+        if: steps.updater.outputs.updated_charts != '0'
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Set branch and PR names
+        if: steps.updater.outputs.updated_charts != '0'
+        id: env-vars
+        run: |
+          echo "pr_title=Update Helm Chart Dependencies - ${{ steps.date.outputs.date }}" >> $GITHUB_OUTPUT
+
       - name: Create PR with Chart updates
-        uses: peter-evans/create-pull-request@v6
+        if: steps.updater.outputs.updated_charts != '0'
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "${{ steps.env-vars.outputs.pr_title }}"
           author: ${{ env.author }}
-          committer: ${{ env.author }}
+          committer: ${{ env.committer }}
           branch: update-staging-chart-deps
           delete-branch: true
           title: ${{ steps.env-vars.outputs.pr_title }}
