@@ -1,7 +1,7 @@
 apiVersion: v2
-name: longhorn
+name: docker-registry
 version: 2.0.0
 dependencies:
   - repository: https://stfc.github.io/cloud-helm-charts/
-    name: stfc-cloud-longhorn
-    version: 1.0.4
+    name: stfc-cloud-docker-registry
+    version: 1.0.0
