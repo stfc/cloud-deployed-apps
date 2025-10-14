@@ -1,4 +1,5 @@
 stfc-cloud-docker-registry:
+  nameOverride: docker-registry
   replicaCount: 3
 
   ingress:
@@ -35,3 +36,9 @@ stfc-cloud-docker-registry:
     # Create a prometheus-operator servicemonitor
     serviceMonitor:
       enabled: true
+
+  configData:
+    http:
+      debug:
+        prometheus:
+          enabled: true
