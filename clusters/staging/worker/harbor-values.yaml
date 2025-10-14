@@ -10,7 +10,9 @@ stfc-cloud-harbor:
 
     expose:
       tls: 
-        certSource: none
+        certSource: secret
+        secret: 
+          secretName: harbor-tls
       ingress:
         annotations:
           kubernetes.io/ingress.class: ingress-nginx-external
