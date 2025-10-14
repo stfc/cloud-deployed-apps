@@ -20,4 +20,5 @@ stfc-cloud-cert-manager:
     enabled: true
 
   le-prod:
+    email: cloud-support@stfc.ac.uk
     enabled: true
