@@ -147,7 +147,9 @@ spec:
         jsonPointers:
         - /metadata
         - /data
-      - kind: cert-manager.io/Certificate 
+
+      - group: cert-manager.io/v1
+        kind: Certificate
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
