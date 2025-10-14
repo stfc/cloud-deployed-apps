@@ -141,13 +141,18 @@ spec:
         kind: CustomResourceDefinition
         jsonPointers:
         - /spec/preserveUnknownFields
-      - kind: Secret
+      - group: ""
+        kind: Secret
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
+        - /type
         - /metadata
-        - /data
-      - kind: cert-manager.io/Certificate 
+        - /data/tls.crt
+        - /data/ca.crt
+        - /data/tls.key
+      - group: cert-manager.io/v1
+        kind: Certificate
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
