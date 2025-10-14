@@ -142,6 +142,13 @@ spec:
         kind: CustomResourceDefinition
         jsonPointers:
         - /spec/preserveUnknownFields
+      - group: ''
+        kind: Secret
+        name: harbor-ingress
+        namespace: harbor
+        jsonPointers:
+          - /data
+
 
   templatePatch: |
     {{- if eq .name "manila-csi" }}

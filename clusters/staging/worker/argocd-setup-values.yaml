@@ -18,7 +18,9 @@ stfc-cloud-longhorn:
 stfc-cloud-cert-manager:
   le-staging:
     enabled: true
+    ingressClassName: ingress-nginx-external
 
   le-prod:
     email: cloud-support@stfc.ac.uk
     enabled: true
+    ingressClassName: ingress-nginx-external

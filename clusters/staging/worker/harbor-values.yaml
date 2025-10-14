@@ -11,7 +11,8 @@ stfc-cloud-harbor:
     expose:
       ingress:
         annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-staging
+          kubernetes.io/ingress.class: ingress-nginx-external
+          cert-manager.io/cluster-issuer: letsencrypt-prod
         className: ingress-nginx-external
         hosts:
           core: "staging.harbor.stfc.ac.uk"
