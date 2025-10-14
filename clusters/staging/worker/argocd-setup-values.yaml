@@ -14,3 +14,10 @@ stfc-cloud-longhorn:
     persistence:
       # can't be set for RWX
       migratable: false
+
+stfc-cloud-cert-manager:
+  le-staging:
+    enabled: true
+
+  le-prod:
+    enabled: true
