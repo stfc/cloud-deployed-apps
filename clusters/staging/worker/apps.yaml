@@ -146,9 +146,11 @@ spec:
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
-        - /metadata
-        - /data
         - /type
+        - /metadata
+        - /data/tls.crt
+        - /data/ca.crt
+        - /data/tls.key
       - group: cert-manager.io/v1
         kind: Certificate
         name: harbor-ingress
