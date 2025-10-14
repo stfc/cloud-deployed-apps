@@ -21,7 +21,6 @@ spec:
       - CreateNamespace=true
 
 ---
-
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -43,7 +42,7 @@ spec:
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
             namespace: argocd
 
-          - name: "cert-manager"
+          - name: cert-manager
             chartName: cert-manager
             namespace: cert-manager
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
@@ -142,12 +141,21 @@ spec:
         kind: CustomResourceDefinition
         jsonPointers:
         - /spec/preserveUnknownFields
-      - kind: Secret
+      - group: ""
+        kind: Secret
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
+        - /type
+        - /metadata
         - /data
-
+      - group: cert-manager.io/v1
+        kind: Certificate
+        name: harbor-ingress
+        namespace: harbor
+        jsonPointers:
+        - /metadata
+        - /status
 
   templatePatch: |
     {{- if eq .name "manila-csi" }}
