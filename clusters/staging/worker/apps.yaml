@@ -21,7 +21,6 @@ spec:
       - CreateNamespace=true
 
 ---
-
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -43,14 +42,14 @@ spec:
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
             namespace: argocd
 
-          - name: "cert-manager"
+          - name: cert-manager
             chartName: cert-manager
             namespace: cert-manager
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
 
           - name: cluster-api-addon-provider
             chartName: cluster-api-addon-provider
-            namespace: clusters
+            namespace: clustersf
             valuesFile: ../../../clusters/staging/worker/argocd-setup-values.yaml
 
           - name: ingress-nginx-external
@@ -147,7 +146,12 @@ spec:
         namespace: harbor
         jsonPointers:
         - /data
-
+      - kind: cert-manager.io/Certificate 
+        name: harbor-ingress
+        namespace: harbor
+        jsonPointers:
+        - /metadata/annotations
+        - /status
 
   templatePatch: |
     {{- if eq .name "manila-csi" }}

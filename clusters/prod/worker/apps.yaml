@@ -28,6 +28,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
+  goTemplateOptions: ["missingkey=invalid"]
   generators:
     - list:
         elements:
@@ -41,7 +42,7 @@ spec:
             valuesFile: ../../../clusters/prod/worker/argocd-setup-values.yaml
             namespace: argocd
 
-          - name: "cert-manager"
+          - name: cert-manager
             chartName: cert-manager
             namespace: cert-manager
             valuesFile: ../../../clusters/prod/worker/argocd-setup-values.yaml
