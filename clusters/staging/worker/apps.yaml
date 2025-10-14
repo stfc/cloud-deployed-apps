@@ -145,12 +145,13 @@ spec:
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
+        - /metadata
         - /data
       - kind: cert-manager.io/Certificate 
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
-        - /metadata/annotations
+        - /metadata
         - /status
 
   templatePatch: |
