@@ -147,6 +147,7 @@ spec:
         jsonPointers:
         - /metadata
         - /data
+        - /type
 
       - group: cert-manager.io/v1
         kind: Certificate
