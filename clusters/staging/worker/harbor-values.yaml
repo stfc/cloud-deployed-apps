@@ -1,5 +1,6 @@
 stfc-cloud-harbor:
   harbor:
+    caSecretName: harbor-tls-ca
     externalURL: "https://staging.harbor.stfc.ac.uk"
 
     persistence:
