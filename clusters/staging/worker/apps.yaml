@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: test-staging-letsencrypt
     path: clusters/staging/worker
   syncPolicy:
     automated:
@@ -114,7 +114,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: test-staging-letsencrypt
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
