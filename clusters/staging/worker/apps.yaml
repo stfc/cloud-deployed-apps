@@ -142,12 +142,11 @@ spec:
         kind: CustomResourceDefinition
         jsonPointers:
         - /spec/preserveUnknownFields
-      - group: ''
-        kind: Secret
+      - kind: Secret
         name: harbor-ingress
         namespace: harbor
         jsonPointers:
-          - /data
+        - /data
 
 
   templatePatch: |
