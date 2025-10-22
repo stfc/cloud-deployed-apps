@@ -10,9 +10,9 @@ stfc-cloud-harbor:
           secretName: harbor-tls
 
       ingress:
-        className: ingress-nginx-harbor
+        className: ingress-nginx-external
         annotations:
-          kubernetes.io/ingress.class: ingress-nginx-harbor
+          kubernetes.io/ingress.class: ingress-nginx-external
           cert-manager.io/cluster-issuer: letsencrypt-prod
         hosts:
           core: "harbor.stfc.ac.uk"
@@ -46,19 +46,3 @@ stfc-cloud-harbor:
       weekly: "s3://prod-harbor-backup/weekly"
       monthly: "s3://prod-harbor-backup/monthly"
     endpoint: "https://s3.echo.stfc.ac.uk"
-
-ingress-nginx-harbor:
-  controller:
-    electionID: harbor-ingress-controller-leader
-    ingressClass: ingress-nginx-harbor
-    ingressClassResource:
-      name: ingress-nginx-harbor
-      enabled: true
-      default: false
-      controllerValue: "k8s.io/ingress-nginx-harbor"
-    service:
-      annotations:
-        # Don't delete the floating ip when deleting loadbalancers
-        # prevents errors when deleting clusters, leave as true
-        loadbalancer.openstack.org/keep-floatingip: true
-      loadBalancerIP: "130.246.81.113"
