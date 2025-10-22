@@ -1,5 +1,6 @@
 stfc-cloud-harbor:
   harbor:
+    caSecretName: harbor-tls
     externalURL: "https://staging.harbor.stfc.ac.uk"
 
     persistence:
@@ -9,10 +10,14 @@ stfc-cloud-harbor:
           regionendpoint: s3.echo.stfc.ac.uk
 
     expose:
+      tls: 
+        certSource: secret
+        secret: 
+          secretName: harbor-tls
       ingress:
         annotations:
           kubernetes.io/ingress.class: ingress-nginx-external
-          cert-manager.io/cluster-issuer: letsencrypt-staging
+          cert-manager.io/cluster-issuer: letsencrypt-prod
         className: ingress-nginx-external
         hosts:
           core: "staging.harbor.stfc.ac.uk"
