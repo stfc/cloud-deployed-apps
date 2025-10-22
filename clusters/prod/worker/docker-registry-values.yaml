@@ -1,0 +1,44 @@
+stfc-cloud-docker-registry:
+  nameOverride: docker-registry
+  replicaCount: 3
+
+  ingress:
+    enabled: true
+    ingressClassName: ingress-nginx-external
+    path: /
+    annotations:
+      kubernetes.io/ingress.class: ingress-nginx-external
+      cert-manager.io/cluster-issuer: "self-signed"
+    hosts:
+      - dockerhub.stfc.ac.uk
+    tls:
+      - hosts:
+          - dockerhub.stfc.ac.uk
+
+  # we'll default to S3
+  persistence:
+    enabled: false
+
+  # set the type of filesystem to use: filesystem or s3
+  storage: s3
+
+  # Options for s3 storage type if .Values.storage=s3:
+  s3:
+    bucket: prod-registry
+    regionEndpoint: s3.echo.stfc.ac.uk
+
+  # remote url for pull-through cache
+  proxy:
+    remoteURL: https://registry-1.docker.io
+
+  metrics:
+    enabled: true
+    # Create a prometheus-operator servicemonitor
+    serviceMonitor:
+      enabled: true
+
+  configData:
+    http:
+      debug:
+        prometheus:
+          enabled: true

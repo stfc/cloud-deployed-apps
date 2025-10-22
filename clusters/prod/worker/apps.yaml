@@ -78,6 +78,12 @@ spec:
             secretsFile: ../../../clusters/prod/worker/secrets/apps/harbor.yaml
             valuesFile: ../../../clusters/prod/worker/harbor-values.yaml
 
+          - name: docker-registry
+            chartName: docker-registry
+            namespace: docker-registry
+            valuesFile: ../../../clusters/prod/worker/docker-registry-values.yaml
+            secretsFile: ../../../clusters/prod/worker/secrets/apps/docker-registry.yaml
+
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true

@@ -13,7 +13,7 @@ stfc-cloud-harbor:
         className: ingress-nginx-external
         annotations:
           kubernetes.io/ingress.class: ingress-nginx-external
-          cert-manager.io/cluster-issuer: letsencrypt-prod
+          cert-manager.io/cluster-issuer: "self-signed"
         hosts:
           core: "harbor.stfc.ac.uk"
 
