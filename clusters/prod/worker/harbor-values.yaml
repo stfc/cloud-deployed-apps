@@ -1,19 +1,19 @@
 stfc-cloud-harbor:
   harbor:
+    caSecretName: harbor-tls
     externalURL: "https://harbor.stfc.ac.uk"
 
     expose:
-      type: ingress
       tls:
-        enabled: true
         certSource: secret
-        secretName: "selfsigned"
+        secret:
+          secretName: harbor-tls
 
       ingress:
         className: ingress-nginx-harbor
         annotations:
           kubernetes.io/ingress.class: ingress-nginx-harbor
-          cert-manager.io/cluster-issuer: "selfsigned"
+          cert-manager.io/cluster-issuer: letsencrypt-prod
         hosts:
           core: "harbor.stfc.ac.uk"
 
