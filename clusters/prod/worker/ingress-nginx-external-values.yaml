@@ -1,0 +1,15 @@
+ingress-nginx-external:
+  controller:
+    electionID: external-ingress-controller-leader
+    ingressClass: ingress-nginx-external
+    ingressClassResource:
+      name: ingress-nginx-external
+      enabled: true
+      default: false
+      controllerValue: "k8s.io/ingress-nginx-external"
+    service:
+      annotations:
+        # Don't delete the floating ip when deleting loadbalancers
+        # prevents errors when deleting clusters, leave as true
+        loadbalancer.openstack.org/keep-floatingip: true
+      loadBalancerIP: "130.246.81.113"
