@@ -10,13 +10,15 @@ stfc-cloud-harbor:
           regionendpoint: s3.echo.stfc.ac.uk
 
     expose:
-      tls: 
+      tls:
         certSource: secret
-        secret: 
+        secret:
           secretName: harbor-tls
       ingress:
         annotations:
           kubernetes.io/ingress.class: ingress-nginx-external
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "900"
           cert-manager.io/cluster-issuer: letsencrypt-prod
         className: ingress-nginx-external
         hosts:
