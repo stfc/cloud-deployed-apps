@@ -45,6 +45,26 @@ stfc-cloud-openstack-cluster:
                 service:
                   type: ClusterIP
 
+                extraSecretMounts:
+                  - name: iris-iam-creds
+                    secretName: grafana-iris-iam-creds
+                    defaultMode: 0440
+                    mountPath: /etc/secrets/iris_iam_creds
+                    readOnly: true
+
+                grafana.ini:
+                  auth.generic_oauth: 
+                    enabled: true
+                    name: "IRIS IAM"
+                    scopes: "openid profile email"
+                    auth_url: "https://iris-iam.stfc.ac.uk/authorize"
+                    token_url: "https://iris-iam.stfc.ac.uk/token"
+                    api_url: "https://iris-iam.stfc.ac.uk/userinfo"
+                    groups_attribute_path: "groups[*]"
+                    allowed_groups: "stfc-cloud/team,stfc-cloud/admins"
+                    client_id: $__file{/etc/secrets/iris_iam_creds/client_id}
+                    client_secret: $__file{/etc/secrets/iris_iam_creds/client_secret}
+                
                 ingress:
                   ingressClassName: nginx
                   enabled: true

@@ -42,11 +42,10 @@ stfc-cloud-openstack-cluster:
                         - prometheus.prod-worker.nubes.stfc.ac.uk
                       secretName: tls-keypair
               grafana:
+                grafana.ini:
+                  server:
+                    root_url: https://grafana.prod-worker.nubes.stfc.ac.uk
                 ingress:
-                  annotations:
-                    nginx.ingress.kubernetes.io/auth-type: basic
-                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Prod Worker" 
                   hosts:
                     - grafana.prod-worker.nubes.stfc.ac.uk
                   tls:
