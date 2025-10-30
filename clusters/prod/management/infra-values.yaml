@@ -39,10 +39,6 @@ stfc-cloud-openstack-cluster:
                       secretName: tls-keypair
               grafana:
                 ingress:
-                  annotations:
-                    nginx.ingress.kubernetes.io/auth-type: basic
-                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Prod Management"
                   hosts:
                     - grafana.prod-mgmt.nubes.stfc.ac.uk
                   tls:

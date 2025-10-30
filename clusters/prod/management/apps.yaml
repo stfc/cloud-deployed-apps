@@ -126,7 +126,7 @@ spec:
             # Bring in infra secrets specific to this cluster
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
-            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/basic-auth.yaml"
+            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/auth.yaml"
 
       syncPolicy:
         automated:
