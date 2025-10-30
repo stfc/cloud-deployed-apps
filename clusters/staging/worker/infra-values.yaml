@@ -66,12 +66,11 @@ stfc-cloud-openstack-cluster:
                         - prometheus.staging-worker.nubes.stfc.ac.uk
                       secretName: tls-keypair
               grafana:
+                grafana.ini:
+                  server:
+                    root_url: https://grafana.staging-worker.nubes.stfc.ac.uk
                 ingress:
                   ingressClassName: internal-nginx
-                  annotations:
-                    nginx.ingress.kubernetes.io/auth-type: basic
-                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Worker"
                   hosts:
                     - grafana.staging-worker.nubes.stfc.ac.uk
                   tls:
