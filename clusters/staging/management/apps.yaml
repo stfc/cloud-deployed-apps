@@ -32,17 +32,18 @@ spec:
   generators:
     - list:
         elements:
-          - name: "argocd"
+          - name: argocd
             chartName: argocd
 
             # NOTE: each chart needs a valuesFile for this to work
             # so create one for each chart - even if its empty
 
             # argocd and all dependencies use the same file "argocd-setup-values.yaml"
-            valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
             namespace: argocd
+            valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
+            secretsFile: ../../../clusters/staging/management/secrets/apps/argocd.yaml
 
-          - name: "cert-manager"
+          - name: cert-manager
             chartName: cert-manager
             namespace: cert-manager
             valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
