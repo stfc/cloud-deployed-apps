@@ -25,6 +25,11 @@ argo-cd:
 
       oidc.skip.insecure.verify: true
 
+    rbac:
+      policy.csv: |
+        g, stfc-cloud/team, role:readonly
+        g, stfc-cloud/admins, role:admin
+
   server:
     ingress:
       enabled: true
