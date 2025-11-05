@@ -1,9 +1,5 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
-    auth:
-      monitoring:
-        enabled: true
-
     cloudCredentialsSecretName: staging-worker-cluster-cloud-credentials
 
     controlPlane:
