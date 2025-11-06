@@ -52,4 +52,4 @@ stfc-cloud-harbor:
     endpoint: "https://s3.echo.stfc.ac.uk"
 
     schedule:
-      test: "*15 * * * *" # run every 15 minutes to test
+      test: "*/15 * * * *" # run every 15 minutes to test
