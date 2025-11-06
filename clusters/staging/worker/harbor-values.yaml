@@ -50,3 +50,6 @@ stfc-cloud-harbor:
       weekly: "s3://staging-harbor-backup/weekly"
       monthly: "s3://staging-harbor-backup/monthly"
     endpoint: "https://s3.echo.stfc.ac.uk"
+
+    schedule:
+      test: "*15 * * * *" # run every 15 minutes to test
