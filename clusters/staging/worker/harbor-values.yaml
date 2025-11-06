@@ -49,6 +49,7 @@ stfc-cloud-harbor:
       daily: "s3://staging-harbor-backup/daily"
       weekly: "s3://staging-harbor-backup/weekly"
       monthly: "s3://staging-harbor-backup/monthly"
+      test: "s3://staging-harbor-backup/test"
     endpoint: "https://s3.echo.stfc.ac.uk"
 
     schedule:
