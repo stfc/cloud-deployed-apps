@@ -24,3 +24,6 @@ stfc-cloud-cert-manager:
     email: cloud-support@stfc.ac.uk
     enabled: true
     ingressClassName: ingress-nginx-external
+
+irisiam:
+  enabled: true

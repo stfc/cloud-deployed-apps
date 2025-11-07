@@ -48,9 +48,6 @@ while ! kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server --fie
   sleep 5
 done
 
-# Get the initial admin password
-./get-argocd-password.sh
-
 if [ ! -f /usr/local/bin/argocd ]; then
   echo "Installing ArgoCD CLI..."
   curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
