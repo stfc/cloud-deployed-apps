@@ -39,8 +39,9 @@ spec:
             # so create one for each chart - even if its empty
 
             # argocd and all dependencies use the same file "argocd-setup-values.yaml"
-            valuesFile: ../../../clusters/prod/worker/argocd-setup-values.yaml
             namespace: argocd
+            valuesFile: ../../../clusters/prod/worker/argocd-setup-values.yaml
+            secretsFile: ../../../clusters/prod/worker/secrets/apps/argocd.yaml
 
           - name: cert-manager
             chartName: cert-manager
