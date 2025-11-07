@@ -6,7 +6,7 @@ stfc-cloud-harbor:
     persistence:
       imageChartStorage:
         s3:
-          bucket: staging-harbor-bucket
+          bucket: new-staging-harbor
           regionendpoint: s3.echo.stfc.ac.uk
 
     expose:
@@ -44,7 +44,7 @@ stfc-cloud-harbor:
 
   backup:
     enabled: true
-    sourceBucket: "s3://staging-harbor-bucket"
+    sourceBucket: "s3://new-staging-harbor"
     destination:
       daily: "s3://staging-harbor-backup/daily"
       weekly: "s3://staging-harbor-backup/weekly"
