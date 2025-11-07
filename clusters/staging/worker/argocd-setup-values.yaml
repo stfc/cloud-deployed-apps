@@ -25,5 +25,3 @@ stfc-cloud-cert-manager:
     enabled: true
     ingressClassName: ingress-nginx-external
 
-irisiam:
-  enabled: true
