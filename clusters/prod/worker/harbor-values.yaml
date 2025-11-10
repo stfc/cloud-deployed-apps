@@ -8,12 +8,16 @@ stfc-cloud-harbor:
         certSource: secret
         secret:
           secretName: harbor-tls
-
       ingress:
-        className: ingress-nginx-external
         annotations:
           kubernetes.io/ingress.class: ingress-nginx-external
-          cert-manager.io/cluster-issuer: "self-signed"
+          nginx.ingress.kubernetes.io/proxy-connect-timeout: "900"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "900"
+          nginx.ingress.kubernetes.io/proxy-buffering: "on"
+          nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+          cert-manager.io/cluster-issuer: letsencrypt-prod
+        className: ingress-nginx-external
         hosts:
           core: "harbor.stfc.ac.uk"
 
