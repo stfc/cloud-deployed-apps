@@ -3,12 +3,6 @@ stfc-cloud-harbor:
     caSecretName: harbor-tls
     externalURL: "https://staging.harbor.stfc.ac.uk"
 
-    persistence:
-      imageChartStorage:
-        s3:
-          bucket: new-staging-harbor
-          regionendpoint: s3.echo.stfc.ac.uk
-
     expose:
       tls:
         certSource: secret
@@ -32,6 +26,12 @@ stfc-cloud-harbor:
       external:
         host: "dbspgha03.fds.rl.ac.uk"
         coreDatabase: "cloud_harbor_registry_dev"
+
+    persistence:
+      imageChartStorage:
+        s3:
+          bucket: new-staging-harbor
+          regionendpoint: s3.echo.stfc.ac.uk
 
     metrics:
       enabled: true
