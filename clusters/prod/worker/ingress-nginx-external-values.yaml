@@ -12,4 +12,4 @@ ingress-nginx-external:
         # Don't delete the floating ip when deleting loadbalancers
         # prevents errors when deleting clusters, leave as true
         loadbalancer.openstack.org/keep-floatingip: true
-      loadBalancerIP: "130.246.81.113"
+      loadBalancerIP: "130.246.80.218"
