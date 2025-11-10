@@ -19,6 +19,7 @@ stfc-cloud-docker-registry:
     tls:
       - hosts:
         - staging.dockerhub.stfc.ac.uk
+        secretName: docker-registry-tls
 
   # we'll default to S3
   persistence:
