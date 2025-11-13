@@ -17,7 +17,7 @@ stfc-cloud-openstack-cluster:
         # set label so worker nodes can host longhorn volumes
         longhorn.store.nodeselect/longhorn-storage-node: true
 
-    addons:
+    addons:        
       ingress:
         enabled: true
         nginx:
@@ -87,3 +87,7 @@ stfc-cloud-openstack-cluster:
                     - hosts:
                         - alertmanager.staging-worker.nubes.stfc.ac.uk
                       secretName: tls-keypair
+      etcdDefrag:
+        release:
+          values:
+            schedule: 10 12 * * * # smearing the time for defrag job 10:12pm daily  
