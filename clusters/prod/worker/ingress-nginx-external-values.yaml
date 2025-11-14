@@ -1,5 +1,9 @@
 ingress-nginx-external:
   controller:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
     electionID: external-ingress-controller-leader
     ingressClass: ingress-nginx-external
     ingressClassResource:
