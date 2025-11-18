@@ -16,6 +16,7 @@ stfc-cloud-harbor:
           nginx.ingress.kubernetes.io/proxy-send-timeout: "900"
           nginx.ingress.kubernetes.io/proxy-buffering: "on"
           nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+          nginx.ingress.kubernetes.io/proxy-body-size: 0
           cert-manager.io/cluster-issuer: letsencrypt-prod
         className: ingress-nginx-external
         hosts:
@@ -29,6 +30,7 @@ stfc-cloud-harbor:
 
     persistence:
       imageChartStorage:
+        disableredirect: true
         s3:
           bucket: new-staging-harbor
           regionendpoint: s3.echo.stfc.ac.uk
