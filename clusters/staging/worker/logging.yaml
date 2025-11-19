@@ -1,6 +1,6 @@
 stfc-cloud-logging:
   fluent-operator:
-    fluent-bit:
+    fluentbit:
       output:
         loki:
           enable: false
