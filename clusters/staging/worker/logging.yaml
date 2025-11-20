@@ -1,4 +1,6 @@
 stfc-cloud-logging:
+  opensearchCredentials:
+    username: writer-staging
   fluent-operator:
     fluentd:
       crdsEnable: false
