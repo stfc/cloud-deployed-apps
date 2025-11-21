@@ -89,6 +89,7 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
 ---
 apiVersion: argoproj.io/v1alpha1
