@@ -1,4 +1,5 @@
 stfc-cloud-logging:
+  includePrometheusRules: true
   opensearchCredentials:
     username: writer-staging
   fluent-operator:
@@ -13,10 +14,3 @@ stfc-cloud-logging:
           # staging worker opensearch for now, with plans to move it to prod/olaf
           host: opensearch.staging-worker.nubes.stfc.ac.uk
           port: 443
-        prometheusMetricsExporter:
-          match: "fb.metrics"
-      input:
-        fluentBitMetrics:
-          scrapeInterval: "2"
-          scrapeOnStart: true
-          tag: "fb.metrics"
