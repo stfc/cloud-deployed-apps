@@ -141,9 +141,8 @@ stfc-cloud-opensearch:
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_*"
-              - "trivy_*"
-              - ".kibana_cloud_staging_*"
+              - "kube_logs_staging*"
+              - "trivy_staging*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -160,9 +159,8 @@ stfc-cloud-opensearch:
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_*"
-              - "trivy_*"
-              - ".kibana_cloud_*"
+              - "kube_logs_prod*"
+              - "trivy_prod*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -180,12 +178,10 @@ stfc-cloud-opensearch:
           - "cluster_composite_ops_ro"
         index_permissions:
           - index_patterns:
-              - "kube_logs_*"
-              - "trivy_*"
-              - "kube_logs_azimuth_*"
-              - "trivy_azimuth_*"
-              - ".kibana_cloud_staging_*"
-              - ".kibana_azimuth_staging_*"
+              - "kube_logs_staging*"
+              - "trivy_staging*"
+              - "kube_logs_azimuth-stfc-staging*"
+              - "trivy_azimuth-stfc-staging*"
             allowed_actions:
               - "read"
               - "indices_monitor"
@@ -204,8 +200,8 @@ stfc-cloud-opensearch:
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_azimuth_user_cluster*"
-              - "trivy_azimuth_*"
+              - "kube_logs_azimuth-stfc-prod*"
+              - "trivy_azimuth-stfc-prod*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -222,8 +218,8 @@ stfc-cloud-opensearch:
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_azimuth_staging_user_cluster*"
-              - "trivy_azimuth_*"
+              - "kube_logs_azimuth-stfc-staging*"
+              - "trivy_azimuth-stfc-staging*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
