@@ -1,5 +1,5 @@
 stfc-cloud-rabbit-consumer:
-  replicaCount: 8
+  replicaCount: 1
   consumer:
     logLevel: INFO
     aquilon:
