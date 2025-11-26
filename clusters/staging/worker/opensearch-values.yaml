@@ -143,6 +143,8 @@ stfc-cloud-opensearch:
           - index_patterns:
               - "kube_logs_staging*"
               - "trivy_staging*"
+              - "kube_logs_azimuth-stfc-staging*"
+              - "trivy_azimuth-stfc-staging*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -161,6 +163,8 @@ stfc-cloud-opensearch:
           - index_patterns:
               - "kube_logs_prod*"
               - "trivy_prod*"
+              - "kube_logs_azimuth-stfc-prod*"
+              - "trivy_azimuth-stfc-prod*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -182,6 +186,7 @@ stfc-cloud-opensearch:
               - "trivy_staging*"
               - "kube_logs_azimuth-stfc-staging*"
               - "trivy_azimuth-stfc-staging*"
+              - "kube_logs_azimuth_staging_user_cluster*"
             allowed_actions:
               - "read"
               - "indices_monitor"
@@ -193,15 +198,14 @@ stfc-cloud-opensearch:
               - "kibana_all_read"
 
       # Azimuth production writer role
-      writer_azimuth_prod_role:
+      writer_azimuth_user_prod_role:
         reserved: false
         cluster_permissions:
           - "cluster:monitor/health"
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_azimuth-stfc-prod*"
-              - "trivy_azimuth-stfc-prod*"
+              - kube_logs_azimuth_user_cluster*
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -211,15 +215,14 @@ stfc-cloud-opensearch:
               - "indices:data/write/bulk*"
 
       # Azimuth staging writer role
-      writer_azimuth_staging_role:
+      writer_azimuth_user_staging_role:
         reserved: false
         cluster_permissions:
           - "cluster:monitor/health"
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - "kube_logs_azimuth-stfc-staging*"
-              - "trivy_azimuth-stfc-staging*"
+              - "kube_logs_azimuth_staging_user_cluster*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
@@ -302,15 +305,15 @@ stfc-cloud-opensearch:
         description: "Maps reader-staging user to cloud-staging and azimuth-staging read access"
 
       # Azimuth production writer role mapping
-      writer_azimuth_prod_role:
+      writer_azimuth_user_prod_role:
         reserved: false
         backend_roles:
-          - "writer_azimuth_prod_role"
+          - "writer_azimuth_user_prod_role"
         description: "Maps writer-azimuth-user-prod to azimuth tenant write access"
 
       # Azimuth staging writer role mapping
-      writer_azimuth_staging_role:
+      writer_azimuth_user_staging_role:
         reserved: false
         backend_roles:
-          - "writer_azimuth_staging_role"
+          - "writer_azimuth_user_staging_role"
         description: "Maps writer-azimuth-user-staging to azimuth-staging tenant write access"
