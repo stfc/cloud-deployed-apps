@@ -8,10 +8,10 @@ stfc-cloud-openstack-cluster:
     nodeGroups:
       - name: default-md-0
         machineCount: 5
-        machineFlavor: dep-l2.tiny
+        machineFlavor: dep-l2.xsmall
 
     nodeGroupDefaults:
-      machineFlavor: dep-l2.tiny
+      machineFlavor: dep-l2.xsmall
       nodeLabels:
         # we're running longhorn on this cluster
         # set label so worker nodes can host longhorn volumes
