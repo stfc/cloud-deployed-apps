@@ -43,6 +43,12 @@ spec:
             valuesFile: ../../../clusters/prod/management/argocd-setup-values.yaml
             secretsFile: ../../../clusters/prod/management/secrets/apps/argocd.yaml
 
+          - name: logging
+            chartName: logging
+            namespace: logging-system
+            valuesFile: ../../../clusters/prod/management/logging.yaml
+            secretsFile: ../../../clusters/prod/management/secrets/apps/logging.yaml
+
           - name: "cert-manager"
             chartName: cert-manager
             namespace: cert-manager
@@ -83,6 +89,7 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
 
 ---
 apiVersion: argoproj.io/v1alpha1

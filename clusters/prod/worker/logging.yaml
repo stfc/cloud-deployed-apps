@@ -1,0 +1,19 @@
+stfc-cloud-logging:
+  includePrometheusRules: true
+  opensearchCredentials:
+    username: writer-prod
+  fluent-operator:
+    # we're not going to use fluentd for now
+    operator:
+      disableComponentControllers: fluentd
+    fluentd:
+      crdsEnable: false
+    fluentbit:
+      output:
+        loki:
+          enable: false
+        opensearch:
+          logstashPrefix: kube_logs_production_worker
+          # staging worker opensearch for now, with plans to move it to prod/olaf
+          host: opensearch.staging-worker.nubes.stfc.ac.uk
+          port: 443

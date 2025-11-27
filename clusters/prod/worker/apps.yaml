@@ -43,6 +43,12 @@ spec:
             valuesFile: ../../../clusters/prod/worker/argocd-setup-values.yaml
             secretsFile: ../../../clusters/prod/worker/secrets/apps/argocd.yaml
 
+          - name: logging
+            chartName: logging
+            namespace: logging-system
+            valuesFile: ../../../clusters/prod/worker/logging.yaml
+            secretsFile: ../../../clusters/prod/worker/secrets/apps/logging.yaml
+
           - name: cert-manager
             chartName: cert-manager
             namespace: cert-manager
