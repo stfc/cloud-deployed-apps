@@ -212,7 +212,7 @@ stfc-cloud-opensearch:
           - "indices:data/write/bulk"
         index_permissions:
           - index_patterns:
-              - kube_logs_azimuth_user_cluster*
+              - "kube_logs_azimuth_user_cluster*"
             allowed_actions:
               - "indices:data/write/index"
               - "indices:data/write/update"
