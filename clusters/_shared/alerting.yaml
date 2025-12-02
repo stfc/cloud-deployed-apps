@@ -21,13 +21,6 @@ stfc-cloud-openstack-cluster:
                     # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/templates/monitoring/kube-prometheus-stack.yaml#L41-L44
                     receiver: "null"
                     routes:
-                      - receiver: "default-receiver"
-                        group_by: ["cluster", "service"]
-                        group_wait: 30m
-                        group_interval: 4h
-                        repeat_interval: 2d
-                        active_time_intervals:
-                          - officehours
 
                         # mute watchdog alert
                         #   - this should always be firing
@@ -35,8 +28,26 @@ stfc-cloud-openstack-cluster:
                         #   - not useful by itself
                         #   - if this is firing, we're suppressing severity=info alerts
                         #   - infoinhibitor rules should be automatically configured
-                        matchers:
-                          - alertname !~ "Watchdog|InfoInhibitor" 
+                      - matchers:
+                          - alertname=~"Watchdog|InfoInhibitor" 
+                        continue: false
+
+                      # Route 1: alerts WITH namespace label - group by instance
+                      - matchers:
+                          - namespace=~".+"
+                        group_by: ['namespace', 'severity']
+                        receiver: 'with-namespace-receiver'
+                        continue: false
+
+                      - receiver: "default-receiver"
+                        group_by: ["cluster"]
+                        group_wait: 30m
+                        group_interval: 4h
+                        repeat_interval: 2d
+                        active_time_intervals:
+                          - officehours
+
+
 
                   inhibit_rules:
                     # mute warning/info alerts on same service if a critical alert is firing - less noise
@@ -44,7 +55,7 @@ stfc-cloud-openstack-cluster:
                         - severity = "critical"
                       target_matchers:
                         - severity = "warning"
-                      equal: [cluster, service]
+                      equal: [cluster, alertname]
 
                   time_intervals:
                     - name: officehours
@@ -60,11 +71,53 @@ stfc-cloud-openstack-cluster:
                     - name: default-receiver
                       email_configs:
                         - to: cloud-support@stfc.ac.uk
-                          send_resolved: true
+                          send_resolved: false
                           headers:
                             subject: |
                               {%- raw %}
-                              "({{ .CommonLabels.env }} : {{ .CommonLabels.cluster }}) {{ or .CommonLabels.alertname "Multiple Alerts" }}"
+                              "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} {{.CommonLabels.alertname}} alert(s)"
+                              {%- endraw %}
+                          html: |-
+                            {%- raw %}
+                            <b>You have the following alerts:</b>
+                            {{ range .Alerts }}
+                                <b>{{.Labels.alertname}}</b><br/>
+                                <b>Annotations:</b><br/>
+                                <ul>{{ range .Annotations.SortedPairs }}
+                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                                {{ end }}</ul>
+                                <b>Labels:</b>
+                                <ul>{{ range .Labels.SortedPairs }}
+                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
+                                {{ end }}</ul>
+                                <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
+                            {{ end }}
+                            {%- endraw %}
+                          text: |-
+                            {%- raw %}
+                            You have the following alerts:
+                            {{ range .Alerts }}
+                            * [{{ .Labels.severity }}] {{.Labels.alertname}}
+                              Annotations:
+                              {{ range .Annotations.SortedPairs }}
+                              {{ .Name }} = {{ .Value }}
+                              {{ end }}
+                              Labels:
+                              {{ range .Labels.SortedPairs }}
+                              {{ .Name }} = {{ .Value }}
+                              {{ end }}
+                              View in Prometheus: {{ .GeneratorURL }}
+                            {{ end }}
+                            {%- endraw %}
+
+                    - name: with-namespace-receiver
+                      email_configs:
+                        - to: cloud-support@stfc.ac.uk
+                          send_resolved: false
+                          headers:
+                            subject: |
+                              {%- raw %}
+                              "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} alert(s) for {{.CommonLabels.namespace}}"
                               {%- endraw %}
                           html: |-
                             {%- raw %}
