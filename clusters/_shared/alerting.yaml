@@ -21,6 +21,17 @@ stfc-cloud-openstack-cluster:
                     # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/templates/monitoring/kube-prometheus-stack.yaml#L41-L44
                     receiver: "null"
                     routes:
+
+                        # mute watchdog alert
+                        #   - this should always be firing
+                        # mute infoinhibitor alert
+                        #   - not useful by itself
+                        #   - if this is firing, we're suppressing severity=info alerts
+                        #   - infoinhibitor rules should be automatically configured
+                      - matchers:
+                          - alertname=~"Watchdog|InfoInhibitor" 
+                        continue: false
+
                       # Route 1: alerts WITH namespace label - group by instance
                       - matchers:
                           - namespace=~".+"
@@ -36,14 +47,7 @@ stfc-cloud-openstack-cluster:
                         active_time_intervals:
                           - officehours
 
-                        # mute watchdog alert
-                        #   - this should always be firing
-                        # mute infoinhibitor alert
-                        #   - not useful by itself
-                        #   - if this is firing, we're suppressing severity=info alerts
-                        #   - infoinhibitor rules should be automatically configured
-                        matchers:
-                          - alertname !~ "Watchdog|InfoInhibitor" 
+
 
                   inhibit_rules:
                     # mute warning/info alerts on same service if a critical alert is firing - less noise
@@ -51,7 +55,7 @@ stfc-cloud-openstack-cluster:
                         - severity = "critical"
                       target_matchers:
                         - severity = "warning"
-                      equal: [cluster, service]
+                      equal: [cluster, alertname]
 
                   time_intervals:
                     - name: officehours
@@ -67,7 +71,7 @@ stfc-cloud-openstack-cluster:
                     - name: default-receiver
                       email_configs:
                         - to: cloud-support@stfc.ac.uk
-                          send_resolved: true
+                          send_resolved: false
                           headers:
                             subject: |
                               {%- raw %}
@@ -109,7 +113,7 @@ stfc-cloud-openstack-cluster:
                     - name: with-namespace-receiver
                       email_configs:
                         - to: cloud-support@stfc.ac.uk
-                          send_resolved: true
+                          send_resolved: false
                           headers:
                             subject: |
                               {%- raw %}
