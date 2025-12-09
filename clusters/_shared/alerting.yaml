@@ -11,10 +11,10 @@ stfc-cloud-openstack-cluster:
               alertmanager:
                 config:
                   global:
-                    resolve_timeout: 1h
-                    smtp_smarthost:
-                    smtp_from: cloud-support@stfc.ac.uk
-                    smtp_require_tls: false
+                    resolve_timeout: 5m
+                    smtp_require_tls: true
+                    opsgenie_api_url: 'https://api.opsgenie.com/'
+
 
                   route:
                     # we need a null reciever to workaround azimuth addon enforced defaults 
@@ -41,9 +41,9 @@ stfc-cloud-openstack-cluster:
 
                       - receiver: "default-receiver"
                         group_by: ["cluster"]
-                        group_wait: 30m
-                        group_interval: 4h
-                        repeat_interval: 2d
+                        group_wait: 30s
+                        group_interval: 5m
+                        repeat_interval: 2h
                         active_time_intervals:
                           - officehours
 
@@ -61,96 +61,59 @@ stfc-cloud-openstack-cluster:
                     - name: officehours
                       time_intervals:
                         - times:
-                            - start_time: 07:00
-                              end_time: 18:00
+                            - start_time: 08:30
+                              end_time: 17:00
                           weekdays: ["monday:friday"]
                           location: "Europe/London"
 
                   receivers:
                     - name: "null"
                     - name: default-receiver
-                      email_configs:
-                        - to: cloud-support@stfc.ac.uk
-                          send_resolved: false
-                          headers:
-                            subject: |
+                      opsgenie_configs:
+                        - send_resolved: true
+                          message: >- 
+                            {%- raw %}
+                            "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} {{.CommonLabels.alertname}} alert(s)"
+                            {%- endraw %}
+                          description: >-
                               {%- raw %}
-                              "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} {{.CommonLabels.alertname}} alert(s)"
+                              {{ if gt (len .Alerts.Firing) 0 -}}
+                              Alerts Firing:
+                              {{ template "__text_alert_list" .Alerts.Firing }}
+                              {{- end }}
                               {%- endraw %}
-                          html: |-
-                            {%- raw %}
-                            <b>You have the following alerts:</b>
-                            {{ range .Alerts }}
-                                <b>{{.Labels.alertname}}</b><br/>
-                                <b>Annotations:</b><br/>
-                                <ul>{{ range .Annotations.SortedPairs }}
-                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
-                                {{ end }}</ul>
-                                <b>Labels:</b>
-                                <ul>{{ range .Labels.SortedPairs }}
-                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
-                                {{ end }}</ul>
-                                <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
-                            {{ end }}
-                            {%- endraw %}
-                          text: |-
-                            {%- raw %}
-                            You have the following alerts:
-                            {{ range .Alerts }}
-                            * [{{ .Labels.severity }}] {{.Labels.alertname}}
-                              Annotations:
-                              {{ range .Annotations.SortedPairs }}
-                              {{ .Name }} = {{ .Value }}
-                              {{ end }}
-                              Labels:
-                              {{ range .Labels.SortedPairs }}
-                              {{ .Name }} = {{ .Value }}
-                              {{ end }}
-                              View in Prometheus: {{ .GeneratorURL }}
-                            {{ end }}
-                            {%- endraw %}
+                          tags: >- 
+                              {%- raw %}
+                              "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                              {%- endraw %}
+                          entity: >-
+                              {%- raw %}
+                              "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                              {%- endraw %}
+                          
 
                     - name: with-namespace-receiver
-                      email_configs:
-                        - to: cloud-support@stfc.ac.uk
-                          send_resolved: false
-                          headers:
-                            subject: |
-                              {%- raw %}
-                              "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} alert(s) for {{.CommonLabels.namespace}}"
-                              {%- endraw %}
-                          html: |-
+                      opsgenie_configs:
+                        - send_resolved: true
+                          message: >- 
                             {%- raw %}
-                            <b>You have the following alerts:</b>
-                            {{ range .Alerts }}
-                                <b>{{.Labels.alertname}}</b><br/>
-                                <b>Annotations:</b><br/>
-                                <ul>{{ range .Annotations.SortedPairs }}
-                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
-                                {{ end }}</ul>
-                                <b>Labels:</b>
-                                <ul>{{ range .Labels.SortedPairs }}
-                                    <li><strong>{{ .Name }}</strong> = {{ .Value }}</li>
-                                {{ end }}</ul>
-                                <p><a href="{{ .GeneratorURL }}">View in Prometheus</a></p>
-                            {{ end }}
+                            "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} alert(s) for {{.CommonLabels.namespace}}"
                             {%- endraw %}
-                          text: |-
+                          description: >-
                             {%- raw %}
-                            You have the following alerts:
-                            {{ range .Alerts }}
-                            * [{{ .Labels.severity }}] {{.Labels.alertname}}
-                              Annotations:
-                              {{ range .Annotations.SortedPairs }}
-                              {{ .Name }} = {{ .Value }}
-                              {{ end }}
-                              Labels:
-                              {{ range .Labels.SortedPairs }}
-                              {{ .Name }} = {{ .Value }}
-                              {{ end }}
-                              View in Prometheus: {{ .GeneratorURL }}
-                            {{ end }}
+                            {{ if gt (len .Alerts.Firing) 0 -}}
+                            Alerts Firing:
+                            {{ template "__text_alert_list" .Alerts.Firing }}
+                            {{- end }}
                             {%- endraw %}
-
+                          tags: >- 
+                            {%- raw %}
+                            "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                            {%- endraw %}
+                          entity: >-
+                            {%- raw %}
+                            "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                            {%- endraw %}
+                          
                   templates:
                     - "/etc/alertmanager/config/*.tmpl"
