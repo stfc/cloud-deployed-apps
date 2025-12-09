@@ -17,12 +17,26 @@ stfc-cloud-opensearch:
       security: 
         tls:
           http:
+            adminDn: ["CN=admin,OU=log-storage"]
             generate: false
-            secret: log-storage-http-tls-secret
+            secret: 
+              name: log-storage-http-cert
+
           transport:
             generate: false
-            secret: log-storage-transport-tls-secret
+            perNode: false
+            caSecret:
+              name: log-storage-ca
+            nodesDn: ["CN=log-storage,OU=log-storage"]
+            adminDn: ["CN=admin, OU=log-storage"] 
+            secret: 
+              name: log-storage-transport-cert
+            #enableHotReload: false
+        # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
+        # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
         config: 
+          adminSecret: 
+            name: log-storage-admin-cert
           adminCredentialsSecret: 
             name: log-storage-admin-credentials
           securityConfigSecret:
@@ -32,6 +46,11 @@ stfc-cloud-opensearch:
         version: 3.1.0
       
       dashboards:
+        tls:
+          generate: false
+          secret: 
+            name: log-storage-dashboards-cert
+
         opensearchCredentialsSecret:
           name: log-storage-admin-credentials
         version: 3.1.0
