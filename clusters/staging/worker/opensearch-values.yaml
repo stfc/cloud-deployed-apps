@@ -5,6 +5,29 @@ stfc-cloud-opensearch:
     cluster:
       name: log-storage
       
+      # set explicit cert secrets because argocd doesn't play nice with self generated secrets
+      # instead explicitly generate self-signed certs using cert-manager and have them managed externally outside of argocd 
+      # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
+      # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
+      dashboards:
+        tls:
+          generate: false
+          secret: log-storage-dashboards-tls-secret
+      
+      security: 
+        tls:
+          http:
+            generate: false
+            secret: log-storage-http-tls-secret
+          transport:
+            generate: false
+            secret: log-storage-transport-tls-secret
+        config: 
+          adminCredentialsSecret: 
+            name: log-storage-admin-credentials
+          securityConfigSecret:
+            name: log-storage-securityconfig-secret
+
       general:
         version: 3.1.0
       
@@ -73,14 +96,7 @@ stfc-cloud-opensearch:
               hosts:
                 - opensearch.staging-worker.nubes.stfc.ac.uk
 
-      # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
-      # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
-      security:
-        config: 
-          adminCredentialsSecret: 
-            name: log-storage-admin-credentials
-          securityConfigSecret:
-            name: log-storage-securityconfig-secret
+
 
   customSecurityConfigFiles:
     config.yml: |

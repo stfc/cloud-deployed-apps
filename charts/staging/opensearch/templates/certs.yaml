@@ -1,0 +1,46 @@
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Name }}-transport-tls-cert
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ .Release.Name }}-transport-tls-secret
+  commonName: "transport"
+  issuerRef:
+    name: self-signed
+    kind: ClusterIssuer
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+    - client auth
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Name }}-http-tls-cert
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ .Release.Name }}-http-tls-secret
+  commonName: "http"
+  issuerRef:
+    name: self-signed
+    kind: ClusterIssuer
+
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Name }}-dashboards-tls-cert
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ .Release.Name }}-dashboards-tls-secret
+  commonName: "dashboards"
+  issuerRef:
+    name: self-signed
+    kind: ClusterIssuer
+
+---
