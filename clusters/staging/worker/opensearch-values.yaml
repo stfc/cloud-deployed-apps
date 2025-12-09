@@ -37,11 +37,14 @@ stfc-cloud-opensearch:
             - "data"
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "500m"
+              memory: "4Gi"
+              # dedicate 5 cores 
+              cpu: "5000m" 
             limits:
-              memory: "2Gi"
-              cpu: "500m"
+              memory: "10Gi"
+              # burst to max 10 cores (62.5% of total) 
+              # to stop CPU throttling alerts
+              cpu: "10000m" 
           pdb:
             enable: true
             maxUnavailable: 1  
