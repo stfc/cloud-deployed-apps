@@ -5,10 +5,47 @@ stfc-cloud-opensearch:
     cluster:
       name: log-storage
       
+      # set explicit cert secrets because argocd doesn't play nice with self generated secrets
+      # instead explicitly generate self-signed certs using cert-manager and have them managed externally outside of argocd 
+      # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
+      # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
+      security: 
+        tls:
+          http:
+            adminDn: ["CN=admin,OU=log-storage"]
+            generate: false
+            secret: 
+              name: log-storage-http-cert
+
+          transport:
+            generate: false
+            perNode: false
+            caSecret:
+              name: log-storage-ca
+            nodesDn: ["CN=log-storage,OU=log-storage"]
+            adminDn: ["CN=admin, OU=log-storage"] 
+            secret: 
+              name: log-storage-transport-cert
+            #enableHotReload: false
+        # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
+        # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
+        config: 
+          adminSecret: 
+            name: log-storage-admin-cert
+          adminCredentialsSecret: 
+            name: log-storage-admin-credentials
+          securityConfigSecret:
+            name: log-storage-securityconfig-secret
+
       general:
         version: 3.1.0
       
       dashboards:
+        tls:
+          generate: false
+          secret: 
+            name: log-storage-dashboards-cert
+
         opensearchCredentialsSecret:
           name: log-storage-admin-credentials
         version: 3.1.0
@@ -37,11 +74,14 @@ stfc-cloud-opensearch:
             - "data"
           resources:
             requests:
-              memory: "2Gi"
-              cpu: "500m"
+              memory: "4Gi"
+              # dedicate 5 cores 
+              cpu: "5000m" 
             limits:
-              memory: "2Gi"
-              cpu: "500m"
+              memory: "10Gi"
+              # burst to max 10 cores (62.5% of total) 
+              # to stop CPU throttling alerts
+              cpu: "10000m" 
           pdb:
             enable: true
             maxUnavailable: 1  
