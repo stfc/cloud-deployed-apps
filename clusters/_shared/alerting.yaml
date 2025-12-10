@@ -84,11 +84,11 @@ stfc-cloud-openstack-cluster:
                               {%- endraw %}
                           tags: >- 
                               {%- raw %}
-                              "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                              {{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}
                               {%- endraw %}
                           entity: >-
                               {%- raw %}
-                              "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                              {{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}
                               {%- endraw %}
                           
 
@@ -115,5 +115,4 @@ stfc-cloud-openstack-cluster:
                             {{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}
                             {%- endraw %}
                           
-                  templates:
-                    - "/etc/alertmanager/config/*.tmpl"
+                  templates: []

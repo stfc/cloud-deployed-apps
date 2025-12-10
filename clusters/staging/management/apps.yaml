@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: test-alerts-branch
     path: clusters/staging/management
   syncPolicy:
     automated:
@@ -71,7 +71,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: test-alerts-branch
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
@@ -101,7 +101,7 @@ spec:
   generators:
     - git:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        revision: main
+        revision: test-alerts-branch
         files:
           # grab all infra values for all clusters in environment
           - path: "clusters/staging/*/infra-values.yaml"
@@ -120,7 +120,7 @@ spec:
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
-        targetRevision: main
+        targetRevision: test-alerts-branch
         path: charts/staging/capi-infra
         helm:
           valueFiles:
