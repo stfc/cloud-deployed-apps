@@ -73,7 +73,7 @@ stfc-cloud-openstack-cluster:
                         - send_resolved: true
                           message: >- 
                             {%- raw %}
-                            "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} {{.CommonLabels.alertname}} alert(s)"
+                            {{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} {{.CommonLabels.alertname}} alert(s)
                             {%- endraw %}
                           description: >-
                               {%- raw %}
@@ -97,7 +97,7 @@ stfc-cloud-openstack-cluster:
                         - send_resolved: true
                           message: >- 
                             {%- raw %}
-                            "{{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} alert(s) for {{.CommonLabels.namespace}}"
+                            {{ .Status | toUpper }}{{ if eq .Status "firing" }} [{{.CommonLabels.env}}/{{ .CommonLabels.cluster }}: {{ .CommonLabels.severity | toUpper }}] {{ .Alerts.Firing | len }}{{ end }} alert(s) for {{.CommonLabels.namespace}}
                             {%- endraw %}
                           description: >-
                             {%- raw %}
@@ -108,11 +108,11 @@ stfc-cloud-openstack-cluster:
                             {%- endraw %}
                           tags: >- 
                             {%- raw %}
-                            "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                            {{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}
                             {%- endraw %}
                           entity: >-
                             {%- raw %}
-                            "{{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}"
+                            {{- if eq .CommonLabels.env "prod" -}}stfc-production{{- else -}}stfc-development{{- end }}
                             {%- endraw %}
                           
                   templates:
