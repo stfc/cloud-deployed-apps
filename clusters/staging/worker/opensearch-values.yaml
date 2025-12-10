@@ -113,14 +113,7 @@ stfc-cloud-opensearch:
               hosts:
                 - opensearch.staging-worker.nubes.stfc.ac.uk
 
-      # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
-      # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
-      security:
-        config: 
-          adminCredentialsSecret: 
-            name: log-storage-admin-credentials
-          securityConfigSecret:
-            name: log-storage-securityconfig-secret
+
 
   customSecurityConfigFiles:
     config.yml: |
