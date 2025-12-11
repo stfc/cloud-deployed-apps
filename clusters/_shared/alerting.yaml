@@ -12,42 +12,63 @@ stfc-cloud-openstack-cluster:
                 config:
                   global:
                     resolve_timeout: 5m
-                    smtp_require_tls: true
                     opsgenie_api_url: 'https://api.opsgenie.com/'
-
 
                   route:
                     # we need a null reciever to workaround azimuth addon enforced defaults 
+                    # null reciever just ignores incoming values, then forwarded onto child routes
+                    # every alert needs a route - even ones we're ignoring - hence null receiver for ignoring alerts
                     # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/templates/monitoring/kube-prometheus-stack.yaml#L41-L44
                     receiver: "null"
+
+                    # all child routes pick will use these rules
+
+                    # wait time to pick up any alerts before alertmanager sends off alerts
+                    group_wait: 30s
+                    # wait time before sending another different group of alerts after one has already been sent
+                    group_interval: 5m
+                    # wait time before repeating the same group of alerts if the same group of alerts are still firing
+                    repeat_interval: 2h
+                    # only fire alerts in active office hours
+                    active_time_intervals:
+                      - officehours
+                    
+                    # child routes
                     routes:
 
-                        # mute watchdog alert
-                        #   - this should always be firing
-                        # mute infoinhibitor alert
-                        #   - not useful by itself
-                        #   - if this is firing, we're suppressing severity=info alerts
-                        #   - infoinhibitor rules should be automatically configured
+                      # mute watchdog alert
+                      #   - this should always be firing
+                      #   - if this shows up on the alertmanager UI it means our monitoring stack is working and alerts are routing correctly
+
+                      # mute infoinhibitor alert
+                      #   - not useful by itself
+                      #   - if this is firing, we're suppressing severity=info alerts
+                      #   - infoinhibitor rules should be automatically configured  
+                      #   Infoinhibitor prevents occassional blips from triggering a full-blown alert - like CPUThrottlingHigh 
+                      #   - if CPUThrottlingHigh fires on its own, it could just be noise - infoinhibitor alert picks this up and fires, we ignore it
+                      #   - if CPUThrottlingHIgh fires in conjunction with other alerts in the same namespace - its probably serious, so infoinhibitor is turned off and each alert fires as normal
+                      #   - this is all just to prevent noise in the alert queue
+
+
+                      # Route 0: ignore Watchdog and InfoInhibitor alerts - clears up alert queue
+                      # Only informational - we can see these in alertmanager for info but we don't need to see them in the alert queue
                       - matchers:
                           - alertname=~"Watchdog|InfoInhibitor" 
+                        # this means don't look at sibling routes, cancel early 
                         continue: false
 
-                      # Route 1: alerts WITH namespace label - group by instance
+                      # Route 1: alerts WITH namespace label - group by namespace - easier to understand
+                      # A namespace is a good differentiating factor - because it usually pertains to a single service/role the cluster has
                       - matchers:
                           - namespace=~".+"
                         group_by: ['namespace', 'severity']
                         receiver: 'with-namespace-receiver'
+                        # this means don't look at sibling routes, cancel early 
                         continue: false
 
+                      # Route 2: alerts WITHOUT namespace label - group by alertname - a catch all at the end
                       - receiver: "default-receiver"
-                        group_by: ["cluster"]
-                        group_wait: 30s
-                        group_interval: 5m
-                        repeat_interval: 2h
-                        active_time_intervals:
-                          - officehours
-
-
+                        group_by: ['severity', 'alertname']
 
                   inhibit_rules:
                     # mute warning/info alerts on same service if a critical alert is firing - less noise
@@ -55,7 +76,7 @@ stfc-cloud-openstack-cluster:
                         - severity = "critical"
                       target_matchers:
                         - severity = "warning"
-                      equal: [cluster, alertname]
+                      equal: ['alertname']
 
                   time_intervals:
                     - name: officehours
