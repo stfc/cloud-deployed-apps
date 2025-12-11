@@ -14,7 +14,8 @@ BASE_DIR="$(dirname "$SCRIPTPATH")"
 
 
 if [[ $CLUSTER_NAME == "management" ]]; then
-    PUBLIC_KEY=$(age-keygen /tmp/$ENVIRONMENT-age-management-key.txt | grep "# public key:" | cut -d' ' -f4)
+    age-keygen -o /tmp/$ENVIRONMENT-age-management-key.txt 
+    PUBLIC_KEY=$(grep "# public key:" /tmp/$ENVIRONMENT-age-management-key.txt | cut -d' ' -f4)
     # Update .sops.yaml files - replace the temporary ArgoCD key
     for file in "$BASE_DIR/clusters/$ENVIRONMENT/$CLUSTER_NAME/secrets/infra/.sops.yaml" "$BASE_DIR/clusters/$ENVIRONMENT/worker/secrets/infra/.sops.yaml"; do
     if [ -f "$file" ]; then
@@ -30,7 +31,9 @@ if [[ $CLUSTER_NAME == "management" ]]; then
 fi
 
 if [[ $CLUSTER_NAME == "worker" ]]; then
-    PUBLIC_KEY=$(age-keygen /tmp/$ENVIRONMENT-age-worker-key.txt | grep "# public key:" | cut -d' ' -f4)
+    age-keygen -o /tmp/$ENVIRONMENT-age-worker-key.txt 
+    PUBLIC_KEY=$(grep "# public key:" /tmp/$ENVIRONMENT-age-worker-key.txt | cut -d' ' -f4)
+    echo $PUBLIC_KEY
     sed -i '/# Temporary key for ArgoCD/,/- age1/d' "$BASE_DIR/clusters/$ENVIRONMENT/$CLUSTER_NAME/secrets/apps/.sops.yaml"
     # Add the new temporary key after the age: line
     sed -i "/- age:/a\\
