@@ -130,7 +130,7 @@ spec:
             # Bring in infra values specific to this cluster
             - "../../../{{path}}/{{path.filename}}"
             # Bring in infra secrets specific to this cluster
-            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/opsgenie-api-key.yaml"
+            - "secrets://../../../clusters/{{path[1]}}/management/secrets/infra/opsgenie-api-key.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/auth.yaml"
