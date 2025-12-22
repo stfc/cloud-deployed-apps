@@ -217,6 +217,7 @@ stfc-cloud-opensearch:
       reader_staging_role:
         reserved: false
         cluster_permissions:
+          - "cluster:monitor/main"
           - "cluster:monitor/nodes/info"
           - "cluster:monitor/health"
           - "cluster_composite_ops_ro"
