@@ -65,3 +65,7 @@ stfc-cloud-openstack-cluster:
                     - hosts:
                         - alertmanager.prod-worker.nubes.stfc.ac.uk
                       secretName: tls-keypair
+      etcdDefrag:
+        release:
+          values:
+            schedule: 11 12 * * * # smearing the time for defrag job 11:12am daily  
