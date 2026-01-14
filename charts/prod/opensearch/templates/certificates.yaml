@@ -1,0 +1,114 @@
+{{- $clusterName := index .Values "stfc-cloud-opensearch" "opensearch-cluster" "cluster" "name" -}}
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{$clusterName}}-admin-certificate
+  namespace: {{.Release.Namespace}}
+spec:
+  subject:
+    organizationalUnits: [{{$clusterName}}] # OU
+  commonName: admin # CN
+  secretName: {{$clusterName}}-admin-cert
+  duration: 87600h0m0s # 10yr
+  renewBefore: 8760h0m0s # 1yr
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  issuerRef:
+    name: {{$clusterName}}-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{$clusterName}}-http-certificate
+  namespace: {{.Release.Namespace}}
+spec:
+  subject:
+    organizationalUnits: [{{$clusterName}}] # OU
+  commonName: {{$clusterName}} # CN
+  secretName: {{$clusterName}}-http-cert
+  duration: 87600h0m0s # 10yr
+  renewBefore: 8760h0m0s # 1yr
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  dnsNames:
+  - {{$clusterName}}
+  - {{$clusterName}}-discovery
+  - {{$clusterName}}.{{.Release.Namespace}}
+  - {{$clusterName}}.{{.Release.Namespace}}.svc
+  - {{$clusterName}}.{{.Release.Namespace}}.svc.cluster.local
+  usages:
+    - server auth
+    - client auth
+  issuerRef:
+    name: {{$clusterName}}-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{$clusterName}}-transport-certificate
+  namespace: {{.Release.Namespace}}
+spec:
+  subject:
+    organizationalUnits: [{{$clusterName}}] # OU
+  commonName: {{$clusterName}} # CN
+  secretName: {{$clusterName}}-transport-cert
+  duration: 87600h0m0s # 10yr
+  renewBefore: 8760h0m0s # 1yr
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  dnsNames:
+  - {{$clusterName}}
+  - {{$clusterName}}-discovery
+  - {{$clusterName}}.{{.Release.Namespace}}
+  - {{$clusterName}}.{{.Release.Namespace}}.svc
+  - {{$clusterName}}.{{.Release.Namespace}}.svc.cluster.local
+  usages:
+    - server auth
+    - client auth
+  issuerRef:
+    name: {{$clusterName}}-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+
+--- 
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{$clusterName}}-dashboards-certificate
+  namespace: {{.Release.Namespace}}
+spec:
+  subject:
+    organizationalUnits: [{{$clusterName}}] # OU
+  commonName: {{$clusterName}}-dashboards # CN
+  secretName: {{$clusterName}}-dashboards-cert
+  duration: 87600h0m0s # 10yr
+  renewBefore: 8760h0m0s # 1yr
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  dnsNames:
+  - {{$clusterName}}-dashboards
+  - {{$clusterName}}-dashboards.{{.Release.Namespace}}
+  - {{$clusterName}}-dashboards.{{.Release.Namespace}}.svc
+  - {{$clusterName}}-dashboards.{{.Release.Namespace}}.svc.cluster.local
+  usages:
+    - server auth
+    - client auth
+  issuerRef:
+    name: {{$clusterName}}-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
