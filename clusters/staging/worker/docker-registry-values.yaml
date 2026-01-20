@@ -14,6 +14,10 @@ stfc-cloud-docker-registry:
       nginx.ingress.kubernetes.io/proxy-buffering: "on"
       nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
       cert-manager.io/cluster-issuer: "letsencrypt-prod"  
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        if ($request_uri !~ ^/v2) {
+          rewrite ^(.*)$ /v2$1 break;
+        }
     hosts:
       - staging.dockerhub.stfc.ac.uk
     tls:
