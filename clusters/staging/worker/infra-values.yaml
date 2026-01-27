@@ -1,6 +1,7 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
     cloudCredentialsSecretName: staging-worker-cluster-cloud-credentials
+    registryMirrors: { docker.io: ["https://staging.dockerhub.stfc.ac.uk/v2/"] }
 
     controlPlane:
       machineFlavor: dep-l2.tiny
