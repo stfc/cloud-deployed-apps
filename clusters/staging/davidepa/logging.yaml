@@ -12,7 +12,7 @@ stfc-cloud-logging:
         loki:
           enable: false
         opensearch:
-          logstashPrefix: kube_logs_staging_david-epa
+          logstashPrefix: kube_logs_staging_davidepa
           # staging worker opensearch for now, with plans to move it to prod/olaf
-          host: opensearch.staging.nubes.stfc.ac.uk
+          host: opensearch.staging-worker.nubes.stfc.ac.uk
           port: 443
