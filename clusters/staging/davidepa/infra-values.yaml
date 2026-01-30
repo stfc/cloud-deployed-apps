@@ -3,6 +3,9 @@ stfc-cloud-openstack-cluster:
     machineSSHKeyName: k8s-david-epa
     cloudCredentialsSecretName: david-epa-cluster-cloud-credentials
 
+    kubernetesVersion: "1.34.3"
+    machineImage: "capi-ubuntu-2204-kube-v1.34.3"
+
     controlPlane:
       machineFlavor: dep-l2.tiny
 
