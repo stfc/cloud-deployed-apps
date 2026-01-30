@@ -64,12 +64,6 @@ spec:
             namespace: ingress-nginx-external
             valuesFile: ../../../clusters/staging/davidepa/ingress-nginx-external-values.yaml
 
-          - name: manila-csi
-            chartName: manila-csi
-            namespace: manila-csi
-            valuesFile: ../../../clusters/staging/davidepa/argocd-setup-values.yaml
-            secretsFile: ../../../clusters/staging/davidepa/secrets/apps/manila-csi.yaml
-
           - name: longhorn
             chartName: longhorn
             namespace: longhorn-system
