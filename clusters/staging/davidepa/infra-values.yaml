@@ -78,7 +78,7 @@ stfc-cloud-openstack-cluster:
                         - grafana.david-epa.nubes.stfc.ac.uk
                       secretName: tls-keypair
               alertmanager:
-                enabled: true
+                enabled: false
                 ingress:
                   ingressClassName: internal-nginx
                   annotations:
