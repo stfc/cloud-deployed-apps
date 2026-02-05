@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: https://github.com/stfc/cloud-deployed-apps.git
+    repoURL: https://github.com/DaveWox/cloud-deployed-apps.git
     targetRevision: david-epa-branch
     path: clusters/staging/davidepa
   syncPolicy:
@@ -81,7 +81,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+        repoURL: "https://github.com/DaveWox/cloud-deployed-apps.git"
         targetRevision: david-epa-branch
         path: "charts/staging/{{.chartName}}"
         helm:
