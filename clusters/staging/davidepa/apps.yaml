@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    repoURL: https://github.com/stfc/cloud-deployed-apps.git
+    repoURL: https://github.com/DaveWox/cloud-deployed-apps.git
     targetRevision: david-epa-branch
     path: clusters/staging/davidepa
   syncPolicy:
@@ -64,12 +64,6 @@ spec:
             namespace: ingress-nginx-external
             valuesFile: ../../../clusters/staging/davidepa/ingress-nginx-external-values.yaml
 
-          - name: manila-csi
-            chartName: manila-csi
-            namespace: manila-csi
-            valuesFile: ../../../clusters/staging/davidepa/argocd-setup-values.yaml
-            secretsFile: ../../../clusters/staging/davidepa/secrets/apps/manila-csi.yaml
-
           - name: longhorn
             chartName: longhorn
             namespace: longhorn-system
@@ -87,7 +81,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
+        repoURL: "https://github.com/DaveWox/cloud-deployed-apps.git"
         targetRevision: david-epa-branch
         path: "charts/staging/{{.chartName}}"
         helm:
