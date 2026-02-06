@@ -3,5 +3,5 @@ name: fission
 version: 1.0.0
 dependencies:
   - name: stfc-cloud-fission
-    version: 1.0.0
+    version: "null"
     repository: https://davewox.github.io/cloud-helm-charts
