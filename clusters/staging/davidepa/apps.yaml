@@ -69,6 +69,11 @@ spec:
             namespace: longhorn-system
             valuesFile: ../../../clusters/staging/davidepa/argocd-setup-values.yaml
 
+          - name: fission
+            chartName: fission-all
+            namespace: fission
+            # valuesFile: ../../../clusters/staging/worker/fission-values.yaml  
+
 
   syncPolicy:
     # Don't remove everything if we remove the appset
