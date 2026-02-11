@@ -3,5 +3,5 @@ name: harbor
 version: 1.1.4
 dependencies:
   - name: stfc-cloud-harbor
-    version: 1.2.5
+    version: 1.2.6
     repository: https://stfc.github.io/cloud-helm-charts
