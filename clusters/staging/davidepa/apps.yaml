@@ -72,7 +72,7 @@ spec:
           - name: fission
             chartName: fission-all
             namespace: fission
-            valuesFile: ../../../clusters/staging/worker/fission-values.yaml  
+            valuesFile: ../../../clusters/staging/davidepa/fission-values.yaml  
 
 
   syncPolicy:
