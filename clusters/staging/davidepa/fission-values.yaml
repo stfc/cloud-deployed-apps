@@ -1,3 +1,18 @@
 stfc-cloud-fission:
   openTelemetry:
-    otlpCollectorEndpoint: otel-collector.opentelemetry-operator-system.svc:4317
+    otlpCollectorEndpoint: "otel-collector.opentelemetry-operator-system.svc:4317"
+
+  serviceMonitor:
+    enabled: true
+    namespace: "monitoring-system"
+    additionalServiceMonitorLabels:
+      release: "kube-prometheus-stack"
+  podMonitor:
+    enabled: true
+    namespace: "monitoring-system"
+    additionalPodMonitorLabels:
+      release: "kube-prometheus-stack"
+  grafana:
+    namespace: "monitoring-system"
+    dashboards:
+      enable: true
