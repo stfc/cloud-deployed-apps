@@ -31,6 +31,7 @@ argo-cd:
         g, stfc-cloud/admins, role:admin
 
   server:
+    insecure: true
     httproute:
       enabled: true
 
