@@ -1,0 +1,44 @@
+{{- if .Values.internal.basicAuth.enabled }}
+{{- if .Values.internal.basicAuth.prometheus.enabled }}
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: basicauth-prometheus
+  namespace: monitoring-system
+  labels:
+    app.kubernetes.io/component: prometheus
+    monitoring-auth/type: basic-auth
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: {{ .Values.internal.basicAuth.prometheus.routeName }}
+  basicAuth:
+    users:
+      name: internal-basic-auth
+{{- end }}
+
+
+{{- if .Values.internal.basicAuth.prometheus.enabled}}
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: basicauth-alertmanager
+  namespace: monitoring-system
+  labels:
+    app.kubernetes.io/component: prometheus
+    monitoring-auth/type: basic-auth
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: {{ .Values.internal.basicAuth.alertmanager.routeName }}
+  basicAuth:
+    users:
+      name: internal-basic-auth
+{{- end }}
+
+# TODO add longhorn
+{{- end }}

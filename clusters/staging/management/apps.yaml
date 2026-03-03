@@ -59,6 +59,12 @@ spec:
             namespace: capi-addon-system
             valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
 
+          - name: envoy-gateways
+            chartName: envoy-gateways
+            namespace: envoy-gateway-system
+            valuesFile: ../../../clusters/staging/management/envoy-gateways-values.yaml
+            secretsFile: ../../../clusters/staging/management/secrets/apps/envoy-gateways.yaml
+
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
@@ -133,7 +139,6 @@ spec:
             - "secrets://../../../clusters/{{path[1]}}/management/secrets/infra/opsgenie-api-key.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
-            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/auth.yaml"
 
       syncPolicy:
         automated:

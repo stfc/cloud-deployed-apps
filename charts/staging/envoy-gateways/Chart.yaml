@@ -1,0 +1,9 @@
+apiVersion: v2
+name: envoy-gateways
+description: Deploy internal & external Envoy Gateways with optional OAuth2 and Basic Auth
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: gateway-helm
+    version: 1.7.0
+    repository: oci://docker.io/envoyproxy

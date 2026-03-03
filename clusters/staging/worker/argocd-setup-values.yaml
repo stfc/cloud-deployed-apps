@@ -1,16 +1,25 @@
 argo-cd:
+  httproute:
+    hostnames:
+      - argocd.staging-mgmt.nubes.stfc.ac.uk
+    parentRefs:
+      - name: internal-gateway
+        namespace: envoy-gateway-system
+        sectionName: https
   global:
     domain: argocd.staging-worker.nubes.stfc.ac.uk
 
-  server:
-    ingress:
-      ingressClassName: internal-nginx
-
 stfc-cloud-longhorn:
   longhorn:
-    ingress:
-      ingressClassName: internal-nginx
-      host: "longhorn.staging-worker.nubes.stfc.ac.uk"
+    httproute:
+      enabled: true
+      parentRefs:
+        - name: internal-gateway
+          namespace: envoy-gateway-system
+          sectionName: https
+      hostnames:
+        - longhorn.staging-worker.nubes.stfc.ac.uk
+
     persistence:
       # can't be set for RWX
       migratable: false
@@ -24,4 +33,3 @@ stfc-cloud-cert-manager:
     email: cloud-support@stfc.ac.uk
     enabled: true
     ingressClassName: ingress-nginx-external
-

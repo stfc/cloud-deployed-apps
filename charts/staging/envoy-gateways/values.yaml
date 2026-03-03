@@ -1,0 +1,57 @@
+nameOverride: envoy-gateway
+
+external:
+  enabled: false
+  clusterIssuerName: letsencrypt-prod
+  service:
+    annotations:
+      # prevents errors when deleting clusters, leave as true
+      loadbalancer.openstack.org/keep-floatingip: true
+      # Set loadbalancing method: ROUND_ROBIN, LEAST_CONNECTIONS, SOURCE_IP, SOURCE_IP_PORT
+      loadbalancer.openstack.org/lb-method: ROUND_ROBIN
+      # Client inactivity timeout in milliseconds
+      loadbalancer.openstack.org/timeout-client-data: 60000
+      # Set true to enable X-Forwarded-For Headers for HTTP
+      loadbalancer.openstack.org/x-forwarded-for: false
+    loadbalancerIP: null
+
+  listeners:
+    # define separate listeners here for all externally accessible services (by hostname)
+
+internal:
+  clusterIssuerName: self-signed
+  service:
+    annotations:
+      # prevents errors when deleting clusters, leave as true
+      loadbalancer.openstack.org/keep-floatingip: true
+      # Set loadbalancing method: ROUND_ROBIN, LEAST_CONNECTIONS, SOURCE_IP, SOURCE_IP_PORT
+      loadbalancer.openstack.org/lb-method: ROUND_ROBIN
+      # Client inactivity timeout in milliseconds
+      loadbalancer.openstack.org/timeout-client-data: 60000
+      # Set true to enable X-Forwarded-For Headers for HTTP
+      loadbalancer.openstack.org/x-forwarded-for: false
+    loadbalancerIP: null
+
+  listeners:
+    # for all internal services - share the same tls
+    # we don't need separate listeners since we use self-signed certs
+    - name: https
+      protocol: https
+      port: 443
+      tlsSecret: self-signed-tls-secret
+      allowedRoutes:
+        namespace:
+          from: ALL
+
+  basicAuth:
+    # htpasswd format - generate with: htpasswd -nb <user> <password>
+    # !!!SENSITIVE!!! encrypt it with sops!
+    credentials: ""
+
+    enabled: true
+    prometheus:
+      enabled: true
+      httproute: kube-prometheus-stack-prometheus-main
+    alertmanager:
+      enabled: false
+      httproute: kube-prometheus-stack-alertmanager-main

@@ -1,0 +1,33 @@
+{{- if .Values.external.enabled }}
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: external-proxy
+  namespace: {{ include "envoy-gateways.namespace" }}
+  labels:
+    {{- include "envoy-gateways.labels" . | nindent 4 }}
+spec:
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyService:
+        type: LoadBalancer
+        annotations: 
+          {{- .Values.external.service.annotations | nindent 10}}
+        loadBalancerIP: {{.Values.external.service.loadBalancerIP}}
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: external
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: external-proxy
+    namespace: {{ include "envoy-gateways.namespace" }}
+
+{{- end }}
