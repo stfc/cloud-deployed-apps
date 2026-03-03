@@ -1,16 +1,9 @@
 stfc-cloud-logging:
-  includePrometheusRules: true
   opensearchCredentials:
     username: writer-staging
   fluent-operator:
-    operator:
-      disableComponentControllers: fluentd
-    fluentd:
-      crdsEnable: false
     fluentbit:
       output:
-        loki:
-          enable: false
         opensearch:
           logstashPrefix: kube_logs_staging_worker
           # staging worker opensearch for now, with plans to move it to prod/olaf

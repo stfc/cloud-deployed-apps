@@ -1,0 +1,71 @@
+stfc-cloud-envoy-gateways:
+  external:
+    enabled: true
+    clusterIssuerName: external-le-prod
+    service:
+      loadBalancerIP: 130.246.81.227
+
+    listeners:
+      - name: http
+        protocol: HTTP
+        port: 80
+        allowedRoutes:
+          namespaces:
+            from: All
+
+      - name: harbor-https
+        protocol: HTTPS
+        port: 443
+        tls:
+          mode: Terminate
+          secretName: harbor-gateway-tls
+
+        hostname: "staging.harbor.stfc.ac.uk"
+        allowedRoutes:
+          namespaces:
+            from: All
+
+      - name: dockerhub-https
+        protocol: HTTPS
+        port: 443
+        tls:
+          mode: Terminate
+          secretName: dockerhub-gateway-tls
+        hostname: "staging.dockerhub.stfc.ac.uk"
+        allowedRoutes:
+          namespaces:
+            from: All
+
+  httpsRedirect:
+    enabled: false
+
+  internal:
+    clusterIssuerName: self-signed
+    service:
+      loadBalancerIP: 130.246.81.242
+
+    listeners:
+      # since we're using self-signed certs - we pass-through to argocd self-signed cert
+      # should we in the future want to setup lets-encrypt - we need to create a backendtlspolicy
+
+      - name: http
+        protocol: HTTP
+        port: 80
+        allowedRoutes:
+          namespaces:
+            from: All
+
+      - name: https
+        protocol: HTTPS
+        port: 443
+        tls:
+          secretName: internal-tls-secret
+          mode: Terminate
+        hostname: "*.staging-worker.nubes.stfc.ac.uk"
+        allowedRoutes:
+          namespaces:
+            from: All
+
+  basicAuth:
+    alertmanager:
+      enabled: true

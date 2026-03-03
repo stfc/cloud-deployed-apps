@@ -1,26 +1,18 @@
 stfc-cloud-harbor:
   harbor:
-    caSecretName: harbor-tls
     externalURL: "https://staging.harbor.stfc.ac.uk"
 
     expose:
-      tls:
-        certSource: secret
-        secret:
-          secretName: harbor-tls
-      ingress:
-        annotations:
-          kubernetes.io/ingress.class: ingress-nginx-external
-          nginx.ingress.kubernetes.io/proxy-connect-timeout: "900"
-          nginx.ingress.kubernetes.io/proxy-read-timeout: "900"
-          nginx.ingress.kubernetes.io/proxy-send-timeout: "900"
-          nginx.ingress.kubernetes.io/proxy-buffering: "on"
-          nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-          nginx.ingress.kubernetes.io/proxy-body-size: "0"
-          cert-manager.io/cluster-issuer: letsencrypt-prod
-        className: ingress-nginx-external
+      route:
+        enabled: true
+        parentRefs:
+          - name: envoy-gateway-external
+            namespace: envoy-gateway-system
+            sectionName: harbor-https
+            group: gateway.networking.k8s.io
+            kind: Gateway
         hosts:
-          core: "staging.harbor.stfc.ac.uk"
+          - "staging.harbor.stfc.ac.uk"
 
     database:
       type: external
@@ -30,25 +22,19 @@ stfc-cloud-harbor:
 
     persistence:
       imageChartStorage:
-        disableredirect: true
         s3:
           bucket: new-staging-harbor
           regionendpoint: s3.echo.stfc.ac.uk
 
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
-        additionalLabels:
-          release: kube-prometheus
-        interval: 30s
-        scrapeTimeout: 25s
-
   backup:
-    enabled: true
     sourceBucket: "s3://new-staging-harbor"
     destination:
       daily: "s3://staging-harbor-backup/daily"
       weekly: "s3://staging-harbor-backup/weekly"
       monthly: "s3://staging-harbor-backup/monthly"
     endpoint: "https://s3.echo.stfc.ac.uk"
+
+  #  certificate:
+  #    expose:
+  #      issuer:
+  #        name: external-le-prod

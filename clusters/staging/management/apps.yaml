@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: gateway-api-fb
     path: clusters/staging/management
   syncPolicy:
     automated:
@@ -32,13 +32,12 @@ spec:
   generators:
     - list:
         elements:
+          # NOTE: each chart needs a valuesFile for this to work
+          # so create one for each chart - even if its empty
+
+          # argocd and all dependencies use the same file "argocd-setup-values.yaml"
           - name: argocd
             chartName: argocd
-
-            # NOTE: each chart needs a valuesFile for this to work
-            # so create one for each chart - even if its empty
-
-            # argocd and all dependencies use the same file "argocd-setup-values.yaml"
             namespace: argocd
             valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
             secretsFile: ../../../clusters/staging/management/secrets/apps/argocd.yaml
@@ -59,6 +58,17 @@ spec:
             namespace: capi-addon-system
             valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
 
+          - name: envoy-gateways
+            chartName: envoy-gateways
+            namespace: envoy-gateway-system
+            valuesFile: ../../../clusters/staging/management/envoy-gateways-values.yaml
+
+          - name: monitoring-stack
+            chartName: monitoring-stack
+            namespace: monitoring-system
+            valuesFile: ../../../clusters/staging/management/monitoring-stack-values.yaml
+            secretsFile: ../../../clusters/staging/management/secrets/apps/monitoring-stack.yaml
+
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
@@ -67,11 +77,13 @@ spec:
     metadata:
       name: "{{.name}}"
       namespace: argocd
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
     spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: gateway-api-fb
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
@@ -101,7 +113,7 @@ spec:
   generators:
     - git:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        revision: main
+        revision: gateway-api-fb
         files:
           # grab all infra values for all clusters in environment
           - path: "clusters/staging/*/infra-values.yaml"
@@ -120,20 +132,15 @@ spec:
         server: https://kubernetes.default.svc
       source:
         repoURL: https://github.com/stfc/cloud-deployed-apps.git
-        targetRevision: main
+        targetRevision: gateway-api-fb
         path: charts/staging/capi-infra
         helm:
           valueFiles:
-            # Bring in shared environment values
-            - "../../../clusters/_shared/monitoring.yaml"
-            - "../../../clusters/_shared/alerting.yaml"
             # Bring in infra values specific to this cluster
             - "../../../{{path}}/{{path.filename}}"
             # Bring in infra secrets specific to this cluster
-            - "secrets://../../../clusters/{{path[1]}}/management/secrets/infra/opsgenie-api-key.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
-            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/auth.yaml"
 
       syncPolicy:
         automated:
@@ -143,3 +150,10 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
+
+      ignoreDifferences:
+        # ignore httproute backendRefs and parentRefs as optional values are looked up and added causing out-of-sync issues
+        - kind: HTTPRoute
+          jqPathExpressions:
+            - .spec.rules[].backendRefs[]
+            - .spec.parentRefs

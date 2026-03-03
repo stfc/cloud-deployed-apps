@@ -1,0 +1,11 @@
+stfc-cloud-envoy-gateways:
+  external:
+    enabled: false
+
+  internal:
+    service:
+      loadbalancerIP: 130.246.215.233
+
+  basicAuth:
+    alertmanager:
+      enabled: true
