@@ -1,8 +1,8 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: {{ (include "envoy-gateways.name")-internal }}
-  namespace: {{ include "envoy-gateways.namespace" }}
+  name: {{ include "envoy-gateways.name" .}}-internal
+  namespace: {{ include "envoy-gateways.namespace" .}}
   labels:
     app.kubernetes.io/component: gateway
   annotations:
@@ -15,7 +15,7 @@ spec:
     - name: {{ .name }}
       protocol: {{ .protocol }}
       port: {{ .port }}
-      {{- if hostname }}
+      {{- if .hostname }}
       hostname: {{ .hostname }}
       {{- end }}
       {{- if .tlsSecret }}

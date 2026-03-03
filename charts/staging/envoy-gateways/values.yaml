@@ -1,7 +1,7 @@
 nameOverride: envoy-gateway
 
 external:
-  enabled: false
+  enabled: true
   clusterIssuerName: letsencrypt-prod
   service:
     annotations:
@@ -46,7 +46,7 @@ internal:
   basicAuth:
     # htpasswd format - generate with: htpasswd -nb <user> <password>
     # !!!SENSITIVE!!! encrypt it with sops!
-    credentials: ""
+    credentials: "foo"
 
     enabled: true
     prometheus:

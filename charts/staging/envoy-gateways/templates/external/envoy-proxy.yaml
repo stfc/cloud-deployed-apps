@@ -3,9 +3,7 @@ apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
   name: external-proxy
-  namespace: {{ include "envoy-gateways.namespace" }}
-  labels:
-    {{- include "envoy-gateways.labels" . | nindent 4 }}
+  namespace: {{ include "envoy-gateways.namespace" . }}
 spec:
   provider:
     type: Kubernetes
@@ -13,7 +11,7 @@ spec:
       envoyService:
         type: LoadBalancer
         annotations: 
-          {{- .Values.external.service.annotations | nindent 10}}
+          {{- toYaml  .Values.external.service.annotations | nindent 10}}
         loadBalancerIP: {{.Values.external.service.loadBalancerIP}}
 
 ---
@@ -28,6 +26,6 @@ spec:
     group: gateway.envoyproxy.io
     kind: EnvoyProxy
     name: external-proxy
-    namespace: {{ include "envoy-gateways.namespace" }}
+    namespace: {{ include "envoy-gateways.namespace" . }}
 
 {{- end }}

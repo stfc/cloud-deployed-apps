@@ -14,6 +14,15 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+Expand the namespace of the release.
+Allows overriding it for multi-namespace deployments in combined charts.
+*/}}
+{{- define "envoy-gateways.namespace" -}}
+{{- default .Release.Namespace .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+
+{{/*
 Resolve the oauth2-proxy service name from its subchart.
 If oauth2-proxy.fullnameOverride is set, use that; otherwise use <release>-oauth2-proxy.
 */}}
