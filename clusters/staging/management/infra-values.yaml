@@ -15,15 +15,6 @@ stfc-cloud-openstack-cluster:
       machineFlavor: dep-l2.tiny
 
     addons:
-      ingress:
-        enabled: true
-        nginx:
-          release:
-            values:
-              controller:
-                service:
-                  loadBalancerIP: "130.246.215.233"
-
       monitoring:
         kubePrometheusStack:
           release:
@@ -33,42 +24,42 @@ stfc-cloud-openstack-cluster:
                   externalLabels:
                     cluster: management
                     env: staging
-                ingress:
-                  annotations:
-                    nginx.ingress.kubernetes.io/auth-type: basic
-                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Management"
-                  hosts:
-                    - prometheus.staging-mgmt.nubes.stfc.ac.uk
-                  tls:
-                    - hosts:
-                        - prometheus.staging-mgmt.nubes.stfc.ac.uk
-                      secretName: tls-keypair
+                route:
+                  main:
+                    enabled: true
+                    hostnames:
+                      - prometheus.staging-mgmt.nubes.stfc.ac.uk
+                    parentRefs:
+                      - name: internal-gateway
+                        namespace: envoy-gateway-system
+                        sectionName: https
               grafana:
                 grafana.ini:
                   server:
                     root_url: https://grafana.staging-mgmt.nubes.stfc.ac.uk
-                ingress:
-                  hosts:
-                    - grafana.staging-mgmt.nubes.stfc.ac.uk
-                  tls:
-                    - hosts:
-                        - grafana.staging-mgmt.nubes.stfc.ac.uk
-                      secretName: tls-keypair
+                route:
+                  main:
+                    enabled: true
+                    hostnames:
+                      - grafana.staging-mgmt.nubes.stfc.ac.uk
+                    parentRefs:
+                      - name: internal-gateway
+                        namespace: envoy-gateway-system
+                        sectionName: https
+
               alertmanager:
                 enabled: true
-                ingress:
-                  annotations:
-                    nginx.ingress.kubernetes.io/auth-type: basic
-                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Staging Management"
-                  hosts:
-                    - alertmanager.staging-mgmt.nubes.stfc.ac.uk
-                  tls:
-                    - hosts:
-                        - alertmanager.staging-mgmt.nubes.stfc.ac.uk
-                      secretName: tls-keypair
+                route:
+                  main:
+                    enabled: true
+                    hostnames:
+                      - alertmanager.staging-mgmt.nubes.stfc.ac.uk
+                    parentRefs:
+                      - name: internal-gateway
+                        namespace: envoy-gateway-system
+                        sectionName: https
+
       etcdDefrag:
         release:
           values:
-            schedule: 10 08 * * * # smearing the time for defrag job 10:08am daily  
+            schedule: 10 08 * * * # smearing the time for defrag job 10:08am daily

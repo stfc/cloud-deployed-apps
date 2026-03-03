@@ -1,20 +1,37 @@
 stfc-cloud-opensearch:
-  
+  httproute:
+    opensearch:
+      enabled: true
+      hostnames:
+        - opensearch.staging-worker.nubes.stfc.ac.uk
+      parentRefs:
+        - name: internal-gateway
+          namespace: envoy-gateway-system
+          sectionName: https
+
+    dashboards:
+      enabled: true
+      hostnames:
+        - opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
+      parentRefs:
+        - name: internal-gateway
+          namespace: envoy-gateway-system
+          sectionName: https
+
   opensearch-cluster:
-    
     cluster:
       name: log-storage
-      
+
       # set explicit cert secrets because argocd doesn't play nice with self generated secrets
-      # instead explicitly generate self-signed certs using cert-manager and have them managed externally outside of argocd 
-      # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
+      # instead explicitly generate self-signed certs using cert-manager and have them managed externally outside of argocd
+      # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name"
       # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
-      security: 
+      security:
         tls:
           http:
             adminDn: ["CN=admin,OU=log-storage"]
             generate: false
-            secret: 
+            secret:
               name: log-storage-http-cert
 
           transport:
@@ -23,34 +40,34 @@ stfc-cloud-opensearch:
             caSecret:
               name: log-storage-ca
             nodesDn: ["CN=log-storage,OU=log-storage"]
-            adminDn: ["CN=admin, OU=log-storage"] 
-            secret: 
+            adminDn: ["CN=admin, OU=log-storage"]
+            secret:
               name: log-storage-transport-cert
             #enableHotReload: false
-        # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name" 
+        # change the secret references to match the name of your cluster - under "opensearch-cluster.cluster.name"
         # e.g. if your cluster name is "log-storage" - change secret to `log-storage-admin-credentials` and `log-storage-securityconfig-secret`
-        config: 
-          adminSecret: 
+        config:
+          adminSecret:
             name: log-storage-admin-cert
-          adminCredentialsSecret: 
+          adminCredentialsSecret:
             name: log-storage-admin-credentials
           securityConfigSecret:
             name: log-storage-securityconfig-secret
 
       general:
         version: 3.1.0
-      
+
       dashboards:
         tls:
           generate: false
-          secret: 
+          secret:
             name: log-storage-dashboards-cert
 
         opensearchCredentialsSecret:
           name: log-storage-admin-credentials
         version: 3.1.0
         enable: true
-        additionalConfig: 
+        additionalConfig:
           opensearch.requestHeadersAllowlist: "['Authorization', 'securitytenant', 'x-forwarded-for', 'x-forwarded-by']"
           opensearch_security.auth.multiple_auth_enabled: "true"
           opensearch_security.auth.type: |
@@ -58,7 +75,7 @@ stfc-cloud-opensearch:
           opensearch_security.openid.connect_url: "https://iris-iam.stfc.ac.uk/.well-known/openid-configuration"
           opensearch_security.openid.scope: "openid profile email preferred_username groups"
           opensearch_security.openid.base_redirect_url: https://opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
-      
+
       nodePools:
         - component: nodes
           diskSize: "500Gi"
@@ -75,45 +92,16 @@ stfc-cloud-opensearch:
           resources:
             requests:
               memory: "4Gi"
-              # dedicate 5 cores 
-              cpu: "5000m" 
+              # dedicate 5 cores
+              cpu: "5000m"
             limits:
               memory: "10Gi"
-              # burst to max 10 cores (62.5% of total) 
+              # burst to max 10 cores (62.5% of total)
               # to stop CPU throttling alerts
-              cpu: "10000m" 
+              cpu: "10000m"
           pdb:
             enable: true
-            maxUnavailable: 1  
-
-      ingress: 
-        dashboards:
-          enabled: true 
-          className: internal-nginx
-          hosts:
-            - host: opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
-              paths:
-                - path: /
-                  pathType: ImplementationSpecific
-          tls:
-            - secretName: opensearch-tls
-              hosts:
-                - opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
-        
-        opensearch:
-          enabled: true 
-          className: internal-nginx
-          hosts:
-            - host: opensearch.staging-worker.nubes.stfc.ac.uk
-              paths:
-                - path: /
-                  pathType: ImplementationSpecific
-          tls:
-            - secretName: opensearch-tls
-              hosts:
-                - opensearch.staging-worker.nubes.stfc.ac.uk
-
-
+            maxUnavailable: 1
 
   customSecurityConfigFiles:
     config.yml: |
@@ -152,7 +140,7 @@ stfc-cloud-opensearch:
                   verify_hostnames: true
               authentication_backend:
                 type: noop
-           
+
     roles.yml: |
       _meta:
         type: "roles"

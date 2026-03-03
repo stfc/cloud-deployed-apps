@@ -1,3 +1,11 @@
 argo-cd:
+  httproute:
+    hostnames:
+      - argocd.staging-mgmt.nubes.stfc.ac.uk
+    parentRefs:
+      - name: internal-gateway
+        namespace: envoy-gateway-system
+        sectionName: https
+
   global:
     domain: argocd.staging-mgmt.nubes.stfc.ac.uk

@@ -1,0 +1,31 @@
+external:
+  enabled: true
+  # change to lets-encrypt once we know it works
+  clusterIssuerName: self-signed
+  service:
+    loadbalancerIP: 130.246.81.227
+
+  listeners:
+    - name: harbor-https
+      protocol: https
+      port: 443
+      tlsSecret: harbor-tls
+      allowedRoutes:
+        namespace:
+          from: harbor
+
+    - name: dockerhub-https
+      protocol: https
+      port: 443
+      tlsSecret: dockerhub-tls
+      allowedRoutes:
+        namespace:
+          from: docker-registry
+
+internal:
+  service:
+    loadbalancerIP: 130.246.81.242
+
+basicAuth:
+  alertmanager:
+    enabled: true
