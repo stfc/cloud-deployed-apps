@@ -7,7 +7,7 @@ external:
 
   listeners:
     - name: harbor-https
-      protocol: https
+      protocol: HTTPS
       port: 443
       tlsSecret: harbor-tls
       hostname: "staging.harbor.stfc.ac.uk"
@@ -16,7 +16,7 @@ external:
           from: All
 
     - name: dockerhub-https
-      protocol: https
+      protocol: HTTPS
       port: 443
       tlsSecret: dockerhub-tls
       hostname: "staging.dockerhub.stfc.ac.uk"
@@ -31,7 +31,7 @@ internal:
   listeners:
     # for all internal services - share the same tls
     # we don't need separate listeners since we use self-signed certs
-    - name: https
+    - name: staging-internal-https
       protocol: HTTPS
       port: 443
       tlsSecret: self-signed-tls-secret
