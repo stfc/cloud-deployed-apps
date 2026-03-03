@@ -35,7 +35,7 @@ internal:
       protocol: HTTPS
       port: 443
       tlsSecret: self-signed-tls-secret
-      hostname: "*.staging-worker.stfc.ac.uk"
+      hostname: "*.staging-worker.nubes.stfc.ac.uk"
       allowedRoutes:
         namespaces:
           from: All
