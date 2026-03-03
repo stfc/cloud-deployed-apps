@@ -37,7 +37,7 @@ internal:
       tlsSecret: self-signed-tls-secret
       hostname: "*.staging-worker.stfc.ac.uk"
       allowedRoutes:
-        namespace:
+        namespaces:
           from: All
 
 basicAuth:
