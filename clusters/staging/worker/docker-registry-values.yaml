@@ -7,7 +7,7 @@ stfc-cloud-docker-registry:
     hostnames:
       - staging.dockerhub.stfc.ac.uk
     parentRefs:
-      - name: external-gateway
+      - name: envoy-gateway-external
         namespace: envoy-gateway-system
         sectionName: https
 

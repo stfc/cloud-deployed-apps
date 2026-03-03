@@ -4,7 +4,7 @@ argo-cd:
     hostnames:
       - argocd.staging-mgmt.nubes.stfc.ac.uk
     parentRefs:
-      - name: internal-gateway
+      - name: envoy-gateway-internal
         namespace: envoy-gateway-system
         sectionName: https
 
@@ -16,7 +16,7 @@ stfc-cloud-longhorn:
     httproute:
       enabled: true
       parentRefs:
-        - name: internal-gateway
+        - name: envoy-gateway-internal
           namespace: envoy-gateway-system
           sectionName: https
       hostnames:

@@ -5,7 +5,7 @@ stfc-cloud-opensearch:
       hostnames:
         - opensearch.staging-worker.nubes.stfc.ac.uk
       parentRefs:
-        - name: internal-gateway
+        - name: envoy-gateway-internal
           namespace: envoy-gateway-system
           sectionName: https
 
@@ -14,7 +14,7 @@ stfc-cloud-opensearch:
       hostnames:
         - opensearch-dashboards.staging-worker.nubes.stfc.ac.uk
       parentRefs:
-        - name: internal-gateway
+        - name: envoy-gateway-internal
           namespace: envoy-gateway-system
           sectionName: https
 

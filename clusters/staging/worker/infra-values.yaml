@@ -35,7 +35,7 @@ stfc-cloud-openstack-cluster:
                     hostnames:
                       - prometheus.staging-worker.nubes.stfc.ac.uk
                     parentRefs:
-                      - name: internal-gateway
+                      - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
                         sectionName: https
               grafana:
@@ -48,7 +48,7 @@ stfc-cloud-openstack-cluster:
                     hostnames:
                       - grafana.staging-worker.nubes.stfc.ac.uk
                     parentRefs:
-                      - name: internal-gateway
+                      - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
                         sectionName: https
               alertmanager:
@@ -59,7 +59,7 @@ stfc-cloud-openstack-cluster:
                     hostnames:
                       - alertmanager.staging-worker.nubes.stfc.ac.uk
                     parentRefs:
-                      - name: internal-gateway
+                      - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
                         sectionName: https
       etcdDefrag:

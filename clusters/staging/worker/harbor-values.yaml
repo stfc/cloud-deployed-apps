@@ -12,7 +12,7 @@ stfc-cloud-harbor:
       route:
         enabled: true
         parentRefs:
-          - name: external-gateway
+          - name: envoy-gateway-external
             namespace: envoy-gateway-system
             sectionName: https
         hosts:
