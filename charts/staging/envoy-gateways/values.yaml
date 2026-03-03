@@ -32,17 +32,6 @@ internal:
       loadbalancer.openstack.org/x-forwarded-for: "false"
     loadbalancerIP: null
 
-  listeners:
-    # for all internal services - share the same tls
-    # we don't need separate listeners since we use self-signed certs
-    - name: https
-      protocol: https
-      port: 443
-      tlsSecret: self-signed-tls-secret
-      allowedRoutes:
-        namespace:
-          from: All
-
   basicAuth:
     # htpasswd format - generate with: htpasswd -nb <user> <password>
     # !!!SENSITIVE!!! encrypt it with sops!

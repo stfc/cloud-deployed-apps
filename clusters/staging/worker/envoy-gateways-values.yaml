@@ -28,6 +28,18 @@ internal:
   service:
     loadBalancerIP: 130.246.81.242
 
+  listeners:
+    # for all internal services - share the same tls
+    # we don't need separate listeners since we use self-signed certs
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tlsSecret: self-signed-tls-secret
+      hostname: "*.staging-worker.stfc.ac.uk"
+      allowedRoutes:
+        namespace:
+          from: All
+
 basicAuth:
   alertmanager:
     enabled: true

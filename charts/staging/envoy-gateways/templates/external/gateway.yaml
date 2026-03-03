@@ -21,7 +21,6 @@ spec:
       {{- end }}
       {{- if .tlsSecret }}
       tls:
-        mode: Terminate
         certificateRefs:
           - kind: Secret
             group: ""
