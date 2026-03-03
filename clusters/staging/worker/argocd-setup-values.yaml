@@ -3,7 +3,7 @@ argo-cd:
     httproute:
       enabled: true
       hostnames:
-        - argocd.staging-mgmt.nubes.stfc.ac.uk
+        - argocd.staging-worker.nubes.stfc.ac.uk
       parentRefs:
         - name: envoy-gateway-internal
           namespace: envoy-gateway-system
