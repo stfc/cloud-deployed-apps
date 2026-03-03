@@ -14,7 +14,7 @@ stfc-cloud-harbor:
         parentRefs:
           - name: envoy-gateway-external
             namespace: envoy-gateway-system
-            sectionName: https
+            sectionName: harbor-https
         hosts:
           - "staging.harbor.stfc.ac.uk"
 

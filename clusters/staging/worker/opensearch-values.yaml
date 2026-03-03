@@ -7,7 +7,7 @@ stfc-cloud-opensearch:
       parentRefs:
         - name: envoy-gateway-internal
           namespace: envoy-gateway-system
-          sectionName: https
+          sectionName: staging-internal-https
 
     dashboards:
       enabled: true
@@ -16,7 +16,7 @@ stfc-cloud-opensearch:
       parentRefs:
         - name: envoy-gateway-internal
           namespace: envoy-gateway-system
-          sectionName: https
+          sectionName: staging-internal-https
 
   opensearch-cluster:
     cluster:

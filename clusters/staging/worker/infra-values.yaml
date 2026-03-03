@@ -37,7 +37,7 @@ stfc-cloud-openstack-cluster:
                     parentRefs:
                       - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
-                        sectionName: https
+                        sectionName: staging-internal-https
               grafana:
                 grafana.ini:
                   server:
@@ -50,7 +50,7 @@ stfc-cloud-openstack-cluster:
                     parentRefs:
                       - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
-                        sectionName: https
+                        sectionName: staging-internal-https
               alertmanager:
                 enabled: true
                 route:
@@ -61,7 +61,7 @@ stfc-cloud-openstack-cluster:
                     parentRefs:
                       - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
-                        sectionName: https
+                        sectionName: staging-internal-https
       etcdDefrag:
         release:
           values:

@@ -9,7 +9,7 @@ stfc-cloud-docker-registry:
     parentRefs:
       - name: envoy-gateway-external
         namespace: envoy-gateway-system
-        sectionName: https
+        sectionName: dockerhub-https
 
   # we'll default to S3
   persistence:

@@ -7,7 +7,7 @@ argo-cd:
       parentRefs:
         - name: envoy-gateway-internal
           namespace: envoy-gateway-system
-          sectionName: https
+          sectionName: staging-internal-https
 
   global:
     domain: argocd.staging-worker.nubes.stfc.ac.uk
@@ -19,7 +19,7 @@ stfc-cloud-longhorn:
       parentRefs:
         - name: envoy-gateway-internal
           namespace: envoy-gateway-system
-          sectionName: https
+          sectionName: staging-internal-https
       hostnames:
         - longhorn.staging-worker.nubes.stfc.ac.uk
 
