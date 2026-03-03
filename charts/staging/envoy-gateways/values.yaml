@@ -6,13 +6,13 @@ external:
   service:
     annotations:
       # prevents errors when deleting clusters, leave as true
-      loadbalancer.openstack.org/keep-floatingip: true
+      loadbalancer.openstack.org/keep-floatingip: "true"
       # Set loadbalancing method: ROUND_ROBIN, LEAST_CONNECTIONS, SOURCE_IP, SOURCE_IP_PORT
       loadbalancer.openstack.org/lb-method: ROUND_ROBIN
       # Client inactivity timeout in milliseconds
-      loadbalancer.openstack.org/timeout-client-data: 60000
+      loadbalancer.openstack.org/timeout-client-data: "60000"
       # Set true to enable X-Forwarded-For Headers for HTTP
-      loadbalancer.openstack.org/x-forwarded-for: false
+      loadbalancer.openstack.org/x-forwarded-for: "false"
     loadbalancerIP: null
 
   listeners:
@@ -23,13 +23,13 @@ internal:
   service:
     annotations:
       # prevents errors when deleting clusters, leave as true
-      loadbalancer.openstack.org/keep-floatingip: true
+      loadbalancer.openstack.org/keep-floatingip: "true"
       # Set loadbalancing method: ROUND_ROBIN, LEAST_CONNECTIONS, SOURCE_IP, SOURCE_IP_PORT
       loadbalancer.openstack.org/lb-method: ROUND_ROBIN
       # Client inactivity timeout in milliseconds
-      loadbalancer.openstack.org/timeout-client-data: 60000
+      loadbalancer.openstack.org/timeout-client-data: "60000"
       # Set true to enable X-Forwarded-For Headers for HTTP
-      loadbalancer.openstack.org/x-forwarded-for: false
+      loadbalancer.openstack.org/x-forwarded-for: "false"
     loadbalancerIP: null
 
   listeners:
@@ -51,7 +51,7 @@ internal:
     enabled: true
     prometheus:
       enabled: true
-      httproute: kube-prometheus-stack-prometheus-main
+      routeName: kube-prometheus-stack-prometheus-main
     alertmanager:
       enabled: false
-      httproute: kube-prometheus-stack-alertmanager-main
+      routeName: kube-prometheus-stack-alertmanager-main

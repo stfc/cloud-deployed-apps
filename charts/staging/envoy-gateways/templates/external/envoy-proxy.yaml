@@ -15,6 +15,7 @@ spec:
         loadBalancerIP: {{.Values.external.service.loadBalancerIP}}
 
 ---
+{{- end }}
 
 apiVersion: gateway.networking.k8s.io/v1
 kind: GatewayClass
@@ -28,4 +29,3 @@ spec:
     name: external-proxy
     namespace: {{ include "envoy-gateways.namespace" . }}
 
-{{- end }}
