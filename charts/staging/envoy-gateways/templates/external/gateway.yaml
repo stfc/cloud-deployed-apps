@@ -5,7 +5,7 @@ metadata:
   name: {{ include "envoy-gateways.name" . }}-external
   namespace: {{ include "envoy-gateways.namespace" . }}
   labels:
-    app.kubernetes.io/component: gateway
+    app.kubernetes.io/component: gateway-external
   annotations:
     # cert-manager creates certs specified for each tls secret in specified listeners 
     cert-manager.io/cluster-issuer: {{ .Values.external.clusterIssuerName }}
