@@ -41,7 +41,7 @@ internal:
       tlsSecret: self-signed-tls-secret
       allowedRoutes:
         namespace:
-          from: ALL
+          from: All
 
   basicAuth:
     # htpasswd format - generate with: htpasswd -nb <user> <password>

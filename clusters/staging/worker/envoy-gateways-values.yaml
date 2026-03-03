@@ -13,7 +13,7 @@ external:
       hostname: "staging.harbor.stfc.ac.uk"
       allowedRoutes:
         namespaces:
-          from: ALL
+          from: All
 
     - name: dockerhub-https
       protocol: https
@@ -22,7 +22,7 @@ external:
       hostname: "staging.dockerhub.stfc.ac.uk"
       allowedRoutes:
         namespaces:
-          from: ALL
+          from: All
 
 internal:
   service:
