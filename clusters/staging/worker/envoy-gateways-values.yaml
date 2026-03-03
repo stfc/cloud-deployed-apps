@@ -3,7 +3,7 @@ external:
   # change to lets-encrypt once we know it works
   clusterIssuerName: self-signed
   service:
-    loadbalancerIP: 130.246.81.227
+    loadBalancerIP: 130.246.81.227
 
   listeners:
     - name: harbor-https
@@ -26,7 +26,7 @@ external:
 
 internal:
   service:
-    loadbalancerIP: 130.246.81.242
+    loadBalancerIP: 130.246.81.242
 
 basicAuth:
   alertmanager:
