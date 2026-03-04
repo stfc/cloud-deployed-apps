@@ -7,6 +7,8 @@ argo-cd:
       server.insecure: true
 
     cm:
+      controller.diff.server.side: true
+
       helm.valuesFileSchemes: >-
         secrets+age-import, secrets+age-import-kubernetes,
         secrets,secrets+literal,

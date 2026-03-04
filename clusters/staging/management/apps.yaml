@@ -73,6 +73,8 @@ spec:
     metadata:
       name: "{{.name}}"
       namespace: argocd
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
     spec:
       project: default
       source:
@@ -97,17 +99,6 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
 
-      ignoreDifferences:
-        # ignore httproute backendRefs and parentRefs as optional values are looked up and added causing out-of-sync issues
-        - kind: HTTPRoute
-          jqPathExpressions:
-            - .spec.rules[].backendRefs[]
-            - .spec.parentRefs
-
-        - group: cert-manager.io
-          kind: ClusterIssuer
-          jqPathExpressions:
-            - .spec.acme.solvers[].http01.gatewayHTTPRoute.parentRefs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
