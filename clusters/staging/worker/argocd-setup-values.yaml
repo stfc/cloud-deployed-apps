@@ -38,14 +38,14 @@ stfc-cloud-cert-manager:
 
     - name: external-le-staging
       type: le-staging
-      email: admin@example.com
+      email: cloud-support@stfc.ac.uk
       gateway:
         name: envoy-gateway-external
         namespace: envoy-gateway-system
 
     - name: external-le-prod
       type: le-prod
-      email: admin@example.com
+      email: cloud-support@stfc.ac.uk
       gateway:
         name: envoy-gateway-external
         namespace: envoy-gateway-system

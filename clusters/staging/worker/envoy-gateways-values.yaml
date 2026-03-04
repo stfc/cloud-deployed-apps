@@ -1,7 +1,7 @@
 external:
   enabled: true
   # change to lets-encrypt once we know it works
-  clusterIssuerName: selfsigned
+  clusterIssuerName: self-signed
   service:
     loadBalancerIP: 130.246.81.227
 
@@ -25,7 +25,7 @@ external:
           from: All
 
 internal:
-  clusterIssuerName: selfsigned
+  clusterIssuerName: self-signed
 
   service:
     loadBalancerIP: 130.246.81.242
