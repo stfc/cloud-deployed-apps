@@ -37,7 +37,7 @@ argo-cd:
 
     certificate:
       # -- Deploy a Certificate resource (requires cert-manager)
-      enabled: true
+      enabled: false
       issuer:
         kind: "ClusterIssuer"
         # Certificate issuer name. Eg. `self-signed`, `letsencrypt-staging`, or `letsencrypt-prod``
