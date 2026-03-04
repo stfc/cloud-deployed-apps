@@ -3,6 +3,9 @@ argo-cd:
     domain:
 
   configs:
+    params:
+      server.insecure: true
+
     cm:
       helm.valuesFileSchemes: >-
         secrets+age-import, secrets+age-import-kubernetes,
@@ -31,7 +34,6 @@ argo-cd:
         g, stfc-cloud/admins, role:admin
 
   server:
-    servicePortHttpsAppProtocol: HTTPS
     httproute:
       enabled: true
 
