@@ -7,6 +7,7 @@ stfc-cloud-harbor:
       tls:
         certSource: secret
         secret:
+          enabled: false
           secretName: harbor-tls
 
       route:
