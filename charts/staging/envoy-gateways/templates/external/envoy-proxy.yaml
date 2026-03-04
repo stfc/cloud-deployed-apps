@@ -13,7 +13,16 @@ spec:
         annotations: 
           {{- toYaml  .Values.external.service.annotations | nindent 10}}
         loadBalancerIP: {{.Values.external.service.loadBalancerIP}}
-
+      envoyDeployment:
+        replicas: {{ .Values.external.deployment.replicas }}
+        container:
+          resources:
+            requests:
+              cpu: {{ .Values.external.deployment.resources.requests.cpu }}
+              memory: {{ .Values.external.deployment.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.external.deployment.resources.limits.cpu }}
+              memory: {{ .Values.external.deployment.resources.limits.memory }}
 ---
 {{- end }}
 

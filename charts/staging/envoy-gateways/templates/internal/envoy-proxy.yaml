@@ -12,7 +12,16 @@ spec:
         annotations: 
           {{- toYaml  .Values.internal.service.annotations | nindent 10}}
         loadBalancerIP: {{.Values.internal.service.loadBalancerIP}}
-
+      envoyDeployment:
+        replicas: {{ .Values.internal.deployment.replicas }}
+        container:
+          resources:
+            requests:
+              cpu: {{ .Values.internal.deployment.resources.requests.cpu }}
+              memory: {{ .Values.internal.deployment.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.internal.deployment.resources.limits.cpu }}
+              memory: {{ .Values.internal.deployment.resources.limits.memory }}
 ---
 
 apiVersion: gateway.networking.k8s.io/v1
