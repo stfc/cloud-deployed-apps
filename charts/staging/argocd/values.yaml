@@ -37,6 +37,9 @@ argo-cd:
     httproute:
       enabled: true
 
+    service:
+      servicePortHttpsAppProtocol: HTTPS
+
     certificate:
       # -- Deploy a Certificate resource (requires cert-manager)
       enabled: false

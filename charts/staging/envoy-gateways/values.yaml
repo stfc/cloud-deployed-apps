@@ -2,7 +2,7 @@ nameOverride: envoy-gateway
 
 external:
   enabled: true
-  clusterIssuerName: letsencrypt-prod
+  clusterIssuerName: selfsigned
   service:
     annotations:
       # prevents errors when deleting clusters, leave as true
@@ -19,7 +19,7 @@ external:
     # define separate listeners here for all externally accessible services (by hostname)
 
 internal:
-  clusterIssuerName: self-signed
+  clusterIssuerName: selfsigned
   service:
     annotations:
       # prevents errors when deleting clusters, leave as true

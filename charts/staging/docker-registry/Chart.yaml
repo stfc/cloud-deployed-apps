@@ -4,4 +4,4 @@ version: 2.0.0
 dependencies:
   - repository: https://stfc.github.io/cloud-helm-charts/
     name: stfc-cloud-docker-registry
-    version: 3.0.0-alpha.44e1ae7
+    version: 3.0.0-alpha.20407d5

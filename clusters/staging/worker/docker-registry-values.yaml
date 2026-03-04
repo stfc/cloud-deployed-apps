@@ -10,6 +10,8 @@ stfc-cloud-docker-registry:
       - name: envoy-gateway-external
         namespace: envoy-gateway-system
         sectionName: dockerhub-https
+        group: gateway.networking.k8s.io
+        kind: Gateway
 
   # we'll default to S3
   persistence:

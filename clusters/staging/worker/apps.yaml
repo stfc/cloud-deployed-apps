@@ -149,6 +149,8 @@ spec:
           kind: CustomResourceDefinition
           jsonPointers:
             - /spec/preserveUnknownFields
+
+        # ignore harbor certificates as they are managed and modified by cert-manager
         - group: ""
           kind: Secret
           name: harbor-ingress
@@ -163,7 +165,13 @@ spec:
           namespace: harbor
           jsonPointers:
             - /metadata
-            - /status
+            - /status#
+
+        # ignore httproute backendRefs and parentRefs as optional values are looked up and added causing out-of-sync issues
+        - kind: HTTPRoute
+          jqPathExpressions:
+            - .spec.rules[].backendRefs[]
+            - .spec.parentRefs
 
   templatePatch: |
     {{- if eq .name "manila-csi" }}

@@ -97,6 +97,13 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
 
+      ignoreDifferences:
+        # ignore httproute backendRefs and parentRefs as optional values are looked up and added causing out-of-sync issues
+        - kind: HTTPRoute
+          jqPathExpressions:
+            - .spec.rules[].backendRefs[]
+            - .spec.parentRefs
+
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -148,3 +155,10 @@ spec:
           allowEmpty: true
         syncOptions:
           - CreateNamespace=true
+
+      ignoreDifferences:
+        # ignore httproute backendRefs and parentRefs as optional values are looked up and added causing out-of-sync issues
+        - kind: HTTPRoute
+          jqPathExpressions:
+            - .spec.rules[].backendRefs[]
+            - .spec.parentRefs

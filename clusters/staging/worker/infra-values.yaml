@@ -38,6 +38,8 @@ stfc-cloud-openstack-cluster:
                       - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
                         sectionName: staging-internal-https
+                        group: gateway.networking.k8s.io
+                        kind: Gateway
               grafana:
                 grafana.ini:
                   server:
@@ -51,6 +53,8 @@ stfc-cloud-openstack-cluster:
                       - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
                         sectionName: staging-internal-https
+                        group: gateway.networking.k8s.io
+                        kind: Gateway
               alertmanager:
                 enabled: true
                 route:
@@ -62,6 +66,8 @@ stfc-cloud-openstack-cluster:
                       - name: envoy-gateway-internal
                         namespace: envoy-gateway-system
                         sectionName: staging-internal-https
+                        group: gateway.networking.k8s.io
+                        kind: Gateway
       etcdDefrag:
         release:
           values:

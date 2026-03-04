@@ -8,6 +8,8 @@ argo-cd:
         - name: envoy-gateway-internal
           namespace: envoy-gateway-system
           sectionName: staging-internal-https
+          group: gateway.networking.k8s.io
+          kind: Gateway
 
   global:
     domain: argocd.staging-worker.nubes.stfc.ac.uk
@@ -20,6 +22,8 @@ stfc-cloud-longhorn:
         - name: envoy-gateway-internal
           namespace: envoy-gateway-system
           sectionName: staging-internal-https
+          group: gateway.networking.k8s.io
+          kind: Gateway
       hostnames:
         - longhorn.staging-worker.nubes.stfc.ac.uk
 
@@ -28,11 +32,20 @@ stfc-cloud-longhorn:
       migratable: false
 
 stfc-cloud-cert-manager:
-  le-staging:
-    enabled: true
-    ingressClassName: ingress-nginx-external
+  clusterIssuers:
+    - name: selfsigned
+      type: selfsigned
 
-  le-prod:
-    email: cloud-support@stfc.ac.uk
-    enabled: true
-    ingressClassName: ingress-nginx-external
+    - name: external-le-staging
+      type: le-staging
+      email: admin@example.com
+      gateway:
+        name: envoy-gateway-external
+        namespace: envoy-gateway-system
+
+    - name: external-le-prod
+      type: le-prod
+      email: admin@example.com
+      gateway:
+        name: envoy-gateway-external
+        namespace: envoy-gateway-system

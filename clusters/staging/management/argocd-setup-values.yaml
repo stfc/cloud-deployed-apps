@@ -9,3 +9,8 @@ argo-cd:
 
   global:
     domain: argocd.staging-mgmt.nubes.stfc.ac.uk
+
+stfc-cloud-cert-manager:
+  clusterIssuers:
+    - name: selfsigned
+      type: selfsigned
