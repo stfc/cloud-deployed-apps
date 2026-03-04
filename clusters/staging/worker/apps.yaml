@@ -173,6 +173,11 @@ spec:
             - .spec.rules[].backendRefs[]
             - .spec.parentRefs
 
+        - group: cert-manager.io
+          kind: ClusterIssuer
+          jqPathExpressions:
+            - .spec.acme.solvers[].http01.gatewayHTTPRoute.parentRefs
+
   templatePatch: |
     {{- if eq .name "manila-csi" }}
       spec:

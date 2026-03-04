@@ -104,6 +104,10 @@ spec:
             - .spec.rules[].backendRefs[]
             - .spec.parentRefs
 
+        - group: cert-manager.io
+          kind: ClusterIssuer
+          jqPathExpressions:
+            - .spec.acme.solvers[].http01.gatewayHTTPRoute.parentRefs
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
