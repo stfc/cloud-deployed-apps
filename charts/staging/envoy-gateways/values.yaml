@@ -64,3 +64,9 @@ internal:
     alertmanager:
       enabled: false
       routeName: kube-prometheus-stack-alertmanager-main
+
+gateway-helm:
+  config:
+    envoyGateway:
+      extensionAPIs:
+        enableBackend: true
