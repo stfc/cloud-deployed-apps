@@ -2,10 +2,6 @@ argo-cd:
   global:
     domain:
 
-  configs:
-    params:
-      server.insecure: true
-
     cm:
       controller.diff.server.side: true
 
@@ -41,10 +37,10 @@ argo-cd:
 
     certificate:
       # -- Deploy a Certificate resource (requires cert-manager)
-      enabled: false
+      enabled: enabled
       issuer:
         kind: "ClusterIssuer"
-        # Certificate issuer name. Eg. `self-signed`, `letsencrypt-staging`, or `letsencrypt-prod``
+        # Certificate issuer name. Eg. `self-signed`, `le-staging`, or `le-prod``
         # This is overriden per-cluster in the cluster's argo-values.yaml
         name: "self-signed"
 

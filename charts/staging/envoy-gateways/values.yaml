@@ -68,5 +68,5 @@ internal:
 gateway-helm:
   config:
     envoyGateway:
-      extensionAPIs:
+      extensionApis:
         enableBackend: true

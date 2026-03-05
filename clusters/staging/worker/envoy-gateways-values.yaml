@@ -1,12 +1,12 @@
 external:
   enabled: true
   # change to lets-encrypt once we know it works
-  clusterIssuerName: external-le-staging
+  clusterIssuerName: external-le-prod
   service:
     loadBalancerIP: 130.246.81.227
 
   listeners:
-    - name: http
+    - name: http01-challenge
       protocol: HTTP
       port: 80
       allowedRoutes:
