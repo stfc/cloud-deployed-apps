@@ -2,6 +2,6 @@ apiVersion: v2
 name: logging
 version: 1.0.0
 dependencies:
-  - repository: https://stfc.github.io/cloud-helm-charts
+  - repository: https://anish-mudaraddi.github.io/cloud-helm-charts
     name: stfc-cloud-logging
-    version: 1.3.0
+    version: 1.3.1
