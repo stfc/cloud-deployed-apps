@@ -1,7 +1,11 @@
 stfc-cloud-argocd:
   argo-cd:
-    cm:
-      controller.diff.server.side: true
+    configs:
+      cm:
+        controller.diff.server.side: true
+        # TODO remove this once PR merged
+        oidc.skip.insecure.verify: false
+
     server:
       httproute:
         enabled: true
