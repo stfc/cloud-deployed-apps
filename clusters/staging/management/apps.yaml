@@ -32,13 +32,12 @@ spec:
   generators:
     - list:
         elements:
+          # NOTE: each chart needs a valuesFile for this to work
+          # so create one for each chart - even if its empty
+
+          # argocd and all dependencies use the same file "argocd-setup-values.yaml"
           - name: argocd
             chartName: argocd
-
-            # NOTE: each chart needs a valuesFile for this to work
-            # so create one for each chart - even if its empty
-
-            # argocd and all dependencies use the same file "argocd-setup-values.yaml"
             namespace: argocd
             valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
             secretsFile: ../../../clusters/staging/management/secrets/apps/argocd.yaml
@@ -58,6 +57,17 @@ spec:
             chartName: cluster-api-addon-provider
             namespace: capi-addon-system
             valuesFile: ../../../clusters/staging/management/argocd-setup-values.yaml
+
+          - name: envoy-gateways
+            chartName: envoy-gateways
+            namespace: envoy-gateway-system
+            valuesFile: ../../../clusters/staging/management/envoy-gateways-values.yaml
+
+          - name: monitoring-stack
+            chartName: monitoring-stack
+            namespace: monitoring-system
+            valuesFile: ../../../clusters/staging/management/monitoring-stack-values.yaml
+            secretsFile: ../../../clusters/staging/management/secrets/apps/monitoring-stack.yaml
 
   syncPolicy:
     # Don't remove everything if we remove the appset
@@ -90,6 +100,13 @@ spec:
         syncOptions:
           - CreateNamespace=true
           - ServerSideApply=true
+
+      ignoreDifferences:
+        # ignore httproute backendRefs and parentRefs as optional values are looked up and added causing out-of-sync issues
+        - kind: HTTPRoute
+          jqPathExpressions:
+            - .spec.rules[].backendRefs[]
+            - .spec.parentRefs
 
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -124,16 +141,11 @@ spec:
         path: charts/staging/capi-infra
         helm:
           valueFiles:
-            # Bring in shared environment values
-            - "../../../clusters/_shared/monitoring.yaml"
-            - "../../../clusters/_shared/alerting.yaml"
             # Bring in infra values specific to this cluster
             - "../../../{{path}}/{{path.filename}}"
             # Bring in infra secrets specific to this cluster
-            - "secrets://../../../clusters/{{path[1]}}/management/secrets/infra/opsgenie-api-key.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
-            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/auth.yaml"
 
       syncPolicy:
         automated:
