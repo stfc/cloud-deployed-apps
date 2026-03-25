@@ -1,0 +1,30 @@
+stfc-cloud-envoy-gateways:
+  external:
+    enabled: false
+
+  internal:
+    clusterIssuerName: self-signed
+    service:
+      loadBalancerIP: 130.246.80.233
+
+    listeners:
+      # since we're using self-signed certs - we pass-through to argocd self-signed cert
+      # should we in the future want to setup lets-encrypt - we need to create a backendtlspolicy
+
+      - name: http
+        protocol: HTTP
+        port: 80
+        allowedRoutes:
+          namespaces:
+            from: All
+
+      - name: https
+        protocol: HTTPS
+        port: 443
+        tls:
+          secretName: internal-tls-secret
+          mode: Terminate
+        hostname: "*.prod-mgmt.nubes.stfc.ac.uk"
+        allowedRoutes:
+          namespaces:
+            from: All

@@ -1,3 +1,15 @@
-argo-cd:
-  global:
-    domain: argocd.prod-mgmt.nubes.stfc.ac.uk
+stfc-cloud-argocd:
+  argo-cd:
+    server:
+      httproute:
+        enabled: true
+        hostnames:
+          - argocd.prod-mgmt.nubes.stfc.ac.uk
+        parentRefs:
+          - name: envoy-gateway-internal
+            namespace: envoy-gateway-system
+            sectionName: https
+            group: gateway.networking.k8s.io
+            kind: Gateway
+    global:
+      domain: argocd.prod-mgmt.nubes.stfc.ac.uk
