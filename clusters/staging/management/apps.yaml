@@ -77,6 +77,8 @@ spec:
     metadata:
       name: "{{.name}}"
       namespace: argocd
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true, IncludeMutationWebhook=true
     spec:
       project: default
       source:
@@ -102,11 +104,12 @@ spec:
           - ServerSideApply=true
 
       ignoreDifferences:
-        # ignore httproute backendRefs and parentRefs as optional values are looked up and added causing out-of-sync issues
+        # ignore outofsync issues with httproute refs when not specifying all the values
+        # k8s adds them for us, argocd considers this a sync issue but we should ignore this
         - kind: HTTPRoute
-          jqPathExpressions:
-            - .spec.rules[].backendRefs[]
-            - .spec.parentRefs
+          jsonPointers:
+            - /spec/rules/backendRefs
+            - /spec/parentRefs
 
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -130,6 +133,8 @@ spec:
       name: "staging-{{path.basename}}-cluster"
       # All applications need to go into the ArgoCD namespace
       namespace: argocd
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true, IncludeMutationWebhook=true
     spec:
       project: default
       destination:
