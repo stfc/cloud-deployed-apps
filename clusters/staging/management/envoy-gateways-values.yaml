@@ -5,7 +5,7 @@ stfc-cloud-envoy-gateways:
   internal:
     clusterIssuerName: self-signed
     service:
-      loadbalancerIP: 130.246.215.233
+      loadBalancerIP: 130.246.215.233
 
     listeners:
       # since we're using self-signed certs - we pass-through to argocd self-signed cert
