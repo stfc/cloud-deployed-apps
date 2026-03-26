@@ -1,0 +1,52 @@
+stfc-cloud-monitoring-stack:
+  kube-prometheus-stack:
+    prometheus:
+      prometheusSpec:
+        externalLabels:
+          cluster: worker
+          env: prod
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - prometheus.prod-worker.nubes.stfc.ac.uk
+          parentRefs:
+            - name: envoy-gateway-internal
+              namespace: envoy-gateway-system
+              sectionName: https
+              group: gateway.networking.k8s.io
+              kind: Gateway
+    grafana:
+      grafana.ini:
+        server:
+          root_url: https://grafana.prod-worker.nubes.stfc.ac.uk
+
+        auth.generic_oauth:
+          # TODO: add to cloud-helm-charts, remove after new chart released
+          client_id: $__file{/etc/secrets/iris_iam_creds/client-id}
+          client_secret: $__file{/etc/secrets/iris_iam_creds/client-secret}
+
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - grafana.prod-worker.nubes.stfc.ac.uk
+          parentRefs:
+            - name: envoy-gateway-internal
+              namespace: envoy-gateway-system
+              sectionName: https
+              group: gateway.networking.k8s.io
+              kind: Gateway
+    alertmanager:
+      enabled: true
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - alertmanager.prod-worker.nubes.stfc.ac.uk
+          parentRefs:
+            - name: envoy-gateway-internal
+              namespace: envoy-gateway-system
+              sectionName: https
+              group: gateway.networking.k8s.io
+              kind: Gateway

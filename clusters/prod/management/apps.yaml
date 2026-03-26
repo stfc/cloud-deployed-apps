@@ -32,13 +32,12 @@ spec:
   generators:
     - list:
         elements:
-          - name: "argocd"
+          # NOTE: each chart needs a valuesFile for this to work
+          # so create one for each chart - even if its empty
+
+          # argocd and all dependencies use the same file "argocd-setup-values.yaml"
+          - name: argocd
             chartName: argocd
-
-            # NOTE: each chart needs a valuesFile for this to work
-            # so create one for each chart - even if its empty
-
-            # argocd and all dependencies use the same file "argocd-setup-values.yaml"
             namespace: argocd
             valuesFile: ../../../clusters/prod/management/argocd-setup-values.yaml
             secretsFile: ../../../clusters/prod/management/secrets/apps/argocd.yaml
@@ -49,7 +48,7 @@ spec:
             valuesFile: ../../../clusters/prod/management/logging.yaml
             secretsFile: ../../../clusters/prod/management/secrets/apps/logging.yaml
 
-          - name: "cert-manager"
+          - name: cert-manager
             chartName: cert-manager
             namespace: cert-manager
             valuesFile: ../../../clusters/prod/management/argocd-setup-values.yaml
@@ -59,6 +58,17 @@ spec:
             namespace: capi-addon-system
             valuesFile: ../../../clusters/prod/management/argocd-setup-values.yaml
 
+          - name: envoy-gateways
+            chartName: envoy-gateways
+            namespace: envoy-gateway-system
+            valuesFile: ../../../clusters/prod/management/envoy-gateways-values.yaml
+
+          - name: monitoring-stack
+            chartName: monitoring-stack
+            namespace: monitoring-system
+            valuesFile: ../../../clusters/prod/management/monitoring-stack-values.yaml
+            secretsFile: ../../../clusters/prod/management/secrets/apps/monitoring-stack.yaml
+
   syncPolicy:
     # Don't remove everything if we remove the appset
     preserveResourcesOnDeletion: true
@@ -67,6 +77,8 @@ spec:
     metadata:
       name: "{{.name}}"
       namespace: argocd
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true, IncludeMutationWebhook=true
     spec:
       project: default
       source:
@@ -91,6 +103,14 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
 
+      ignoreDifferences:
+        # ignore outofsync issues with httproute refs when not specifying all the values
+        # k8s adds them for us, argocd considers this a sync issue but we should ignore this
+        - kind: HTTPRoute
+          jsonPointers:
+            - /spec/rules/backendRefs
+            - /spec/parentRefs
+
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -113,6 +133,8 @@ spec:
       name: "prod-{{path.basename}}-cluster"
       # All applications need to go into the ArgoCD namespace
       namespace: argocd
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true, IncludeMutationWebhook=true
     spec:
       project: default
       destination:
@@ -124,16 +146,11 @@ spec:
         path: charts/prod/capi-infra
         helm:
           valueFiles:
-            # Bring in shared environment values
-            - "../../../clusters/_shared/monitoring.yaml"
-            - "../../../clusters/_shared/alerting.yaml"
             # Bring in infra values specific to this cluster
             - "../../../{{path}}/{{path.filename}}"
             # Bring in infra secrets specific to this cluster
-            - "secrets://../../../clusters/{{path[1]}}/management/secrets/infra/opsgenie-api-key.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/api-server-fip.yaml"
             - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/app-creds.yaml"
-            - "secrets://../../../clusters/{{path[1]}}/{{path[2]}}/secrets/infra/auth.yaml"
 
       syncPolicy:
         automated:

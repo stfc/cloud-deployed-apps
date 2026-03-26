@@ -1,71 +1,12 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
-
     cloudCredentialsSecretName: prod-worker-cluster-cloud-credentials
 
     nodeGroups:
       - name: default-md-0
         machineCount: 5
     addons:
-      ingress:
-        enabled: true
-        nginx:
-          release:
-            values:
-              controller:
-                service:
-                  # *.prod-worker.nubes.stfc.ac.uk
-                  loadBalancerIP: "130.246.80.243"
-
-      monitoring:
-        kubePrometheusStack:
-          release:
-            values:
-              defaultRules:
-                additionalRuleLabels:
-                  cluster: worker
-                  env: prod
-              prometheus:
-                prometheusSpec:
-                  externalLabels:
-                    cluster: worker
-                    env: prod
-                ingress:
-                  annotations:
-                    nginx.ingress.kubernetes.io/auth-type: basic
-                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Prod Worker" 
-                  hosts:
-                    - prometheus.prod-worker.nubes.stfc.ac.uk
-                  tls:
-                    - hosts:
-                        - prometheus.prod-worker.nubes.stfc.ac.uk
-                      secretName: tls-keypair
-              grafana:
-                grafana.ini:
-                  server:
-                    root_url: https://grafana.prod-worker.nubes.stfc.ac.uk
-                ingress:
-                  hosts:
-                    - grafana.prod-worker.nubes.stfc.ac.uk
-                  tls:
-                    - hosts:
-                        - grafana.prod-worker.nubes.stfc.ac.uk
-                      secretName: tls-keypair
-              alertmanager:
-                enabled: true
-                ingress:
-                  annotations:
-                    nginx.ingress.kubernetes.io/auth-type: basic
-                    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-                    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - Prod Worker" 
-                  hosts:
-                    - alertmanager.prod-worker.nubes.stfc.ac.uk
-                  tls:
-                    - hosts:
-                        - alertmanager.prod-worker.nubes.stfc.ac.uk
-                      secretName: tls-keypair
       etcdDefrag:
         release:
           values:
-            schedule: 11 12 * * * # smearing the time for defrag job 11:12am daily  
+            schedule: 11 12 * * * # smearing the time for defrag job 11:12am daily

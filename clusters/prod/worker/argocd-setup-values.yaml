@@ -1,13 +1,47 @@
-argo-cd:
-  global:
-    domain: argocd.prod-worker.nubes.stfc.ac.uk
+stfc-cloud-argocd:
+  argo-cd:
+    server:
+      httproute:
+        enabled: true
+        hostnames:
+          - argocd.prod-worker.nubes.stfc.ac.uk
+        parentRefs:
+          - name: envoy-gateway-internal
+            namespace: envoy-gateway-system
+            sectionName: https
+            group: gateway.networking.k8s.io
+            kind: Gateway
+    global:
+      domain: argocd.prod-worker.nubes.stfc.ac.uk
+
+stfc-cloud-longhorn:
+  longhorn:
+    httproute:
+      parentRefs:
+        - name: envoy-gateway-internal
+          namespace: envoy-gateway-system
+          sectionName: https
+          group: gateway.networking.k8s.io
+          kind: Gateway
+      hostnames:
+        - longhorn.prod-worker.nubes.stfc.ac.uk
+
+    persistence:
+      # can't be set for RWX
+      migratable: false
 
 stfc-cloud-cert-manager:
-  le-staging:
-    enabled: true
-    ingressClassName: ingress-nginx-external
+  clusterIssuers:
+    - name: external-le-staging
+      type: le-staging
+      email: cloud-support@stfc.ac.uk
+      gateway:
+        name: envoy-gateway-external
+        namespace: envoy-gateway-system
 
-  le-prod:
-    email: cloud-support@stfc.ac.uk
-    enabled: true
-    ingressClassName: ingress-nginx-external
+    - name: external-le-prod
+      type: le-prod
+      email: cloud-support@stfc.ac.uk
+      gateway:
+        name: envoy-gateway-external
+        namespace: envoy-gateway-system
