@@ -21,29 +21,30 @@ stfc-cloud-opensearch:
           sectionName: https
 
   opensearch-cluster:
-    nodePools:
-      - component: nodes
-        diskSize: "500Gi"
-        replicas: 3
-        persistence:
-          pvc:
-            accessModes:
-              - ReadWriteOnce
-            storageClass: csi-cinder
-        nodeSelector: {}
-        roles:
-          - "cluster_manager"
-          - "data"
-        resources:
-          requests:
-            memory: "4Gi"
-            # dedicate 5 cores
-            cpu: "5000m"
-          limits:
-            memory: "10Gi"
-            # burst to max 10 cores (62.5% of total)
-            # to stop CPU throttling alerts
-            cpu: "10000m"
-        pdb:
-          enable: true
-          maxUnavailable: 1
+    cluster:
+      nodePools:
+        - component: nodes
+          diskSize: "500Gi"
+          replicas: 3
+          persistence:
+            pvc:
+              accessModes:
+                - ReadWriteOnce
+              storageClass: csi-cinder
+          nodeSelector: {}
+          roles:
+            - "cluster_manager"
+            - "data"
+          resources:
+            requests:
+              memory: "4Gi"
+              # dedicate 5 cores
+              cpu: "5000m"
+            limits:
+              memory: "10Gi"
+              # burst to max 10 cores (62.5% of total)
+              # to stop CPU throttling alerts
+              cpu: "10000m"
+          pdb:
+            enable: true
+            maxUnavailable: 1
