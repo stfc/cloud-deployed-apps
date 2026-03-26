@@ -112,7 +112,7 @@ spec:
       name: "{{.name}}"
       namespace: argocd
       annotations:
-        argocd.argoproj.io/compare-options: ServerSideDiff=true
+        argocd.argoproj.io/compare-options: ServerSideDiff=true, IncludeMutationWebhook=true
     spec:
       project: default
       source:
@@ -145,22 +145,12 @@ spec:
           jsonPointers:
             - /spec/preserveUnknownFields
 
-        # ignore harbor certificates as they are managed and modified by cert-manager
-        - group: ""
-          kind: Secret
-          name: harbor-ingress
-          namespace: harbor
+        # ignore outofsync issues with httproute refs when not specifying all the values
+        # k8s adds them for us, argocd considers this a sync issue but we should ignore this
+        - kind: HTTPRoute
           jsonPointers:
-            - /type
-            - /metadata
-            - /data
-        - group: cert-manager.io/v1
-          kind: Certificate
-          name: harbor-ingress
-          namespace: harbor
-          jsonPointers:
-            - /metadata
-            - /status
+            - /spec/rules/backendRefs
+            - /spec/parentRefs
 
   templatePatch: |
     {{- if eq .name "manila-csi" }}
