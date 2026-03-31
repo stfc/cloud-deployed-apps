@@ -13,3 +13,4 @@ stfc-cloud-docker-registry:
   s3:
     bucket: staging-registry
     regionEndpoint: s3.echo.stfc.ac.uk
+    skipverify: true
