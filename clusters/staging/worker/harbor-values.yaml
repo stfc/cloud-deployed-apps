@@ -17,7 +17,8 @@ stfc-cloud-harbor:
     database:
       type: external
       external:
-        host: "dbspgha03.fds.rl.ac.uk"
+        host: "dbspg-dev.fds.rl.ac.uk"
+        port: "6432"
         coreDatabase: "cloud_harbor_registry_dev"
 
     persistence:
