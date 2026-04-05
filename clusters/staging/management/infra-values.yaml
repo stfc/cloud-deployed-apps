@@ -1,5 +1,6 @@
 stfc-cloud-openstack-cluster:
   openstack-cluster:
+    machineSSHKeyName: k8s-staging
     cloudCredentialsSecretName: staging-management-cluster-cloud-credentials
     registryMirrors: { docker.io: ["https://staging.dockerhub.stfc.ac.uk/v2/"] }
 
