@@ -1,14 +1,12 @@
-
 stfc-cloud-rabbit-consumer:
   consumer:
     logLevel: INFO
+    aquilon:
+      defaultPrefix: vm-openstack-Dev-
 
     queues:
       - "ral.info"
       - "ral.error"
-
-    aquilon:
-      defaultPrefix: vm-openstack-Dev-
 
     rabbitmq:
       host: dev-service4.nubes.rl.ac.uk
