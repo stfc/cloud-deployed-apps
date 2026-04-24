@@ -15,14 +15,14 @@ jobs:
 
     steps:
       - name: "Setup Github Token"
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 #v3.1.1
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
 
       - name: Check for changes
         id: check-changes
@@ -56,7 +56,7 @@ jobs:
 
       - name: Commit and Create Pull Request
         if: steps.check-changes.outputs.changes-detected == 'true'
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 #v8.1.0
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "${{ steps.env-vars.outputs.pr_title }}"
