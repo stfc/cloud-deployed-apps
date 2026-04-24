@@ -1,5 +1,7 @@
 # adapted from https://github.com/camptocamp/helm-dependency-update-action example
-
+permissions:
+  contents: read
+  
 name: Update Chart Dependencies on Staging
 
 env:
