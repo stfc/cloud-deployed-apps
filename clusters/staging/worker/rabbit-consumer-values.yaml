@@ -1,6 +1,6 @@
 stfc-cloud-rabbit-consumer:
   consumer:
-    logLevel: INFO
+    logLevel: DEBUG
     aquilon:
       defaultPrefix: vm-openstack-Dev-
 
