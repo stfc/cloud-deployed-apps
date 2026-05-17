@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/stfc/cloud-deployed-apps.git
-    targetRevision: main
+    targetRevision: trivy-timeout
     path: clusters/staging/worker
   syncPolicy:
     automated:
@@ -117,7 +117,7 @@ spec:
       project: default
       source:
         repoURL: "https://github.com/stfc/cloud-deployed-apps.git"
-        targetRevision: main
+        targetRevision: trivy-timeout
         path: "charts/staging/{{.chartName}}"
         helm:
           valueFiles:
