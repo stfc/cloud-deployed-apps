@@ -26,6 +26,16 @@ stfc-cloud-harbor:
           bucket: prod-harbor-bucket
           regionendpoint: s3.echo.stfc.ac.uk
 
+    trivy:
+      resources:
+        requests:
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          cpu: 2
+          memory: 2Gi
+      timeout: 10m0s
+
   backup:
     enabled: true
     sourceBucket: "s3://prod-harbor-bucket"
