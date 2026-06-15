@@ -40,6 +40,7 @@ helm upgrade --install argocd "../charts/$ENVIRONMENT/argocd" \
   -f "../clusters/$ENVIRONMENT/$CLUSTER_NAME/argocd-setup-values.yaml" \
   --create-namespace \
   --namespace argocd \
+  --take-ownership \
   --wait
 
 echo "Waiting for ArgoCD to be ready..."
