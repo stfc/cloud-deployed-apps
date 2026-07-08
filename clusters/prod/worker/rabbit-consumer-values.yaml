@@ -9,7 +9,7 @@ stfc-cloud-rabbit-consumer:
       - "ral.error"
 
     rabbitmq:
-      host: hv748.nubes.rl.ac.uk
+      host: rabbit7.nubes.rl.ac.uk
 
     openstack:
       authUrl: https://openstack.stfc.ac.uk:5000/v3
