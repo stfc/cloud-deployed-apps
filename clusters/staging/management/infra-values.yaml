@@ -4,15 +4,15 @@ stfc-cloud-openstack-cluster:
     registryMirrors: { docker.io: ["https://staging.dockerhub.stfc.ac.uk/v2/"] }
 
     controlPlane:
-      machineFlavor: dep-l2.tiny
+      machineFlavor: l6.c8
 
     nodeGroups:
       - name: md-0
         machineCount: 2
-        machineFlavor: dep-l2.tiny
+        machineFlavor: l6.c8
 
     nodeGroupDefaults:
-      machineFlavor: dep-l2.tiny
+      machineFlavor: l6.c8
 
     addons:
       etcdDefrag:

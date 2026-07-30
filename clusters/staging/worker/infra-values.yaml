@@ -4,15 +4,15 @@ stfc-cloud-openstack-cluster:
     registryMirrors: { docker.io: ["https://staging.dockerhub.stfc.ac.uk/v2/"] }
 
     controlPlane:
-      machineFlavor: dep-l2.tiny
+      machineFlavor: l6.c8
 
     nodeGroups:
       - name: default-md-0
         machineCount: 5
-        machineFlavor: dep-l2.xsmall
+        machineFlavor: l6.c16
 
     nodeGroupDefaults:
-      machineFlavor: dep-l2.xsmall
+      machineFlavor: l6.c16
       nodeLabels:
         # we're running longhorn on this cluster
         # set label so worker nodes can host longhorn volumes
