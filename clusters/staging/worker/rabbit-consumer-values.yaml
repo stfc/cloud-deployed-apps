@@ -2,7 +2,7 @@ stfc-cloud-rabbit-consumer:
   consumer:
     image:
       repository: harbor.stfc.ac.uk/stfc-cloud-staging/openstack-rabbit-consumer
-      tag: 8042a91
+      tag: 8002f19
     logLevel: DEBUG
     aquilon:
       defaultPrefix: vm-openstack-Dev-
