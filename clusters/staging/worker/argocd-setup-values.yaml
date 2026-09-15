@@ -1,5 +1,6 @@
 stfc-cloud-argocd:
   argo-cd:
+
     configs:
       cm:
         # TODO remove this once PR merged
@@ -50,3 +51,8 @@ stfc-cloud-cert-manager:
       gateway:
         name: envoy-gateway-external
         namespace: envoy-gateway-system
+
+  reloader:
+    reloader:
+      reloadOnCreate: true
+      reloadOnDelete: true
