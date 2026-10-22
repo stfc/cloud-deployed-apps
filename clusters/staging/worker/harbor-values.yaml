@@ -2,11 +2,6 @@ stfc-cloud-harbor:
   harbor:
     externalURL: "https://staging.harbor.stfc.ac.uk"
 
-    jobservice:
-      replicas: 50
-    trivy: 
-      replicas: 50
-      
     expose:
       route:
         enabled: true
