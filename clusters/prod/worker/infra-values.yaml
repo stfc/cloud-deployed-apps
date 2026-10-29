@@ -5,8 +5,6 @@ stfc-cloud-openstack-cluster:
     nodeGroups:
       - name: default-md-0
         machineCount: 5
-        machineFlavor: l7-amd.c60
-
     addons:
       etcdDefrag:
         release:
